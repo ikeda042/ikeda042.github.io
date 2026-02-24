@@ -62,106 +62,137 @@
 
         /* Online clipboard */
         #online-clipboard {
-            margin-top: -1rem;
+            margin-top: 1rem;
+            padding: 2.5rem 2rem;
+            background-color: #fafafa;
+            border: 1px solid #eaeaea;
+        }
+        #online-clipboard h2 {
+            margin-top: 0;
         }
         .clipboard-description {
             margin-top: -1rem;
-            margin-bottom: 1.25rem;
+            margin-bottom: 1.5rem;
             color: var(--gray-text);
             font-size: 0.95rem;
         }
         .clipboard-form {
             display: flex;
             flex-direction: column;
-            gap: 0.75rem;
+            gap: 1rem;
         }
         .clipboard-form label {
             font-weight: 700;
             letter-spacing: 0.03em;
+            font-size: 0.9rem;
         }
         .clipboard-form textarea {
             width: 100%;
             min-height: 120px;
-            padding: 0.9rem 1rem;
-            border: 1px solid #d9d9d9;
+            padding: 1rem;
+            border: 1px solid #cccccc;
             resize: vertical;
             font: inherit;
             box-sizing: border-box;
             line-height: 1.6;
             color: var(--text-color);
             background: #ffffff;
+            transition: all 0.2s ease;
         }
         .clipboard-form textarea:focus {
-            outline: 2px solid var(--border-color);
-            outline-offset: 0;
+            outline: none;
+            border-color: var(--border-color);
+            box-shadow: 4px 4px 0px rgba(17, 17, 17, 0.1);
         }
         .clipboard-btn {
             width: fit-content;
-            min-width: 130px;
+            min-width: 150px;
             border: 2px solid var(--border-color);
-            background: transparent;
-            color: var(--text-color);
+            background: var(--text-color);
+            color: var(--bg-color);
             font-weight: 700;
             letter-spacing: 0.06em;
-            padding: 0.75rem 1.5rem;
+            padding: 0.8rem 1.5rem;
             cursor: pointer;
             transition: all 0.3s ease;
         }
         .clipboard-btn:hover {
-            background: var(--text-color);
-            color: var(--bg-color);
+            background: transparent;
+            color: var(--text-color);
+            transform: translateY(-2px);
         }
         .clipboard-btn:disabled {
             opacity: 0.45;
             cursor: not-allowed;
+            transform: none;
         }
         .clipboard-status {
             min-height: 1.5rem;
-            margin-top: 0.75rem;
-            margin-bottom: 1rem;
+            margin-top: 1rem;
+            margin-bottom: 1.5rem;
             color: var(--gray-text);
             font-size: 0.95rem;
+            font-weight: bold;
         }
         .clipboard-status.error {
-            color: #a40000;
+            color: #d93025;
         }
+
+        /* Clipboard List (Card Style) */
         .clipboard-list {
             list-style: none;
             margin: 0;
             padding: 0;
-            border-top: 1px solid #eeeeee;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
         }
         .clipboard-item {
-            padding: 1rem 0;
-            border-bottom: 1px solid #eeeeee;
+            background: #ffffff;
+            border: 1px solid #eeeeee;
+            padding: 1.25rem;
+            transition: all 0.2s ease;
+        }
+        .clipboard-item:hover {
+            border-color: #cccccc;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
         }
         .clipboard-item-row {
             display: flex;
-            align-items: flex-start;
-            justify-content: space-between;
+            flex-direction: column;
             gap: 1rem;
         }
         .clipboard-item-text {
-            flex: 1;
             white-space: pre-wrap;
             overflow-wrap: anywhere;
+            font-family: monospace;
+            font-size: 0.95rem;
+            color: #333333;
+            background: #f9f9f9;
+            padding: 1rem;
+            border-left: 3px solid var(--border-color);
         }
-        .clipboard-delete-btn {
+        .clipboard-item-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 0.5rem;
+        }
+        .clipboard-action-btn {
             border: 1px solid var(--border-color);
             background: transparent;
             color: var(--text-color);
-            padding: 0.35rem 0.7rem;
+            padding: 0.4rem 1rem;
             font-size: 0.8rem;
             font-weight: 700;
             letter-spacing: 0.04em;
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: all 0.2s ease;
         }
-        .clipboard-delete-btn:hover {
+        .clipboard-action-btn:hover {
             background: var(--text-color);
             color: var(--bg-color);
         }
-        .clipboard-delete-btn:disabled {
+        .clipboard-action-btn:disabled {
             opacity: 0.45;
             cursor: not-allowed;
         }
@@ -647,6 +678,10 @@
             if (!items.length) {
                 const li = document.createElement('li');
                 li.className = 'clipboard-item';
+                li.style.textAlign = 'center';
+                li.style.color = 'var(--gray-text)';
+                li.style.background = 'transparent';
+                li.style.border = '1px dashed #cccccc';
                 li.textContent = 'まだ保存されたテキストはありません。';
                 clipboardList.appendChild(li);
                 return;
@@ -659,32 +694,60 @@
                 const row = document.createElement('div');
                 row.className = 'clipboard-item-row';
 
-                const text = document.createElement('span');
+                const text = document.createElement('div');
                 text.className = 'clipboard-item-text';
                 text.textContent = item;
 
+                const actions = document.createElement('div');
+                actions.className = 'clipboard-item-actions';
+
+                const copyBtn = document.createElement('button');
+                copyBtn.type = 'button';
+                copyBtn.className = 'clipboard-action-btn copy-btn';
+                copyBtn.textContent = 'Copy';
+                copyBtn.addEventListener('click', async () => {
+                    try {
+                        await navigator.clipboard.writeText(item);
+                        copyBtn.textContent = 'Copied!';
+                        copyBtn.style.background = 'var(--text-color)';
+                        copyBtn.style.color = 'var(--bg-color)';
+                        setTimeout(() => {
+                            copyBtn.textContent = 'Copy';
+                            copyBtn.style.background = 'transparent';
+                            copyBtn.style.color = 'var(--text-color)';
+                        }, 2000);
+                    } catch (_error) {
+                        alert('コピーに失敗しました');
+                    }
+                });
+
                 const deleteBtn = document.createElement('button');
                 deleteBtn.type = 'button';
-                deleteBtn.className = 'clipboard-delete-btn';
+                deleteBtn.className = 'clipboard-action-btn delete-btn';
                 deleteBtn.textContent = 'Delete';
-
                 deleteBtn.addEventListener('click', async () => {
                     deleteBtn.disabled = true;
+                    copyBtn.disabled = true;
                     setClipboardStatus('削除中...');
 
                     try {
                         await deleteClipboardEntry(item);
                         setClipboardStatus('削除しました。');
                         await loadClipboardList();
+                        setTimeout(() => setClipboardStatus(''), 3000);
                     } catch (error) {
                         const message = error instanceof Error ? error.message : '削除に失敗しました。';
                         setClipboardStatus(`削除に失敗しました: ${message}`, true);
                         deleteBtn.disabled = false;
+                        copyBtn.disabled = false;
                     }
                 });
 
+                actions.appendChild(copyBtn);
+                actions.appendChild(deleteBtn);
+
                 row.appendChild(text);
-                row.appendChild(deleteBtn);
+                row.appendChild(actions);
                 li.appendChild(row);
                 clipboardList.appendChild(li);
             });
