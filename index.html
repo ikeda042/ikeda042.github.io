@@ -1,11 +1,10 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>IKEDA Yunosuke - Portfolio</title>
     <style>
-        /* CSSカスタムプロパティで白黒を定義 */
         :root {
             --bg-color: #ffffff;
             --text-color: #111111;
@@ -13,7 +12,6 @@
             --border-color: #111111;
         }
 
-        /* ベーススタイル */
         body {
             font-family: 'Helvetica Neue', Arial, 'Hiragino Kaku Gothic ProN', 'Hiragino Sans', Meiryo, sans-serif;
             line-height: 1.8;
@@ -30,7 +28,6 @@
             padding: 0 1.5rem;
         }
 
-        /* ヘッダー領域 */
         header {
             padding: 6rem 0 3rem;
             margin-bottom: 4rem;
@@ -51,7 +48,6 @@
             text-transform: uppercase;
         }
 
-        /* メインコンテンツ領域 */
         section {
             margin-bottom: 5rem;
         }
@@ -68,7 +64,17 @@
             font-size: 1.1rem;
         }
 
-        /* 経歴（Experience）リスト */
+        .meta {
+            margin-top: 1.25rem;
+            color: var(--gray-text);
+            font-size: 0.95rem;
+        }
+        .meta strong {
+            color: var(--text-color);
+            font-weight: 700;
+        }
+
+        /* Timeline */
         .timeline {
             list-style: none;
             padding: 0;
@@ -84,7 +90,7 @@
             padding-bottom: 0;
         }
         .timeline-date {
-            flex: 0 0 140px;
+            flex: 0 0 160px;
             font-weight: 600;
             color: var(--text-color);
             font-family: 'Helvetica Neue', Arial, sans-serif;
@@ -96,22 +102,41 @@
             color: var(--text-color);
         }
         .timeline-title {
-            font-weight: 600;
-            margin-bottom: 0.2rem;
+            font-weight: 700;
+            margin-bottom: 0.25rem;
         }
+        .timeline-sub {
+            color: var(--gray-text);
+            font-size: 0.95rem;
+            margin-top: 0.35rem;
+        }
+        .inline-link {
+            color: var(--text-color);
+            text-decoration: none;
+            border-bottom: 1px solid var(--text-color);
+            padding-bottom: 2px;
+            transition: opacity 0.3s ease;
+            font-weight: 700;
+        }
+        .inline-link:hover { opacity: 0.5; }
 
-        /* スマートフォン向け調整 */
         @media (max-width: 600px) {
-            .timeline-item {
-                flex-direction: column;
-            }
+            .timeline-item { flex-direction: column; }
             .timeline-date {
                 margin-bottom: 0.5rem;
                 color: var(--gray-text);
+                flex: 1 1 auto;
             }
         }
 
-        /* プロジェクトリスト */
+        /* Lists */
+        .bullets {
+            margin: 0;
+            padding-left: 1.25rem;
+        }
+        .bullets li { margin: 0.4rem 0; }
+
+        /* Projects */
         .project {
             margin-bottom: 3rem;
             padding-bottom: 2rem;
@@ -128,23 +153,21 @@
         }
         .project p {
             color: var(--gray-text);
-            margin-bottom: 1.5rem;
+            margin-bottom: 1.25rem;
         }
         .project a {
             display: inline-block;
             color: var(--text-color);
             text-decoration: none;
-            font-weight: 600;
+            font-weight: 700;
             font-size: 0.9rem;
             border-bottom: 1px solid var(--text-color);
             padding-bottom: 2px;
             transition: opacity 0.3s ease;
         }
-        .project a:hover {
-            opacity: 0.5;
-        }
+        .project a:hover { opacity: 0.5; }
 
-        /* ボタン */
+        /* Button */
         .contact-btn {
             display: inline-block;
             background: transparent;
@@ -161,7 +184,6 @@
             color: var(--bg-color);
         }
 
-        /* フッター */
         footer {
             text-align: center;
             padding: 3rem 1rem;
@@ -172,72 +194,271 @@
     </style>
 </head>
 <body>
-
     <div class="container">
         <header>
             <h1>池田 有之介</h1>
-            <p>IKEDA Yunosuke / Biotechnology & Computer Science</p>
+            <p>IKEDA Yunosuke / CEO @ Ellipsys / Bioengineering × Computer Science</p>
         </header>
 
         <section id="about">
             <h2>About</h2>
-            <p>生物工学とコンピュータサイエンスの融合領域に関心を持っています。ミネソタ大学でのCS留学経験を活かし、情報科学的アプローチから生命科学の課題解決に取り組んでいます。</p>
+            <p>
+                生物工学とコンピュータサイエンスの交差領域で、研究現場の課題を「ソフトウェア化」して解くことに取り組んでいます。
+                広島大学（生物工学）でのバックグラウンドと、University of MinnesotaでのCS留学経験をベースに、
+                画像解析・Web/API・プロダクト開発を横断して、研究室DXや新規事業の立案/開発を推進しています。
+            </p>
+            <div class="meta">
+                <div><strong>ID</strong>: yunosuke_ikeda</div>
+                <div><strong>Location</strong>: 広島 / USA</div>
+                <div><strong>Motto</strong>: It&apos;s impossible. No, it&apos;s necessary.</div>
+            </div>
+        </section>
+
+        <section id="skills">
+            <h2>Skills</h2>
+            <ul class="bullets">
+                <li>フルスタックWeb開発（バックエンド中心）</li>
+                <li>API高速展開（Vercel / NEON / v0 / MCP / n8n / 各種API）</li>
+                <li>画像解析・研究向けソフトウェア開発（ローカルサーバー展開/運用）</li>
+                <li>日英通訳</li>
+            </ul>
         </section>
 
         <section id="experience">
             <h2>Experience</h2>
             <ul class="timeline">
                 <li class="timeline-item">
-                    <div class="timeline-date">2018.04 –</div>
-                    <div class="timeline-content">広島大学 工学部 第３類 入学</div>
-                </li>
-                <li class="timeline-item">
-                    <div class="timeline-date">2022.08 – 2023.06</div>
-                    <div class="timeline-content">ミネソタ大学 ツインシティーズ校 CS 交換留学</div>
-                </li>
-                <li class="timeline-item">
-                    <div class="timeline-date">2024.04 –</div>
-                    <div class="timeline-content">広島大学大学院 統合生命科学研究科<br>生物工学プログラム 修士課程</div>
-                </li>
-                <li class="timeline-item">
-                    <div class="timeline-date">2025.04 – 2026.03</div>
-                    <div class="timeline-content">広島大学 教育特別研究員</div>
-                </li>
-                <li class="timeline-item">
-                    <div class="timeline-date">2025.04 –</div>
+                    <div class="timeline-date">2025.05 – 現在</div>
                     <div class="timeline-content">
-                        <a class="timeline-title" href="https://ellipsys.co.jp" target="_blank" rel="noopener noreferrer">合同会社Ellipsys</a>
-                        CEO
+                        <div class="timeline-title">トグルホールディングス株式会社 / CTO室（インターン）</div>
+                        <div class="timeline-sub">
+                            Vercel, NEON, v0, MCP（codex/claude code）, n8n と各種APIを用いた高速なWebサービス開発の経験を蓄積。
+                        </div>
                     </div>
                 </li>
+
+                <li class="timeline-item">
+                    <div class="timeline-date">2025.04 – 現在</div>
+                    <div class="timeline-content">
+                        <div class="timeline-title">
+                            <a class="inline-link" href="https://ellipsys.co.jp/" target="_blank" rel="noopener noreferrer">合同会社Ellipsys</a>
+                            / CEO
+                        </div>
+                        <div class="timeline-sub">新規事業立案/開発 等。</div>
+                    </div>
+                </li>
+
+                <li class="timeline-item">
+                    <div class="timeline-date">2025.04 – 現在</div>
+                    <div class="timeline-content">
+                        <div class="timeline-title">広島大学 / 教育特別研究員</div>
+                        <div class="timeline-sub">
+                            画像解析ソフトの開発およびローカルネットワーク内でのソフトウェア展開。
+                            （参考:
+                            <a class="inline-link" href="https://github.com/ikeda042/PhenoPixel6.0" target="_blank" rel="noopener noreferrer">PhenoPixel</a>
+                            ）
+                        </div>
+                    </div>
+                </li>
+
+                <li class="timeline-item">
+                    <div class="timeline-date">2025.01</div>
+                    <div class="timeline-content">
+                        <div class="timeline-title">ミズノ株式会社 / データ活用部門 スポーツデータ解析（インターン）</div>
+                        <div class="timeline-sub">スポーツデータの解析およびアプリケーション開発。</div>
+                    </div>
+                </li>
+
+                <li class="timeline-item">
+                    <div class="timeline-date">2024.12</div>
+                    <div class="timeline-content">
+                        <div class="timeline-title">（株）ブリヂストン / データ解析（インターン）</div>
+                        <div class="timeline-sub">
+                            プロダクトのデータ解析。古典的線形次元削減アルゴリズムを選定し、予測モデルを構築。
+                        </div>
+                    </div>
+                </li>
+
+                <li class="timeline-item">
+                    <div class="timeline-date">2024.12</div>
+                    <div class="timeline-content">
+                        <div class="timeline-title">キリンホールディングス株式会社 / デジタルICT部門（インターン）</div>
+                        <div class="timeline-sub">2024年冬インターン（NDAにより詳細非公開）。</div>
+                    </div>
+                </li>
+
+                <li class="timeline-item">
+                    <div class="timeline-date">2024.09</div>
+                    <div class="timeline-content">
+                        <div class="timeline-title">サントリーホールディングス株式会社 / D&amp;T（インターン）</div>
+                        <div class="timeline-sub">2024年夏インターン（NDAにより詳細非公開）。</div>
+                    </div>
+                </li>
+
+                <li class="timeline-item">
+                    <div class="timeline-date">2024.08 – 2024.09</div>
+                    <div class="timeline-content">
+                        <div class="timeline-title">ExaWizards Inc. / C&amp;I部門（インターン）</div>
+                        <div class="timeline-sub">
+                            NDAにより記載不可（概要等）。
+                        </div>
+                    </div>
+                </li>
+
+                <li class="timeline-item">
+                    <div class="timeline-date">2024.07 – 現在</div>
+                    <div class="timeline-content">
+                        <div class="timeline-title">UT-LAB / メンバー</div>
+                        <div class="timeline-sub">コミュニティ活動。</div>
+                    </div>
+                </li>
+
+                <li class="timeline-item">
+                    <div class="timeline-date">2024.04 – 現在</div>
+                    <div class="timeline-content">
+                        <div class="timeline-title">広島大学 人間社会科学研究科 氏間研究室 / フルスタックエンジニア</div>
+                        <div class="timeline-sub">
+                            文科省プロジェクトUD-Bookのシステム開発（参考:
+                            <a class="inline-link" href="https://home.hiroshima-u.ac.jp/ujima/onsei/index.html" target="_blank" rel="noopener noreferrer">研究室ページ</a>
+                            ）。
+                        </div>
+                    </div>
+                </li>
+
+                <li class="timeline-item">
+                    <div class="timeline-date">2024.04 – 現在</div>
+                    <div class="timeline-content">
+                        <div class="timeline-title">広島大学大学院 / 統合生命科学研究科 生物工学プログラム（修士）</div>
+                        <div class="timeline-sub">研究とプロダクト開発を接続するテーマで活動。</div>
+                    </div>
+                </li>
+
+                <li class="timeline-item">
+                    <div class="timeline-date">2022.10 – 2024.03</div>
+                    <div class="timeline-content">
+                        <div class="timeline-title">合同会社Ellipsys / CTO</div>
+                        <div class="timeline-sub">
+                            バックエンド中心にシステム開発（MongoDB / MariaDB / FastAPI / React / Docker）。
+                        </div>
+                    </div>
+                </li>
+
+                <li class="timeline-item">
+                    <div class="timeline-date">2022.09 – 2023.06</div>
+                    <div class="timeline-content">
+                        <div class="timeline-title">University of Minnesota Twin Cities / CSE（留学）</div>
+                    </div>
+                </li>
+
+                <li class="timeline-item">
+                    <div class="timeline-date">2020.02 – 2020.03</div>
+                    <div class="timeline-content">
+                        <div class="timeline-title">IIT Bombay / 都市工学（短期）</div>
+                        <div class="timeline-sub">渋滞回避問題などを学習。</div>
+                    </div>
+                </li>
+
+                <li class="timeline-item">
+                    <div class="timeline-date">2019.08 – 2019.09</div>
+                    <div class="timeline-content">
+                        <div class="timeline-title">フリンダース大学 / 国際協力（短期研修）</div>
+                        <div class="timeline-sub">人生初の海外研修として参加。</div>
+                    </div>
+                </li>
+
+                <li class="timeline-item">
+                    <div class="timeline-date">2019.06 – 2020.03</div>
+                    <div class="timeline-content">
+                        <div class="timeline-title">合同会社エキスパーツ / CTO</div>
+                        <div class="timeline-sub">家庭教師サービスのシステム担当。</div>
+                    </div>
+                </li>
+
+                <li class="timeline-item">
+                    <div class="timeline-date">2018.08 – 2019.04</div>
+                    <div class="timeline-content">
+                        <div class="timeline-title">NPO法人ドットジェイピー / アナリティクス（インターン）</div>
+                        <div class="timeline-sub">顧客の情報収集・分析。</div>
+                    </div>
+                </li>
+
+                <li class="timeline-item">
+                    <div class="timeline-date">2018.04 – 2024.03</div>
+                    <div class="timeline-content">
+                        <div class="timeline-title">広島大学 工学部 第3類（一般入試）</div>
+                        <div class="timeline-sub">発酵工学を中心に学習。</div>
+                    </div>
+                </li>
+
                 <li class="timeline-item">
                     <div class="timeline-date">2026.04 –</div>
-                    <div class="timeline-content">広島大学大学院 統合生命科学研究科<br>生物工学プログラム 博士課程</div>
+                    <div class="timeline-content">
+                        <div class="timeline-title">広島大学大学院 / 統合生命科学研究科 生物工学プログラム（博士課程）</div>
+                        <div class="timeline-sub">進学予定。</div>
+                    </div>
                 </li>
             </ul>
         </section>
 
         <section id="projects">
             <h2>Projects</h2>
-            
+
             <div class="project">
-                <h3>PhenoPixel 6.0</h3>
-                <p>顕微鏡データから細胞情報を高速に抽出し、研究員がいない夜間に全自動でデータ解析を行うソフトウェアを作成しました。ローカルサーバーに展開しており、ラボ内全員が同じプログラム/APIにブラウザからアクセス可能です。</p>
-                <a href="https://github.com/ikeda042/PhenoPixel6.0" target="_blank">View on GitHub &rarr;</a>
+                <h3>LabSocket（研究室DXプロダクト）</h3>
+                <p>
+                    これまでの経験を統合して、研究室DXを行うプロダクトをローンチしました（広島大学スタートアップチャレンジ2025）。
+                    研究現場のオペレーションを「ソフトウェア/API」に落とし込み、導入障壁を下げることを狙っています。
+                </p>
+                <a href="https://www.labsocket.info/" target="_blank" rel="noopener noreferrer">View details &rarr;</a>
             </div>
 
             <div class="project">
-                <h3>令和5年度広島大学秋季学位記授与式</h3>
-                <p>令和5年度広島大学秋季学位記授与式 の英語司会を務めました。</p>
-                <a href="https://www.hiroshima-u.ac.jp/news/79005" target="_blank">View details &rarr;</a>
+                <h3>PhenoPixel（細胞画像解析ソフト）</h3>
+                <p>
+                    顕微鏡データから細胞情報を高速に抽出し、夜間の自動解析まで含めたパイプラインを構築。
+                    ローカルサーバーに展開し、ラボ内の全員が同一プログラム/APIへブラウザからアクセスできる形で運用しています。
+                </p>
+                <a href="https://www.labsocket.info/products/phenopixel5/index.html" target="_blank" rel="noopener noreferrer">Product page &rarr;</a>
             </div>
 
-            </section>
+            <div class="project">
+                <h3>UD-Book（文科省プロジェクト / システム開発）</h3>
+                <p>
+                    広島大学 人間社会科学研究科 氏間研究室にて、UD-Bookのシステム開発を担当。
+                    研究要件と運用要件を両立する形で、実装と改善サイクルを回しています。
+                </p>
+                <a href="https://home.hiroshima-u.ac.jp/ujima/onsei/index.html" target="_blank" rel="noopener noreferrer">Lab page &rarr;</a>
+            </div>
+
+            <div class="project">
+                <h3>令和5年度 広島大学秋季学位記授与式（英語司会）</h3>
+                <p>令和5年度 広島大学秋季学位記授与式にて、英語司会を務めました。</p>
+                <a href="https://www.hiroshima-u.ac.jp/news/79005" target="_blank" rel="noopener noreferrer">View details &rarr;</a>
+            </div>
+
+            <div class="project">
+                <h3>令和の虎（プロダクト開発）</h3>
+                <p>
+                    プロダクト開発の実務経験を積み、要件定義〜実装・改善までの一連を学びました。
+                </p>
+            </div>
+        </section>
+
+        <section id="awards">
+            <h2>Awards</h2>
+            <ul class="bullets">
+                <li>広島大学スタートアップチャレンジ2025（2025.12）</li>
+                <li>大学院学費免除2025（2025.06）</li>
+                <li>PSI学生アイデアピッチ - 中国銀行賞（2025.02）</li>
+                <li>広島大学スタートアップチャレンジ2024（2024.12）</li>
+                <li>広島大学スタートアップチャレンジ2023（2023.12）</li>
+            </ul>
+        </section>
 
         <section id="contact">
             <h2>Contact</h2>
             <p>研究やプロジェクト、事業に関するお問い合わせは、以下のメールアドレスまでご連絡ください。</p>
-            <p style="margin-top: 2rem; font-size: 1.1rem; font-weight: 600;">ikeda@ellipsys.co.jp</p>
+            <p style="margin-top: 2rem; font-size: 1.1rem; font-weight: 700;">ikeda@ellipsys.co.jp</p>
         </section>
     </div>
 
@@ -248,6 +469,5 @@
     <script>
         document.getElementById('footer-year').textContent = new Date().getFullYear();
     </script>
-
 </body>
 </html>
