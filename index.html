@@ -134,8 +134,36 @@
         .clipboard-item {
             padding: 1rem 0;
             border-bottom: 1px solid #eeeeee;
+        }
+        .clipboard-item-row {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 1rem;
+        }
+        .clipboard-item-text {
+            flex: 1;
             white-space: pre-wrap;
             overflow-wrap: anywhere;
+        }
+        .clipboard-delete-btn {
+            border: 1px solid var(--border-color);
+            background: transparent;
+            color: var(--text-color);
+            padding: 0.35rem 0.7rem;
+            font-size: 0.8rem;
+            font-weight: 700;
+            letter-spacing: 0.04em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .clipboard-delete-btn:hover {
+            background: var(--text-color);
+            color: var(--bg-color);
+        }
+        .clipboard-delete-btn:disabled {
+            opacity: 0.45;
+            cursor: not-allowed;
         }
 
         #about p {
@@ -573,6 +601,46 @@
             }
         };
 
+        const deleteClipboardEntry = async (text) => {
+            const candidates = [
+                {
+                    url: CLIPBOARD_API_URL,
+                    init: {
+                        method: 'DELETE',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ str: text })
+                    }
+                },
+                {
+                    url: CLIPBOARD_API_URL,
+                    init: {
+                        method: 'DELETE',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ text })
+                    }
+                },
+                {
+                    url: `${CLIPBOARD_API_URL}?str=${encodeURIComponent(text)}`,
+                    init: { method: 'DELETE' }
+                }
+            ];
+
+            let lastError = '削除に失敗しました。';
+
+            for (const candidate of candidates) {
+                const response = await fetch(candidate.url, candidate.init);
+                const payload = await parseJsonSafely(response);
+
+                if (response.ok) {
+                    return;
+                }
+
+                lastError = payload && payload.error ? payload.error : lastError;
+            }
+
+            throw new Error(lastError);
+        };
+
         const renderClipboardList = (items) => {
             clipboardList.innerHTML = '';
 
@@ -587,7 +655,37 @@
             items.forEach((item) => {
                 const li = document.createElement('li');
                 li.className = 'clipboard-item';
-                li.textContent = item;
+
+                const row = document.createElement('div');
+                row.className = 'clipboard-item-row';
+
+                const text = document.createElement('span');
+                text.className = 'clipboard-item-text';
+                text.textContent = item;
+
+                const deleteBtn = document.createElement('button');
+                deleteBtn.type = 'button';
+                deleteBtn.className = 'clipboard-delete-btn';
+                deleteBtn.textContent = 'Delete';
+
+                deleteBtn.addEventListener('click', async () => {
+                    deleteBtn.disabled = true;
+                    setClipboardStatus('削除中...');
+
+                    try {
+                        await deleteClipboardEntry(item);
+                        setClipboardStatus('削除しました。');
+                        await loadClipboardList();
+                    } catch (error) {
+                        const message = error instanceof Error ? error.message : '削除に失敗しました。';
+                        setClipboardStatus(`削除に失敗しました: ${message}`, true);
+                        deleteBtn.disabled = false;
+                    }
+                });
+
+                row.appendChild(text);
+                row.appendChild(deleteBtn);
+                li.appendChild(row);
                 clipboardList.appendChild(li);
             });
         };
