@@ -60,6 +60,84 @@
             text-transform: uppercase;
         }
 
+        /* Online clipboard */
+        #online-clipboard {
+            margin-top: -1rem;
+        }
+        .clipboard-description {
+            margin-top: -1rem;
+            margin-bottom: 1.25rem;
+            color: var(--gray-text);
+            font-size: 0.95rem;
+        }
+        .clipboard-form {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+        .clipboard-form label {
+            font-weight: 700;
+            letter-spacing: 0.03em;
+        }
+        .clipboard-form textarea {
+            width: 100%;
+            min-height: 120px;
+            padding: 0.9rem 1rem;
+            border: 1px solid #d9d9d9;
+            resize: vertical;
+            font: inherit;
+            box-sizing: border-box;
+            line-height: 1.6;
+            color: var(--text-color);
+            background: #ffffff;
+        }
+        .clipboard-form textarea:focus {
+            outline: 2px solid var(--border-color);
+            outline-offset: 0;
+        }
+        .clipboard-btn {
+            width: fit-content;
+            min-width: 130px;
+            border: 2px solid var(--border-color);
+            background: transparent;
+            color: var(--text-color);
+            font-weight: 700;
+            letter-spacing: 0.06em;
+            padding: 0.75rem 1.5rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .clipboard-btn:hover {
+            background: var(--text-color);
+            color: var(--bg-color);
+        }
+        .clipboard-btn:disabled {
+            opacity: 0.45;
+            cursor: not-allowed;
+        }
+        .clipboard-status {
+            min-height: 1.5rem;
+            margin-top: 0.75rem;
+            margin-bottom: 1rem;
+            color: var(--gray-text);
+            font-size: 0.95rem;
+        }
+        .clipboard-status.error {
+            color: #a40000;
+        }
+        .clipboard-list {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            border-top: 1px solid #eeeeee;
+        }
+        .clipboard-item {
+            padding: 1rem 0;
+            border-bottom: 1px solid #eeeeee;
+            white-space: pre-wrap;
+            overflow-wrap: anywhere;
+        }
+
         #about p {
             font-size: 1.1rem;
         }
@@ -199,6 +277,18 @@
             <h1>池田 有之介</h1>
             <p>IKEDA Yunosuke / CEO @ Ellipsys / Bioengineering × Computer Science</p>
         </header>
+
+        <section id="online-clipboard">
+            <h2>Online Clipboard</h2>
+            <p class="clipboard-description">保存したテキストは新しい順で表示されます。</p>
+            <form id="clipboard-form" class="clipboard-form">
+                <label for="clipboard-input">テキストを保存</label>
+                <textarea id="clipboard-input" name="str" placeholder="ここに文字列を入力" required></textarea>
+                <button id="clipboard-submit" class="clipboard-btn" type="submit">Save Text</button>
+            </form>
+            <p id="clipboard-status" class="clipboard-status" aria-live="polite"></p>
+            <ul id="clipboard-list" class="clipboard-list"></ul>
+        </section>
 
         <section id="about">
             <h2>About</h2>
@@ -462,6 +552,104 @@
     </footer>
 
     <script>
+        const CLIPBOARD_API_URL = 'https://githubio-api-rnwp-kivb98qgx-ikeda042s-projects.vercel.app/api/v1/clipboards';
+
+        const clipboardForm = document.getElementById('clipboard-form');
+        const clipboardInput = document.getElementById('clipboard-input');
+        const clipboardSubmit = document.getElementById('clipboard-submit');
+        const clipboardStatus = document.getElementById('clipboard-status');
+        const clipboardList = document.getElementById('clipboard-list');
+
+        const setClipboardStatus = (message, isError = false) => {
+            clipboardStatus.textContent = message;
+            clipboardStatus.classList.toggle('error', isError);
+        };
+
+        const parseJsonSafely = async (response) => {
+            try {
+                return await response.json();
+            } catch (_error) {
+                return null;
+            }
+        };
+
+        const renderClipboardList = (items) => {
+            clipboardList.innerHTML = '';
+
+            if (!items.length) {
+                const li = document.createElement('li');
+                li.className = 'clipboard-item';
+                li.textContent = 'まだ保存されたテキストはありません。';
+                clipboardList.appendChild(li);
+                return;
+            }
+
+            items.forEach((item) => {
+                const li = document.createElement('li');
+                li.className = 'clipboard-item';
+                li.textContent = item;
+                clipboardList.appendChild(li);
+            });
+        };
+
+        const loadClipboardList = async () => {
+            setClipboardStatus('読み込み中...');
+            try {
+                const response = await fetch(CLIPBOARD_API_URL, {
+                    method: 'GET',
+                    headers: { 'Content-Type': 'application/json' }
+                });
+                const payload = await parseJsonSafely(response);
+
+                if (!response.ok || !Array.isArray(payload)) {
+                    throw new Error('failed_to_fetch');
+                }
+
+                renderClipboardList(payload);
+                setClipboardStatus('');
+            } catch (_error) {
+                renderClipboardList([]);
+                setClipboardStatus('一覧の取得に失敗しました。時間をおいて再試行してください。', true);
+            }
+        };
+
+        clipboardForm.addEventListener('submit', async (event) => {
+            event.preventDefault();
+            const value = clipboardInput.value.trim();
+
+            if (!value) {
+                setClipboardStatus('文字列を入力してください。', true);
+                return;
+            }
+
+            clipboardSubmit.disabled = true;
+            setClipboardStatus('保存中...');
+
+            try {
+                const response = await fetch(CLIPBOARD_API_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ str: value })
+                });
+                const payload = await parseJsonSafely(response);
+
+                if (!response.ok) {
+                    const message = payload && payload.error ? payload.error : '保存に失敗しました。';
+                    throw new Error(message);
+                }
+
+                clipboardInput.value = '';
+                setClipboardStatus('保存しました。');
+                await loadClipboardList();
+            } catch (error) {
+                const message = error instanceof Error ? error.message : '保存に失敗しました。';
+                setClipboardStatus(`保存に失敗しました: ${message}`, true);
+            } finally {
+                clipboardSubmit.disabled = false;
+            }
+        });
+
+        loadClipboardList();
         document.getElementById('footer-year').textContent = new Date().getFullYear();
     </script>
 </body>
