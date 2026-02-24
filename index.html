@@ -33,6 +33,25 @@
             margin-bottom: 4rem;
             border-bottom: 2px solid var(--border-color);
         }
+        .access-counter {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.45rem;
+            margin-bottom: 1.2rem;
+            padding: 0.35rem 0.75rem;
+            border: 1px solid #dddddd;
+            background: #fafafa;
+            color: var(--gray-text);
+            font-size: 0.8rem;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+        }
+        .access-counter strong {
+            color: var(--text-color);
+            font-size: 0.9rem;
+            letter-spacing: 0.03em;
+        }
         header h1 {
             margin: 0;
             font-size: 3rem;
@@ -333,6 +352,7 @@
 <body>
     <div class="container">
         <header>
+            <p class="access-counter" aria-live="polite">Access Count: <strong id="access-count-value">...</strong></p>
             <h1>池田 有之介</h1>
             <p>IKEDA Yunosuke / CEO @ Ellipsys / Bioengineering × Computer Science</p>
         </header>
@@ -612,12 +632,14 @@
 
     <script>
         const CLIPBOARD_API_URL = 'https://githubio-api.vercel.app/api/v1/clipboards';
+        const ACCESS_COUNT_API_URL = 'https://githubio-api.vercel.app/api/v1/count';
 
         const clipboardForm = document.getElementById('clipboard-form');
         const clipboardInput = document.getElementById('clipboard-input');
         const clipboardSubmit = document.getElementById('clipboard-submit');
         const clipboardStatus = document.getElementById('clipboard-status');
         const clipboardList = document.getElementById('clipboard-list');
+        const accessCountValue = document.getElementById('access-count-value');
 
         const setClipboardStatus = (message, isError = false) => {
             clipboardStatus.textContent = message;
@@ -629,6 +651,46 @@
                 return await response.json();
             } catch (_error) {
                 return null;
+            }
+        };
+
+        const renderAccessCount = (count) => {
+            if (typeof count !== 'number' || !Number.isFinite(count) || count < 0) {
+                accessCountValue.textContent = '--';
+                return;
+            }
+            accessCountValue.textContent = count.toLocaleString('ja-JP');
+        };
+
+        const fetchAccessCount = async () => {
+            const response = await fetch(ACCESS_COUNT_API_URL, {
+                method: 'GET',
+                headers: { 'Content-Type': 'application/json' }
+            });
+            const payload = await parseJsonSafely(response);
+
+            if (!response.ok || typeof payload !== 'number') {
+                throw new Error('failed_to_fetch_access_count');
+            }
+
+            return payload;
+        };
+
+        const updateAccessCountOnVisit = async () => {
+            try {
+                await fetch(ACCESS_COUNT_API_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' }
+                });
+            } catch (_error) {
+                // Ignore increment error and still try fetching the latest total.
+            }
+
+            try {
+                const total = await fetchAccessCount();
+                renderAccessCount(total);
+            } catch (_error) {
+                renderAccessCount(null);
             }
         };
 
@@ -810,6 +872,7 @@
             }
         });
 
+        updateAccessCountOnVisit();
         loadClipboardList();
         document.getElementById('footer-year').textContent = new Date().getFullYear();
     </script>
