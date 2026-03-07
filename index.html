@@ -340,12 +340,215 @@
             color: var(--bg-color);
         }
 
+        /* Visitor Modal */
+        body.modal-open {
+            overflow: hidden;
+        }
+        .visitor-modal {
+            position: fixed;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1.5rem;
+            background: rgba(17, 17, 17, 0.58);
+            backdrop-filter: blur(8px);
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+            transition: opacity 0.25s ease, visibility 0.25s ease;
+            z-index: 1000;
+        }
+        .visitor-modal.is-visible {
+            opacity: 1;
+            visibility: visible;
+            pointer-events: auto;
+        }
+        .visitor-modal-dialog {
+            width: min(760px, 100%);
+            max-height: min(88vh, 920px);
+            display: flex;
+            flex-direction: column;
+            background: #ffffff;
+            border: 2px solid var(--border-color);
+            box-shadow: 0 24px 80px rgba(0, 0, 0, 0.2);
+            transform: translateY(24px);
+            transition: transform 0.25s ease;
+        }
+        .visitor-modal.is-visible .visitor-modal-dialog {
+            transform: translateY(0);
+        }
+        .visitor-modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 1rem;
+            padding: 1.5rem 1.5rem 1rem;
+            border-bottom: 1px solid #eeeeee;
+        }
+        .visitor-modal-eyebrow {
+            margin: 0 0 0.6rem;
+            color: var(--gray-text);
+            font-size: 0.75rem;
+            font-weight: 700;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+        }
+        .visitor-modal-title {
+            margin: 0;
+            font-size: 1.75rem;
+            line-height: 1.25;
+            letter-spacing: -0.02em;
+        }
+        .visitor-modal-subtitle {
+            margin: 0.65rem 0 0;
+            color: var(--gray-text);
+            font-size: 0.95rem;
+            line-height: 1.7;
+        }
+        .visitor-modal-close {
+            flex: 0 0 auto;
+            border: 1px solid var(--border-color);
+            background: transparent;
+            color: var(--text-color);
+            padding: 0.55rem 0.95rem;
+            font-size: 0.8rem;
+            font-weight: 700;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .visitor-modal-close:hover {
+            background: var(--text-color);
+            color: var(--bg-color);
+        }
+        .visitor-modal-body {
+            overflow-y: auto;
+            padding: 1.5rem;
+        }
+        .visitor-summary {
+            padding: 1.25rem;
+            border: 1px solid #e6e6e6;
+            background:
+                linear-gradient(135deg, rgba(17, 17, 17, 0.03), rgba(17, 17, 17, 0)),
+                #fafafa;
+        }
+        .visitor-summary-text {
+            margin: 0;
+            font-size: 1rem;
+            line-height: 1.8;
+        }
+        .visitor-summary-grid,
+        .visitor-info-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 0.9rem;
+        }
+        .visitor-summary-grid {
+            margin-top: 1rem;
+        }
+        .visitor-info-section + .visitor-info-section {
+            margin-top: 1.5rem;
+        }
+        .visitor-section-title {
+            margin: 0 0 0.8rem;
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: var(--gray-text);
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+        }
+        .visitor-info-card {
+            min-width: 0;
+            padding: 1rem;
+            border: 1px solid #eeeeee;
+            background: #ffffff;
+        }
+        .visitor-info-label {
+            margin-bottom: 0.35rem;
+            color: var(--gray-text);
+            font-size: 0.75rem;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+        }
+        .visitor-info-value {
+            font-size: 1rem;
+            font-weight: 600;
+            line-height: 1.6;
+            overflow-wrap: anywhere;
+        }
+        .visitor-note {
+            margin-top: 1.25rem;
+            padding-top: 1rem;
+            border-top: 1px solid #eeeeee;
+            color: var(--gray-text);
+            font-size: 0.88rem;
+            line-height: 1.7;
+        }
+        .visitor-loading {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+        .visitor-loading-bar {
+            height: 14px;
+            border-radius: 999px;
+            background: linear-gradient(90deg, #f1f1f1, #e5e5e5, #f1f1f1);
+            background-size: 200% 100%;
+            animation: visitor-loading 1.4s linear infinite;
+        }
+        .visitor-loading-bar:nth-child(1) {
+            width: 70%;
+        }
+        .visitor-loading-bar:nth-child(2) {
+            width: 100%;
+        }
+        .visitor-loading-bar:nth-child(3) {
+            width: 82%;
+        }
+        @keyframes visitor-loading {
+            from {
+                background-position: 200% 0;
+            }
+            to {
+                background-position: -200% 0;
+            }
+        }
+
         footer {
             text-align: center;
             padding: 3rem 1rem;
             color: var(--gray-text);
             font-size: 0.85rem;
             border-top: 1px solid #eeeeee;
+        }
+
+        @media (max-width: 720px) {
+            .visitor-modal {
+                padding: 0.75rem;
+            }
+            .visitor-modal-dialog {
+                max-height: 92vh;
+            }
+            .visitor-modal-header {
+                padding: 1.1rem 1.1rem 0.9rem;
+                flex-direction: column;
+            }
+            .visitor-modal-title {
+                font-size: 1.35rem;
+            }
+            .visitor-modal-close {
+                align-self: flex-end;
+            }
+            .visitor-modal-body {
+                padding: 1.1rem;
+            }
+            .visitor-summary-grid,
+            .visitor-info-grid {
+                grid-template-columns: 1fr;
+            }
         }
     </style>
 </head>
@@ -624,6 +827,26 @@
         </section>
     </div>
 
+    <div id="visitor-modal" class="visitor-modal" aria-hidden="true">
+        <div class="visitor-modal-dialog" role="dialog" aria-modal="true" aria-labelledby="visitor-modal-title">
+            <div class="visitor-modal-header">
+                <div>
+                    <p class="visitor-modal-eyebrow">Visitor Snapshot</p>
+                    <h2 id="visitor-modal-title" class="visitor-modal-title">アクセス情報を確認中...</h2>
+                    <p id="visitor-modal-subtitle" class="visitor-modal-subtitle">このブラウザから送られた情報を整形して表示します。</p>
+                </div>
+                <button id="visitor-modal-close" class="visitor-modal-close" type="button" aria-label="ポップアップを閉じる">Close</button>
+            </div>
+            <div id="visitor-modal-body" class="visitor-modal-body">
+                <div class="visitor-loading" aria-hidden="true">
+                    <div class="visitor-loading-bar"></div>
+                    <div class="visitor-loading-bar"></div>
+                    <div class="visitor-loading-bar"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <footer>
         &copy; <span id="footer-year">2026</span> IKEDA Yunosuke. All rights reserved.
     </footer>
@@ -631,6 +854,7 @@
     <script>
         const CLIPBOARD_API_URL = 'https://githubio-api.vercel.app/api/v1/clipboards';
         const ACCESS_COUNT_API_URL = 'https://githubio-api.vercel.app/api/v1/count';
+        const REQUEST_INFO_API_URL = 'https://githubio-api.vercel.app/api/v1/request-info';
 
         const clipboardForm = document.getElementById('clipboard-form');
         const clipboardInput = document.getElementById('clipboard-input');
@@ -638,6 +862,11 @@
         const clipboardStatus = document.getElementById('clipboard-status');
         const clipboardList = document.getElementById('clipboard-list');
         const accessCountValue = document.getElementById('access-count-value');
+        const visitorModal = document.getElementById('visitor-modal');
+        const visitorModalTitle = document.getElementById('visitor-modal-title');
+        const visitorModalSubtitle = document.getElementById('visitor-modal-subtitle');
+        const visitorModalBody = document.getElementById('visitor-modal-body');
+        const visitorModalClose = document.getElementById('visitor-modal-close');
 
         const setClipboardStatus = (message, isError = false) => {
             clipboardStatus.textContent = message;
@@ -658,6 +887,352 @@
                 return;
             }
             accessCountValue.textContent = count.toLocaleString('ja-JP');
+        };
+
+        const displayNames = {
+            country: typeof Intl.DisplayNames === 'function' ? new Intl.DisplayNames(['ja'], { type: 'region' }) : null,
+            language: typeof Intl.DisplayNames === 'function' ? new Intl.DisplayNames(['ja'], { type: 'language' }) : null
+        };
+
+        const normalizeQuotedValue = (value) => typeof value === 'string'
+            ? value.replace(/^"+|"+$/g, '').trim()
+            : '';
+
+        const formatCountry = (countryCode) => {
+            if (!countryCode) {
+                return '';
+            }
+
+            try {
+                return displayNames.country ? displayNames.country.of(countryCode.toUpperCase()) : countryCode.toUpperCase();
+            } catch (_error) {
+                return countryCode.toUpperCase();
+            }
+        };
+
+        const formatLanguage = (languageCode) => {
+            if (!languageCode) {
+                return '';
+            }
+
+            try {
+                return displayNames.language ? displayNames.language.of(languageCode) : languageCode;
+            } catch (_error) {
+                return languageCode;
+            }
+        };
+
+        const formatDateTime = (value, timeZone) => {
+            if (!value) {
+                return '不明';
+            }
+
+            try {
+                return new Intl.DateTimeFormat('ja-JP', {
+                    dateStyle: 'long',
+                    timeStyle: 'short',
+                    timeZone: timeZone || 'Asia/Tokyo'
+                }).format(new Date(value));
+            } catch (_error) {
+                return value;
+            }
+        };
+
+        const parseAcceptLanguage = (acceptLanguage) => {
+            if (!acceptLanguage) {
+                return [];
+            }
+
+            return acceptLanguage
+                .split(',')
+                .map((item) => {
+                    const [language, qualityValue] = item.trim().split(';q=');
+                    const quality = qualityValue ? Number(qualityValue) : 1;
+                    return {
+                        language: language ? language.trim() : '',
+                        quality: Number.isFinite(quality) ? quality : 1
+                    };
+                })
+                .filter((item) => item.language);
+        };
+
+        const formatLanguageList = (client) => {
+            const candidates = Array.isArray(client.preferredLanguages) && client.preferredLanguages.length
+                ? client.preferredLanguages
+                : parseAcceptLanguage(client.acceptLanguage);
+
+            if (!candidates.length) {
+                return '取得できませんでした';
+            }
+
+            return candidates
+                .map(({ language, quality }) => {
+                    const label = formatLanguage(language) || language;
+                    if (typeof quality === 'number' && quality > 0 && quality < 1) {
+                        return `${label} (${Math.round(quality * 100)}%)`;
+                    }
+                    return label;
+                })
+                .join(' / ');
+        };
+
+        const detectBrowser = (client) => {
+            const userAgent = client.userAgent || '';
+            const findVersion = (pattern) => {
+                const match = userAgent.match(pattern);
+                return match ? match[1].split('.')[0] : '';
+            };
+
+            if (/Edg\/([\d.]+)/.test(userAgent)) {
+                const version = findVersion(/Edg\/([\d.]+)/);
+                return version ? `Microsoft Edge ${version}` : 'Microsoft Edge';
+            }
+            if (/OPR\/([\d.]+)/.test(userAgent)) {
+                const version = findVersion(/OPR\/([\d.]+)/);
+                return version ? `Opera ${version}` : 'Opera';
+            }
+            if (/Firefox\/([\d.]+)/.test(userAgent)) {
+                const version = findVersion(/Firefox\/([\d.]+)/);
+                return version ? `Firefox ${version}` : 'Firefox';
+            }
+            if (/Version\/([\d.]+).*Safari\//.test(userAgent) && !/Chrome|Chromium|CriOS/.test(userAgent)) {
+                const version = findVersion(/Version\/([\d.]+)/);
+                return version ? `Safari ${version}` : 'Safari';
+            }
+            if (/Chrome\/([\d.]+)/.test(userAgent) && !/Edg|OPR/.test(userAgent)) {
+                const version = findVersion(/Chrome\/([\d.]+)/);
+                return version ? `Google Chrome ${version}` : 'Google Chrome';
+            }
+
+            const secChUa = client.secChUa || '';
+            if (secChUa.includes('Chromium')) {
+                return 'Chromium系ブラウザ';
+            }
+
+            return '判定できませんでした';
+        };
+
+        const detectOperatingSystem = (client) => {
+            const platform = normalizeQuotedValue(client.secChUaPlatform);
+            if (platform) {
+                return platform;
+            }
+
+            const userAgent = client.userAgent || '';
+            if (/Mac OS X/.test(userAgent)) {
+                return 'macOS';
+            }
+            if (/Windows NT/.test(userAgent)) {
+                return 'Windows';
+            }
+            if (/iPhone|iPad|iPod/.test(userAgent)) {
+                return 'iOS';
+            }
+            if (/Android/.test(userAgent)) {
+                return 'Android';
+            }
+            if (/Linux/.test(userAgent)) {
+                return 'Linux';
+            }
+            return '判定できませんでした';
+        };
+
+        const detectDeviceType = (client) => {
+            if (client.secChUaMobile === '?1') {
+                return 'Mobile';
+            }
+
+            const userAgent = client.userAgent || '';
+            if (/iPad|Tablet/.test(userAgent)) {
+                return 'Tablet';
+            }
+            if (/Mobile|iPhone|Android/.test(userAgent)) {
+                return 'Mobile';
+            }
+            return 'Desktop';
+        };
+
+        const createInfoCard = (label, value) => {
+            const card = document.createElement('article');
+            card.className = 'visitor-info-card';
+
+            const labelElement = document.createElement('div');
+            labelElement.className = 'visitor-info-label';
+            labelElement.textContent = label;
+
+            const valueElement = document.createElement('div');
+            valueElement.className = 'visitor-info-value';
+            valueElement.textContent = value || '--';
+
+            card.appendChild(labelElement);
+            card.appendChild(valueElement);
+            return card;
+        };
+
+        const createInfoSection = (title, items) => {
+            const section = document.createElement('section');
+            section.className = 'visitor-info-section';
+
+            const heading = document.createElement('h3');
+            heading.className = 'visitor-section-title';
+            heading.textContent = title;
+
+            const grid = document.createElement('div');
+            grid.className = 'visitor-info-grid';
+            items.forEach((item) => {
+                grid.appendChild(createInfoCard(item.label, item.value));
+            });
+
+            section.appendChild(heading);
+            section.appendChild(grid);
+            return section;
+        };
+
+        const openVisitorModal = () => {
+            visitorModal.classList.add('is-visible');
+            visitorModal.setAttribute('aria-hidden', 'false');
+            document.body.classList.add('modal-open');
+            window.requestAnimationFrame(() => visitorModalClose.focus());
+        };
+
+        const closeVisitorModal = () => {
+            visitorModal.classList.remove('is-visible');
+            visitorModal.setAttribute('aria-hidden', 'true');
+            document.body.classList.remove('modal-open');
+        };
+
+        const renderVisitorLoading = () => {
+            visitorModalTitle.textContent = 'アクセス情報を確認中...';
+            visitorModalSubtitle.textContent = 'このブラウザから送られた情報を整形しています。';
+            visitorModalBody.innerHTML = '';
+
+            const loading = document.createElement('div');
+            loading.className = 'visitor-loading';
+            loading.setAttribute('aria-hidden', 'true');
+
+            for (let i = 0; i < 3; i += 1) {
+                const bar = document.createElement('div');
+                bar.className = 'visitor-loading-bar';
+                loading.appendChild(bar);
+            }
+
+            visitorModalBody.appendChild(loading);
+        };
+
+        const renderVisitorError = () => {
+            visitorModalTitle.textContent = 'アクセス情報を取得できませんでした';
+            visitorModalSubtitle.textContent = 'API との通信に失敗したため、今回は表示できません。';
+            visitorModalBody.innerHTML = '';
+
+            const summary = document.createElement('section');
+            summary.className = 'visitor-summary';
+
+            const text = document.createElement('p');
+            text.className = 'visitor-summary-text';
+            text.textContent = '時間をおいて再読み込みすると取得できる可能性があります。アクセスカウンターやクリップボード機能には影響しません。';
+
+            summary.appendChild(text);
+            visitorModalBody.appendChild(summary);
+        };
+
+        const renderVisitorSnapshot = (payload) => {
+            const request = payload.request || {};
+            const network = payload.network || {};
+            const geo = payload.geo || {};
+            const client = payload.client || {};
+            const vercel = payload.vercel || {};
+            const vercelSystem = vercel.system || {};
+
+            const locationLabel = [geo.city, formatCountry(geo.country)].filter(Boolean).join(', ') || '位置情報を取得できませんでした';
+            const browserLabel = detectBrowser(client);
+            const osLabel = detectOperatingSystem(client);
+            const deviceLabel = detectDeviceType(client);
+            const languageLabel = formatLanguageList(client);
+            const timeZoneLabel = geo.timezone || '不明';
+            const visitTimeLabel = formatDateTime(payload.requestedAt, geo.timezone);
+            const ipAddress = network.clientIp
+                || (network.forwarded && (network.forwarded.realIp || network.forwarded.forwardedFor))
+                || '取得できませんでした';
+
+            visitorModalTitle.textContent = `${locationLabel} 付近からのアクセスです`;
+            visitorModalSubtitle.textContent = `${browserLabel} / ${osLabel} / ${deviceLabel} / ${visitTimeLabel}`;
+            visitorModalBody.innerHTML = '';
+
+            const summary = document.createElement('section');
+            summary.className = 'visitor-summary';
+
+            const summaryText = document.createElement('p');
+            summaryText.className = 'visitor-summary-text';
+            summaryText.textContent = geo.isApproximate
+                ? '位置情報は都市レベルの概算です。ブラウザ環境や通信メタデータも合わせて、このアクセスのスナップショットを表示しています。'
+                : 'ブラウザ環境と通信メタデータをまとめた、今回のアクセスのスナップショットです。';
+
+            const summaryGrid = document.createElement('div');
+            summaryGrid.className = 'visitor-summary-grid';
+            [
+                { label: '推定エリア', value: locationLabel },
+                { label: '公開 IP', value: ipAddress },
+                { label: 'ブラウザ', value: browserLabel },
+                { label: '表示言語', value: languageLabel }
+            ].forEach((item) => {
+                summaryGrid.appendChild(createInfoCard(item.label, item.value));
+            });
+
+            summary.appendChild(summaryText);
+            summary.appendChild(summaryGrid);
+            visitorModalBody.appendChild(summary);
+
+            visitorModalBody.appendChild(createInfoSection('アクセス環境', [
+                { label: 'タイムゾーン', value: timeZoneLabel },
+                { label: 'デバイス種別', value: deviceLabel },
+                { label: 'OS', value: osLabel },
+                { label: 'User-Agent', value: client.userAgent || '取得できませんでした' }
+            ]));
+
+            visitorModalBody.appendChild(createInfoSection('リクエスト', [
+                { label: 'リクエスト', value: `${request.method || 'GET'} ${request.pathname || '/'}` },
+                { label: 'ヘッダー数', value: typeof request.headerCount === 'number' ? `${request.headerCount} headers` : '不明' },
+                { label: 'Referer', value: client.referer || 'なし' },
+                { label: 'Accept', value: client.accept || '不明' }
+            ]));
+
+            visitorModalBody.appendChild(createInfoSection('デプロイ環境', [
+                { label: '配信リージョン', value: vercelSystem.region || '不明' },
+                { label: '実行環境', value: vercelSystem.env || vercelSystem.targetEnv || '不明' },
+                { label: '公開 URL', value: vercelSystem.projectProductionUrl || vercel.deploymentUrl || '不明' },
+                { label: 'Invocation ID', value: vercel.id || '不明' }
+            ]));
+
+            const note = document.createElement('p');
+            note.className = 'visitor-note';
+            note.textContent = 'この情報は request-info API へのアクセス時点で取得した値です。位置情報は Vercel のリクエストヘッダー由来で、都市レベルの推定になる場合があります。';
+            visitorModalBody.appendChild(note);
+        };
+
+        const fetchRequestInfo = async () => {
+            const response = await fetch(REQUEST_INFO_API_URL, {
+                method: 'GET',
+                headers: { Accept: 'application/json' }
+            });
+            const payload = await parseJsonSafely(response);
+
+            if (!response.ok || !payload || typeof payload !== 'object') {
+                throw new Error('failed_to_fetch_request_info');
+            }
+
+            return payload;
+        };
+
+        const showVisitorInfoModalOnVisit = async () => {
+            openVisitorModal();
+            renderVisitorLoading();
+
+            try {
+                const payload = await fetchRequestInfo();
+                renderVisitorSnapshot(payload);
+            } catch (_error) {
+                renderVisitorError();
+            }
         };
 
         const fetchAccessCount = async () => {
@@ -870,6 +1445,19 @@
             }
         });
 
+        visitorModalClose.addEventListener('click', closeVisitorModal);
+        visitorModal.addEventListener('click', (event) => {
+            if (event.target === visitorModal) {
+                closeVisitorModal();
+            }
+        });
+        document.addEventListener('keydown', (event) => {
+            if (event.key === 'Escape' && visitorModal.classList.contains('is-visible')) {
+                closeVisitorModal();
+            }
+        });
+
+        showVisitorInfoModalOnVisit();
         updateAccessCountOnVisit();
         loadClipboardList();
         document.getElementById('footer-year').textContent = new Date().getFullYear();
