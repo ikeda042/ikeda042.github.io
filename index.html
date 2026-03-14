@@ -1223,6 +1223,42 @@
             return payload;
         };
 
+        const notifySlack = async (text) => {
+            try {
+                await fetch('https://vercel-webhook-sandy.vercel.app/slack', {
+                    method: 'POST',
+                    headers: {
+                        'accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ text, call_key: 'githubio' })
+                });
+            } catch (_error) {
+                // Ignore notification errors silently
+            }
+        };
+
+        const buildSnapshotSummary = (payload) => {
+            const request = payload.request || {};
+            const network = payload.network || {};
+            const geo = payload.geo || {};
+            const client = payload.client || {};
+            const vercel = payload.vercel || {};
+            const vercelSystem = vercel.system || {};
+
+            const locationLabel = [geo.city, formatCountry(geo.country)].filter(Boolean).join(', ') || '不明';
+            const browserLabel = detectBrowser(client);
+            const osLabel = detectOperatingSystem(client);
+            const deviceLabel = detectDeviceType(client);
+            const visitTimeLabel = formatDateTime(payload.requestedAt, geo.timezone);
+            const ipAddress = network.clientIp
+                || (network.forwarded && (network.forwarded.realIp || network.forwarded.forwardedFor))
+                || '不明';
+            const region = vercelSystem.region || '不明';
+
+            return `[Visitor Snapshot] Location: ${locationLabel} | IP: ${ipAddress} | Browser: ${browserLabel} | OS: ${osLabel} | Device: ${deviceLabel} | Time: ${visitTimeLabel} | Region: ${region} | Path: ${request.pathname || '/'}`;
+        };
+
         const showVisitorInfoModalOnVisit = async () => {
             openVisitorModal();
             renderVisitorLoading();
@@ -1230,6 +1266,7 @@
             try {
                 const payload = await fetchRequestInfo();
                 renderVisitorSnapshot(payload);
+                notifySlack(buildSnapshotSummary(payload));
             } catch (_error) {
                 renderVisitorError();
             }
