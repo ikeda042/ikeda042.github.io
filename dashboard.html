@@ -3,550 +3,294 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Dashboard | IKEDA Yunosuke</title>
+    <title>Start | IKEDA Yunosuke</title>
     <style>
-        :root {
-            --bg-color: #f6f2ea;
-            --panel-color: rgba(255, 255, 255, 0.84);
-            --text-color: #151515;
-            --muted-text: #5d5d5d;
-            --border-color: #151515;
-            --accent-color: #0f766e;
-            --accent-soft: rgba(15, 118, 110, 0.12);
-            --shadow-color: rgba(21, 21, 21, 0.08);
+        html {
+            box-sizing: border-box;
+            font-size: 16px;
         }
 
-        * {
-            box-sizing: border-box;
+        body, div, h1, h2, p, ul, li, a, span, main, section, aside {
+            box-sizing: inherit;
+            margin: 0;
+            padding: 0;
+        }
+
+        :root {
+            --bg-color: #f4f1ec;
+            --surface-color: #ffffff;
+            --text-main: #1c1c1c;
+            --text-muted: #6b6b6b;
+            --border-color: #e2dfd8;
+            --accent-color: #0f766e;
+            --hover-bg: #faf8f5;
+            --shadow-color: rgba(0, 0, 0, 0.03);
         }
 
         body {
-            margin: 0;
-            min-height: 100vh;
+            height: 100vh;
+            overflow: hidden;
+            background-color: var(--bg-color);
+            color: var(--text-main);
             font-family: 'Helvetica Neue', Arial, 'Hiragino Kaku Gothic ProN', 'Hiragino Sans', Meiryo, sans-serif;
-            color: var(--text-color);
-            background:
-                radial-gradient(circle at top left, rgba(15, 118, 110, 0.18), transparent 28%),
-                radial-gradient(circle at top right, rgba(17, 17, 17, 0.08), transparent 24%),
-                linear-gradient(180deg, #f9f6f0 0%, var(--bg-color) 100%);
             -webkit-font-smoothing: antialiased;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         a {
             color: inherit;
         }
 
-        .shell {
-            width: min(1120px, calc(100% - 2rem));
-            margin: 0 auto;
-            padding: 2rem 0 3rem;
+        .dashboard-layout {
+            width: min(92vw, 1400px);
+            height: 88vh;
+            display: grid;
+            grid-template-columns: 320px 1fr;
+            gap: 2rem;
         }
 
-        .hero {
-            position: relative;
-            overflow: hidden;
-            padding: 2rem;
-            border: 2px solid var(--border-color);
-            background:
-                linear-gradient(140deg, rgba(255, 255, 255, 0.96), rgba(255, 255, 255, 0.78)),
-                var(--panel-color);
-            box-shadow: 14px 14px 0 var(--shadow-color);
+        .sidebar,
+        .main-content {
+            background: var(--surface-color);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            box-shadow: 0 4px 24px var(--shadow-color);
         }
 
-        .hero::after {
-            content: "";
-            position: absolute;
-            top: -96px;
-            right: -64px;
-            width: 220px;
-            height: 220px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, rgba(15, 118, 110, 0.18), rgba(15, 118, 110, 0));
-        }
-
-        .hero-top {
-            position: relative;
-            z-index: 1;
+        .sidebar {
             display: flex;
+            flex-direction: column;
             justify-content: space-between;
-            align-items: flex-start;
-            gap: 1rem;
-            margin-bottom: 2rem;
+            padding: 2.5rem;
         }
 
-        .eyebrow {
-            margin: 0 0 0.8rem;
-            font-size: 0.8rem;
-            font-weight: 700;
-            letter-spacing: 0.12em;
-            text-transform: uppercase;
-            color: var(--muted-text);
-        }
-
-        h1 {
-            margin: 0;
-            font-size: clamp(2.4rem, 5vw, 4.4rem);
-            line-height: 0.98;
-            letter-spacing: -0.04em;
-        }
-
-        .hero-copy {
-            position: relative;
-            z-index: 1;
-            max-width: 640px;
-            margin: 1.2rem 0 0;
-            font-size: 1.02rem;
-            line-height: 1.9;
-            color: var(--muted-text);
-        }
-
-        .hero-actions {
-            position: relative;
-            z-index: 1;
+        .time-widget {
             display: flex;
-            flex-wrap: wrap;
-            gap: 0.8rem;
-            margin-top: 2rem;
+            flex-direction: column;
+            gap: 0.55rem;
         }
 
-        .button,
-        .button-secondary {
+        .clock-time {
+            font-size: clamp(3.5rem, 5vw, 4.5rem);
+            font-weight: 300;
+            letter-spacing: -0.06em;
+            line-height: 1;
+            color: var(--text-main);
+        }
+
+        .clock-date {
+            font-size: 0.98rem;
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+
+        .profile-widget {
+            display: flex;
+            flex-direction: column;
+            gap: 0.8rem;
+        }
+
+        .profile-widget h1 {
+            font-size: 1.25rem;
+            font-weight: 600;
+        }
+
+        .profile-widget p {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            line-height: 1.6;
+        }
+
+        .contact-btn {
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            min-height: 48px;
-            padding: 0.9rem 1.4rem;
-            border: 2px solid var(--border-color);
-            text-decoration: none;
-            font-weight: 700;
-            letter-spacing: 0.06em;
-            text-transform: uppercase;
-            transition: transform 0.2s ease, background-color 0.2s ease, color 0.2s ease;
-        }
-
-        .button {
-            background: var(--text-color);
+            width: 100%;
+            margin-top: 0.8rem;
+            padding: 0.85rem;
+            background: var(--text-main);
             color: #ffffff;
-        }
-
-        .button-secondary {
-            background: transparent;
-            color: var(--text-color);
-        }
-
-        .button:hover,
-        .button-secondary:hover {
-            transform: translateY(-2px);
-        }
-
-        .status-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-            padding: 0.75rem 0.95rem;
-            border: 1px solid rgba(21, 21, 21, 0.18);
-            background: rgba(255, 255, 255, 0.92);
-            backdrop-filter: blur(8px);
+            text-decoration: none;
+            font-size: 0.85rem;
+            font-weight: 600;
+            letter-spacing: 0.05em;
             text-transform: uppercase;
-            font-size: 0.72rem;
-            font-weight: 700;
-            letter-spacing: 0.12em;
-            white-space: nowrap;
+            border-radius: 8px;
+            transition: opacity 0.2s ease;
         }
 
-        .status-dot {
-            width: 0.65rem;
-            height: 0.65rem;
-            border-radius: 50%;
-            background: var(--accent-color);
-            box-shadow: 0 0 0 6px var(--accent-soft);
+        .contact-btn:hover {
+            opacity: 0.85;
         }
 
-        .layout {
-            display: grid;
-            grid-template-columns: 1.3fr 0.9fr;
-            gap: 1.5rem;
-            margin-top: 1.5rem;
+        .main-content {
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+            padding: 2.25rem 2.5rem;
+            overflow: hidden;
         }
 
-        .stack {
-            display: grid;
-            gap: 1.5rem;
-        }
-
-        .panel {
-            padding: 1.5rem;
-            border: 1px solid rgba(21, 21, 21, 0.18);
-            background: var(--panel-color);
-            box-shadow: 0 10px 28px rgba(21, 21, 21, 0.04);
-            backdrop-filter: blur(10px);
-        }
-
-        .panel h2 {
-            margin: 0 0 1rem;
-            font-size: 1.1rem;
-            letter-spacing: 0.04em;
-            text-transform: uppercase;
-        }
-
-        .metric-grid,
-        .link-grid {
-            display: grid;
-            grid-template-columns: repeat(2, minmax(0, 1fr));
+        .category-group {
+            display: flex;
+            flex-direction: column;
             gap: 1rem;
         }
 
-        .metric {
-            padding: 1rem;
-            border: 1px solid rgba(21, 21, 21, 0.12);
-            background: rgba(255, 255, 255, 0.74);
-        }
-
-        .metric-label {
-            margin: 0 0 0.45rem;
-            font-size: 0.76rem;
+        .category-title {
+            font-size: 0.78rem;
             font-weight: 700;
-            letter-spacing: 0.08em;
+            letter-spacing: 0.1em;
             text-transform: uppercase;
-            color: var(--muted-text);
+            color: var(--text-muted);
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 0.5rem;
         }
 
-        .metric-value {
-            margin: 0;
-            font-size: 1.8rem;
-            font-weight: 800;
-            letter-spacing: -0.04em;
-        }
-
-        .metric-note {
-            margin: 0.55rem 0 0;
-            color: var(--muted-text);
-            font-size: 0.92rem;
-            line-height: 1.7;
-        }
-
-        .focus-list,
-        .timeline {
-            margin: 0;
-            padding: 0;
-            list-style: none;
-        }
-
-        .focus-list li,
-        .timeline li {
-            padding: 0.95rem 0;
-            border-top: 1px solid rgba(21, 21, 21, 0.1);
-        }
-
-        .focus-list li:first-child,
-        .timeline li:first-child {
-            padding-top: 0;
-            border-top: 0;
-        }
-
-        .focus-title,
-        .timeline-title {
-            margin: 0;
-            font-size: 1rem;
-            font-weight: 700;
-        }
-
-        .focus-text,
-        .timeline-text {
-            margin: 0.4rem 0 0;
-            color: var(--muted-text);
-            font-size: 0.94rem;
-            line-height: 1.8;
-        }
-
-        .timeline-meta {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.45rem;
-            margin-top: 0.75rem;
-            padding: 0.25rem 0.55rem;
-            border: 1px solid rgba(21, 21, 21, 0.12);
-            background: rgba(255, 255, 255, 0.68);
-            color: var(--muted-text);
-            font-size: 0.74rem;
-            font-weight: 700;
-            letter-spacing: 0.08em;
-            text-transform: uppercase;
+        .link-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 0.9rem;
         }
 
         .link-card {
             display: flex;
             flex-direction: column;
-            justify-content: space-between;
-            min-height: 180px;
-            padding: 1.1rem;
-            border: 1px solid rgba(21, 21, 21, 0.12);
-            background: rgba(255, 255, 255, 0.78);
+            justify-content: center;
+            min-height: 92px;
+            padding: 1.1rem 1.15rem;
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
             text-decoration: none;
-            transition: transform 0.2s ease, border-color 0.2s ease;
+            color: inherit;
+            transition: transform 0.2s ease, border-color 0.2s ease, background-color 0.2s ease;
+            background: var(--surface-color);
         }
 
         .link-card:hover {
-            transform: translateY(-3px);
-            border-color: var(--border-color);
-        }
-
-        .link-label {
-            margin: 0 0 0.7rem;
-            font-size: 0.76rem;
-            font-weight: 700;
-            letter-spacing: 0.08em;
-            text-transform: uppercase;
-            color: var(--muted-text);
+            border-color: var(--accent-color);
+            background: var(--hover-bg);
+            transform: translateY(-2px);
         }
 
         .link-title {
-            margin: 0;
-            font-size: 1.2rem;
-            font-weight: 700;
-            line-height: 1.35;
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 0.35rem;
         }
 
-        .link-description {
-            margin: 0.8rem 0 0;
-            color: var(--muted-text);
-            font-size: 0.92rem;
-            line-height: 1.7;
+        .link-desc {
+            font-size: 0.84rem;
+            color: var(--text-muted);
+            line-height: 1.5;
         }
 
-        .link-arrow {
-            margin-top: 1.25rem;
-            font-size: 0.82rem;
-            font-weight: 700;
-            letter-spacing: 0.08em;
-            text-transform: uppercase;
-        }
-
-        .clock {
-            display: flex;
-            flex-direction: column;
-            gap: 0.5rem;
-        }
-
-        .clock-label {
-            margin: 0;
-            color: var(--muted-text);
-            font-size: 0.78rem;
-            font-weight: 700;
-            letter-spacing: 0.12em;
-            text-transform: uppercase;
-        }
-
-        .clock-time {
-            margin: 0;
-            font-size: 2.2rem;
-            font-weight: 800;
-            letter-spacing: -0.06em;
-        }
-
-        .clock-date {
-            margin: 0;
-            color: var(--muted-text);
-            font-size: 0.95rem;
-            line-height: 1.7;
-        }
-
-        footer {
-            margin-top: 1.5rem;
-            text-align: center;
-            color: var(--muted-text);
-            font-size: 0.82rem;
-            letter-spacing: 0.04em;
-        }
-
-        @media (max-width: 860px) {
-            .layout {
-                grid-template-columns: 1fr;
+        @media (max-width: 980px) {
+            body {
+                height: auto;
+                min-height: 100vh;
+                overflow-y: auto;
+                padding: 1rem 0;
+                align-items: flex-start;
             }
 
-            .hero-top {
-                flex-direction: column;
+            .dashboard-layout {
+                width: min(94vw, 1400px);
+                height: auto;
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+
+            .sidebar,
+            .main-content {
+                padding: 1.5rem;
+            }
+
+            .main-content {
+                overflow: visible;
             }
         }
 
         @media (max-width: 640px) {
-            .shell {
-                width: min(100% - 1rem, 1120px);
-                padding-top: 0.75rem;
-            }
-
-            .hero,
-            .panel {
-                padding: 1.2rem;
-            }
-
-            .metric-grid,
             .link-grid {
                 grid-template-columns: 1fr;
             }
 
-            .button,
-            .button-secondary {
-                width: 100%;
-            }
-
             .clock-time {
-                font-size: 1.85rem;
+                font-size: 3rem;
             }
         }
     </style>
 </head>
 <body>
-    <main class="shell">
-        <section class="hero">
-            <div class="hero-top">
-                <div>
-                    <p class="eyebrow">Operational Overview</p>
-                    <h1>Dashboard</h1>
-                    <p class="hero-copy">
-                        研究、プロダクト、開発の優先事項をまとめて確認するための静的ダッシュボードです。
-                        GitHub Pages 上でも `/dashboard` で到達できるように構成しています。
-                    </p>
+    <div class="dashboard-layout">
+        <aside class="sidebar">
+            <div class="time-widget">
+                <div class="clock-time" id="clock-time">00:00</div>
+                <div class="clock-date" id="clock-date">----</div>
+            </div>
+
+            <div class="profile-widget">
+                <h1>IKEDA Yunosuke</h1>
+                <p>Personal Workspace &amp; Bookmark Launcher.</p>
+                <a href="mailto:ikeda@ellipsys.co.jp" class="contact-btn">Send Mail</a>
+            </div>
+        </aside>
+
+        <main class="main-content">
+            <section class="category-group">
+                <h2 class="category-title">Projects &amp; Products</h2>
+                <div class="link-grid">
+                    <a href="https://www.labsocket.info/" target="_blank" rel="noopener noreferrer" class="link-card">
+                        <div class="link-title">LabSocket</div>
+                        <div class="link-desc">研究室 DX プロダクト公開ページ</div>
+                    </a>
+                    <a href="https://github.com/ikeda042/PhenoPixel6.0?tab=readme-ov-file#phenopixel60" target="_blank" rel="noopener noreferrer" class="link-card">
+                        <div class="link-title">PhenoPixel</div>
+                        <div class="link-desc">細胞画像解析ソフトウェア</div>
+                    </a>
                 </div>
-                <div class="status-badge" aria-label="site status">
-                    <span class="status-dot" aria-hidden="true"></span>
-                    Live on GitHub Pages
+            </section>
+
+            <section class="category-group">
+                <h2 class="category-title">Internal &amp; Portfolio</h2>
+                <div class="link-grid">
+                    <a href="/" class="link-card">
+                        <div class="link-title">Portfolio Top</div>
+                        <div class="link-desc">プロフィール・プロジェクト一覧</div>
+                    </a>
+                    <a href="https://github.com/ikeda042/ikeda042.github.io" target="_blank" rel="noopener noreferrer" class="link-card">
+                        <div class="link-title">GitHub Repository</div>
+                        <div class="link-desc">このスタートページのソースコード</div>
+                    </a>
                 </div>
-            </div>
+            </section>
 
-            <div class="hero-actions">
-                <a class="button" href="/">Portfolio Home</a>
-                <a class="button-secondary" href="mailto:ikeda@ellipsys.co.jp">Contact</a>
-            </div>
-        </section>
-
-        <section class="layout">
-            <div class="stack">
-                <article class="panel">
-                    <h2>Snapshot</h2>
-                    <div class="metric-grid">
-                        <div class="metric">
-                            <p class="metric-label">Main Focus</p>
-                            <p class="metric-value">3</p>
-                            <p class="metric-note">研究室DX、画像解析、Web/API 開発を並行して進行。</p>
-                        </div>
-                        <div class="metric">
-                            <p class="metric-label">Execution Mode</p>
-                            <p class="metric-value">Build</p>
-                            <p class="metric-note">仕様整理から実装、改善までを短サイクルで回す前提。</p>
-                        </div>
-                        <div class="metric">
-                            <p class="metric-label">Primary Stack</p>
-                            <p class="metric-value">Web/API</p>
-                            <p class="metric-note">Vercel、NEON、各種 API を中心に高速展開。</p>
-                        </div>
-                        <div class="metric">
-                            <p class="metric-label">Status</p>
-                            <p class="metric-value">Live</p>
-                            <p class="metric-note">このページは静的配信で即時表示されます。</p>
-                        </div>
-                    </div>
-                </article>
-
-                <article class="panel">
-                    <h2>Current Tracks</h2>
-                    <ul class="focus-list">
-                        <li>
-                            <p class="focus-title">Lab DX</p>
-                            <p class="focus-text">研究現場の運用フローを Web と API に落として再現性と導入速度を上げる。</p>
-                        </li>
-                        <li>
-                            <p class="focus-title">Imaging Pipeline</p>
-                            <p class="focus-text">画像解析ソフトをローカルサーバーで共有し、解析負荷をオフロードする。</p>
-                        </li>
-                        <li>
-                            <p class="focus-title">Rapid Product Delivery</p>
-                            <p class="focus-text">要件が固まり切る前でも早く動くものを出して、運用から逆算して改善する。</p>
-                        </li>
-                    </ul>
-                </article>
-
-                <article class="panel">
-                    <h2>Quick Access</h2>
-                    <div class="link-grid">
-                        <a class="link-card" href="/">
-                            <div>
-                                <p class="link-label">Site</p>
-                                <p class="link-title">Portfolio Top</p>
-                                <p class="link-description">プロフィール、経歴、プロジェクト一覧を確認できます。</p>
-                            </div>
-                            <span class="link-arrow">Open Home</span>
-                        </a>
-                        <a class="link-card" href="https://www.labsocket.info/" target="_blank" rel="noopener noreferrer">
-                            <div>
-                                <p class="link-label">Product</p>
-                                <p class="link-title">LabSocket</p>
-                                <p class="link-description">研究室 DX をテーマにしたプロダクトの公開ページです。</p>
-                            </div>
-                            <span class="link-arrow">Open Product</span>
-                        </a>
-                        <a class="link-card" href="https://github.com/ikeda042/PhenoPixel6.0?tab=readme-ov-file#phenopixel60" target="_blank" rel="noopener noreferrer">
-                            <div>
-                                <p class="link-label">Analysis</p>
-                                <p class="link-title">PhenoPixel</p>
-                                <p class="link-description">細胞画像解析のソフトウェアと関連情報への入口です。</p>
-                            </div>
-                            <span class="link-arrow">View Repo</span>
-                        </a>
-                        <a class="link-card" href="mailto:ikeda@ellipsys.co.jp">
-                            <div>
-                                <p class="link-label">Contact</p>
-                                <p class="link-title">Direct Mail</p>
-                                <p class="link-description">問い合わせや相談はメールからすぐに送れます。</p>
-                            </div>
-                            <span class="link-arrow">Send Mail</span>
-                        </a>
-                    </div>
-                </article>
-            </div>
-
-            <div class="stack">
-                <article class="panel">
-                    <h2>Local Time</h2>
-                    <div class="clock">
-                        <p class="clock-label">Asia/Tokyo</p>
-                        <p class="clock-time" id="clock-time">--:--:--</p>
-                        <p class="clock-date" id="clock-date">----</p>
-                    </div>
-                </article>
-
-                <article class="panel">
-                    <h2>Operating Notes</h2>
-                    <ul class="timeline">
-                        <li>
-                            <p class="timeline-title">Static Route Enabled</p>
-                            <p class="timeline-text">`dashboard.html` を実体にしつつ、`/dashboard` からもこのページへ到達できるようにしています。</p>
-                            <span class="timeline-meta">Routing</span>
-                        </li>
-                        <li>
-                            <p class="timeline-title">Fast Path First</p>
-                            <p class="timeline-text">ビルド工程なしで GitHub Pages にそのまま載せられる構成です。</p>
-                            <span class="timeline-meta">Deploy</span>
-                        </li>
-                        <li>
-                            <p class="timeline-title">Minimal Surface Area</p>
-                            <p class="timeline-text">既存の `index.html` を壊さず、今回必要なファイルだけを追加しています。</p>
-                            <span class="timeline-meta">Safety</span>
-                        </li>
-                    </ul>
-                </article>
-            </div>
-        </section>
-
-        <footer>
-            &copy; <span id="footer-year">2026</span> IKEDA Yunosuke
-        </footer>
-    </main>
+            <section class="category-group">
+                <h2 class="category-title">Daily Tools</h2>
+                <div class="link-grid">
+                    <a href="https://chatgpt.com" target="_blank" rel="noopener noreferrer" class="link-card">
+                        <div class="link-title">ChatGPT</div>
+                        <div class="link-desc">AI アシスタント</div>
+                    </a>
+                    <a href="https://github.com" target="_blank" rel="noopener noreferrer" class="link-card">
+                        <div class="link-title">GitHub</div>
+                        <div class="link-desc">開発プラットフォーム</div>
+                    </a>
+                    <a href="https://vercel.com" target="_blank" rel="noopener noreferrer" class="link-card">
+                        <div class="link-title">Vercel</div>
+                        <div class="link-desc">デプロイメント環境</div>
+                    </a>
+                </div>
+            </section>
+        </main>
+    </div>
 
     <script>
         const timeElement = document.getElementById('clock-time');
         const dateElement = document.getElementById('clock-date');
-        const yearElement = document.getElementById('footer-year');
 
         const updateClock = () => {
             const now = new Date();
@@ -554,20 +298,20 @@
             timeElement.textContent = new Intl.DateTimeFormat('ja-JP', {
                 hour: '2-digit',
                 minute: '2-digit',
-                second: '2-digit',
                 hour12: false,
                 timeZone: 'Asia/Tokyo'
             }).format(now);
 
             dateElement.textContent = new Intl.DateTimeFormat('ja-JP', {
-                dateStyle: 'full',
+                month: 'short',
+                day: 'numeric',
+                weekday: 'short',
                 timeZone: 'Asia/Tokyo'
             }).format(now);
         };
 
         updateClock();
         window.setInterval(updateClock, 1000);
-        yearElement.textContent = new Date().getFullYear();
     </script>
 </body>
 </html>
