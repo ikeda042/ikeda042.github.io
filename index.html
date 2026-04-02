@@ -1,1503 +1,2503 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ja">
-<head>
+  <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>IKEDA Yunosuke - Portfolio</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&amp;family=Noto+Sans+JP:wght@400;500;700;800&amp;family=Space+Grotesk:wght@400;500;700&amp;display=swap"
+      rel="stylesheet"
+    />
     <style>
-        :root {
-            --bg-color: #ffffff;
-            --text-color: #111111;
-            --gray-text: #666666;
-            --border-color: #111111;
+      :root {
+        --bg-color: #07111f;
+        --text-color: #f4f7fb;
+        --gray-text: #a7b7cc;
+        --border-color: rgba(255, 255, 255, 0.13);
+        --panel-color: rgba(10, 20, 35, 0.76);
+        --panel-strong: #11243f;
+        --accent-color: #77d0ff;
+        --accent-soft: #ffd08a;
+        --shadow-color: rgba(2, 8, 23, 0.46);
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html {
+        scroll-behavior: smooth;
+      }
+
+      body {
+        margin: 0;
+        min-height: 100vh;
+        color: var(--text-color);
+        background:
+          radial-gradient(
+            circle at top left,
+            rgba(119, 208, 255, 0.16),
+            transparent 28%
+          ),
+          radial-gradient(
+            circle at 80% 15%,
+            rgba(255, 208, 138, 0.12),
+            transparent 24%
+          ),
+          linear-gradient(180deg, #08111d 0%, #0b1830 45%, #07111f 100%);
+        font-family: "Noto Sans JP", sans-serif;
+        line-height: 1.8;
+        -webkit-font-smoothing: antialiased;
+        position: relative;
+      }
+
+      body::before {
+        content: "";
+        position: fixed;
+        inset: 0;
+        background-image:
+          linear-gradient(rgba(255, 255, 255, 0.045) 1px, transparent 1px),
+          linear-gradient(
+            90deg,
+            rgba(255, 255, 255, 0.045) 1px,
+            transparent 1px
+          );
+        background-size: 32px 32px;
+        mask-image: linear-gradient(
+          180deg,
+          rgba(0, 0, 0, 0.4),
+          transparent 82%
+        );
+        pointer-events: none;
+        opacity: 0.32;
+      }
+
+      a {
+        color: inherit;
+      }
+
+      .container {
+        position: relative;
+        z-index: 1;
+        max-width: 1180px;
+        margin: 0 auto;
+        padding: 1.25rem 1.25rem 4rem;
+      }
+
+      .site-header {
+        position: sticky;
+        top: 0.75rem;
+        z-index: 20;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 1rem;
+        margin-bottom: 1.5rem;
+        padding: 0.9rem 1rem;
+        border: 1px solid var(--border-color);
+        border-radius: 999px;
+        background: rgba(7, 17, 31, 0.8);
+        backdrop-filter: blur(18px);
+        box-shadow: 0 20px 50px rgba(2, 8, 23, 0.22);
+      }
+
+      .brand-block {
+        display: flex;
+        align-items: center;
+        gap: 0.85rem;
+        min-width: 0;
+        text-decoration: none;
+      }
+
+      .brand-mark {
+        display: grid;
+        place-items: center;
+        width: 48px;
+        height: 48px;
+        border-radius: 15px;
+        background: linear-gradient(135deg, #99dfff 0%, #4b79ff 100%);
+        color: #07111f;
+        font-family: "Space Grotesk", sans-serif;
+        font-size: 1.05rem;
+        font-weight: 700;
+        letter-spacing: -0.05em;
+        box-shadow: 0 14px 30px rgba(75, 121, 255, 0.32);
+      }
+
+      .brand-text {
+        display: flex;
+        flex-direction: column;
+        gap: 0.1rem;
+        min-width: 0;
+      }
+
+      .brand-name {
+        font-family: "Space Grotesk", sans-serif;
+        font-size: 1rem;
+        font-weight: 700;
+        line-height: 1.1;
+        letter-spacing: -0.05em;
+      }
+
+      .brand-role {
+        color: var(--gray-text);
+        font-size: 0.74rem;
+        font-weight: 600;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+      }
+
+      .top-nav {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex: 1;
+        gap: 0.4rem;
+        flex-wrap: wrap;
+      }
+
+      .top-nav a,
+      .header-cta {
+        padding: 0.65rem 0.95rem;
+        border: 1px solid transparent;
+        border-radius: 999px;
+        color: var(--gray-text);
+        font-size: 0.82rem;
+        font-weight: 600;
+        letter-spacing: 0.04em;
+        text-decoration: none;
+        transition:
+          color 0.2s ease,
+          background-color 0.2s ease,
+          border-color 0.2s ease,
+          transform 0.2s ease;
+      }
+
+      .top-nav a:hover,
+      .header-cta:hover {
+        color: var(--text-color);
+        background: rgba(255, 255, 255, 0.06);
+        border-color: var(--border-color);
+        transform: translateY(-1px);
+      }
+
+      .page-content {
+        display: flex;
+        flex-direction: column;
+        gap: 1.5rem;
+      }
+
+      .panel {
+        position: relative;
+        overflow: hidden;
+        border: 1px solid var(--border-color);
+        border-radius: 32px;
+        background: var(--panel-color);
+        backdrop-filter: blur(18px);
+        box-shadow: 0 28px 70px var(--shadow-color);
+      }
+
+      .panel::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(
+          135deg,
+          rgba(255, 255, 255, 0.08),
+          transparent 45%
+        );
+        pointer-events: none;
+        opacity: 0.7;
+      }
+
+      .reveal {
+        animation: lift-in 0.75s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+      }
+
+      .hero {
+        display: grid;
+        grid-template-columns: minmax(0, 1.35fr) minmax(320px, 0.95fr);
+        gap: 1.5rem;
+        padding: 2rem;
+      }
+
+      .hero-copy,
+      .hero-side,
+      .section-card,
+      .timeline-panel,
+      .projects-panel,
+      .awards-card,
+      .contact-card,
+      #online-clipboard {
+        position: relative;
+        z-index: 1;
+      }
+
+      .eyebrow,
+      .section-kicker {
+        margin: 0 0 0.7rem;
+        color: var(--accent-color);
+        font-size: 0.76rem;
+        font-weight: 700;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+      }
+
+      .access-counter {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.55rem;
+        margin: 0 0 1.4rem;
+        padding: 0.58rem 0.9rem;
+        border: 1px solid rgba(119, 208, 255, 0.22);
+        border-radius: 999px;
+        background: rgba(119, 208, 255, 0.1);
+        color: var(--gray-text);
+        font-size: 0.78rem;
+        font-weight: 700;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+      }
+
+      .access-counter strong {
+        color: var(--text-color);
+        font-family: "Space Grotesk", sans-serif;
+        font-size: 0.96rem;
+        letter-spacing: 0.04em;
+      }
+
+      .hero h1 {
+        margin: 0;
+        max-width: 8ch;
+        font-family: "Space Grotesk", sans-serif;
+        font-size: clamp(3rem, 8vw, 5.5rem);
+        font-weight: 700;
+        line-height: 0.95;
+        letter-spacing: -0.08em;
+      }
+
+      .hero-lead {
+        max-width: 46rem;
+        margin: 1.2rem 0 0;
+        color: #d7e1ee;
+        font-size: 1.05rem;
+        line-height: 1.95;
+      }
+
+      .hero-meta {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.7rem;
+        margin-top: 1.5rem;
+      }
+
+      .meta-chip {
+        padding: 0.55rem 0.85rem;
+        border: 1px solid var(--border-color);
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.04);
+        color: var(--gray-text);
+        font-size: 0.82rem;
+        font-weight: 600;
+      }
+
+      .hero-actions,
+      .contact-links {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.8rem;
+        margin-top: 1.7rem;
+      }
+
+      .primary-btn,
+      .secondary-btn,
+      .contact-btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 50px;
+        padding: 0.85rem 1.35rem;
+        border-radius: 999px;
+        font-weight: 700;
+        text-decoration: none;
+        transition:
+          transform 0.2s ease,
+          box-shadow 0.2s ease,
+          border-color 0.2s ease,
+          background-color 0.2s ease;
+      }
+
+      .primary-btn,
+      .clipboard-btn {
+        border: 1px solid rgba(119, 208, 255, 0.28);
+        background: linear-gradient(135deg, var(--accent-color), #4b79ff);
+        color: #07111f;
+        box-shadow: 0 16px 30px rgba(75, 121, 255, 0.22);
+      }
+
+      .secondary-btn,
+      .contact-btn {
+        border: 1px solid var(--border-color);
+        background: rgba(255, 255, 255, 0.03);
+        color: var(--text-color);
+      }
+
+      .primary-btn:hover,
+      .secondary-btn:hover,
+      .contact-btn:hover,
+      .clipboard-btn:hover {
+        transform: translateY(-2px);
+      }
+
+      .hero-side {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+      }
+
+      .highlight-card {
+        padding: 1.25rem;
+        border: 1px solid rgba(255, 208, 138, 0.22);
+        border-radius: 24px;
+        background: linear-gradient(
+          160deg,
+          rgba(255, 208, 138, 0.14),
+          rgba(17, 36, 63, 0.32)
+        );
+      }
+
+      .highlight-label {
+        margin-bottom: 0.55rem;
+        color: var(--gray-text);
+        font-size: 0.74rem;
+        font-weight: 700;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+      }
+
+      .highlight-value {
+        margin-bottom: 0.55rem;
+        font-family: "Space Grotesk", sans-serif;
+        font-size: 1.7rem;
+        font-weight: 700;
+        letter-spacing: -0.05em;
+        line-height: 1.1;
+      }
+
+      .highlight-copy {
+        color: #d8e0eb;
+        font-size: 0.95rem;
+        line-height: 1.8;
+      }
+
+      .metric-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 0.85rem;
+      }
+
+      .metric-card {
+        padding: 1rem;
+        border: 1px solid var(--border-color);
+        border-radius: 20px;
+        background: rgba(255, 255, 255, 0.04);
+      }
+
+      .metric-value {
+        font-family: "Space Grotesk", sans-serif;
+        font-size: 1.2rem;
+        font-weight: 700;
+        line-height: 1.2;
+        letter-spacing: -0.04em;
+      }
+
+      .metric-label {
+        margin-top: 0.2rem;
+        color: var(--gray-text);
+        font-size: 0.74rem;
+        font-weight: 700;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+      }
+
+      .metric-text {
+        margin-top: 0.45rem;
+        color: #dbe4ef;
+        font-size: 0.86rem;
+        line-height: 1.7;
+      }
+
+      .section-grid,
+      .contact-grid {
+        display: grid;
+        grid-template-columns: minmax(0, 1.05fr) minmax(320px, 0.95fr);
+        gap: 1.5rem;
+      }
+
+      .section-card,
+      .timeline-panel,
+      .projects-panel,
+      .awards-card,
+      .contact-card,
+      #online-clipboard {
+        padding: 1.7rem;
+      }
+
+      .section-intro {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        gap: 1rem;
+        margin-bottom: 1.3rem;
+      }
+
+      h2 {
+        margin: 0;
+        font-family: "Space Grotesk", sans-serif;
+        font-size: clamp(1.5rem, 3vw, 2.25rem);
+        font-weight: 700;
+        line-height: 1.05;
+        letter-spacing: -0.05em;
+      }
+
+      .section-copy {
+        margin: 0;
+        color: #d5dfec;
+        font-size: 1rem;
+        line-height: 1.9;
+      }
+
+      .story-note {
+        margin-top: 1.15rem;
+        padding: 1rem 1.1rem;
+        border-left: 3px solid var(--accent-color);
+        border-radius: 0 18px 18px 0;
+        background: rgba(119, 208, 255, 0.08);
+        color: var(--gray-text);
+      }
+
+      .bullets {
+        list-style: none;
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 0.8rem;
+        margin: 0;
+        padding: 0;
+      }
+
+      .bullets li,
+      .awards-list li {
+        padding: 0.95rem 1rem;
+        border: 1px solid var(--border-color);
+        border-radius: 18px;
+        background: rgba(255, 255, 255, 0.04);
+        color: #e7eef8;
+        line-height: 1.7;
+      }
+
+      .quick-stats {
+        display: grid;
+        gap: 0.85rem;
+        margin-top: 1rem;
+      }
+
+      .quick-stat {
+        padding: 1rem;
+        border: 1px solid var(--border-color);
+        border-radius: 18px;
+        background: rgba(255, 255, 255, 0.03);
+      }
+
+      .quick-stat strong {
+        display: block;
+        margin-bottom: 0.35rem;
+        font-family: "Space Grotesk", sans-serif;
+        font-size: 1rem;
+        font-weight: 700;
+        line-height: 1.2;
+      }
+
+      .meta {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.75rem;
+        margin-top: 1.25rem;
+        color: var(--gray-text);
+        font-size: 0.88rem;
+      }
+
+      .meta strong {
+        color: var(--text-color);
+        font-weight: 700;
+      }
+
+      .timeline {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+      }
+
+      .timeline-item {
+        display: grid;
+        grid-template-columns: 170px 1fr;
+        gap: 1rem;
+        padding: 1.2rem 1.25rem;
+        border: 1px solid var(--border-color);
+        border-radius: 22px;
+        background: rgba(255, 255, 255, 0.03);
+      }
+
+      .timeline-date {
+        color: var(--accent-soft);
+        font-family: "IBM Plex Mono", monospace;
+        font-size: 0.9rem;
+        line-height: 1.8;
+      }
+
+      .timeline-content {
+        font-size: 1rem;
+        color: var(--text-color);
+      }
+
+      .timeline-title {
+        margin-bottom: 0.35rem;
+        font-weight: 700;
+      }
+
+      .timeline-sub {
+        color: var(--gray-text);
+        font-size: 0.95rem;
+        line-height: 1.8;
+      }
+
+      .inline-link {
+        color: var(--accent-color);
+        text-decoration: none;
+        border-bottom: 1px solid rgba(119, 208, 255, 0.38);
+        padding-bottom: 2px;
+        transition: opacity 0.2s ease;
+        font-weight: 700;
+      }
+
+      .inline-link:hover,
+      .project a:hover {
+        opacity: 0.75;
+      }
+
+      .projects-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 1rem;
+      }
+
+      .project {
+        display: flex;
+        flex-direction: column;
+        min-height: 100%;
+        padding: 1.3rem;
+        border: 1px solid var(--border-color);
+        border-radius: 24px;
+        background: linear-gradient(
+          180deg,
+          rgba(255, 255, 255, 0.06),
+          rgba(255, 255, 255, 0.02)
+        );
+      }
+
+      .project h3 {
+        margin: 0 0 0.6rem;
+        font-size: 1.2rem;
+        line-height: 1.35;
+      }
+
+      .project p {
+        margin: 0 0 1.25rem;
+        color: var(--gray-text);
+        line-height: 1.8;
+        flex: 1;
+      }
+
+      .project a {
+        display: inline-flex;
+        align-items: center;
+        align-self: flex-start;
+        padding: 0.7rem 0.95rem;
+        border: 1px solid rgba(119, 208, 255, 0.22);
+        border-radius: 999px;
+        background: rgba(119, 208, 255, 0.08);
+        color: var(--text-color);
+        font-size: 0.86rem;
+        font-weight: 700;
+        text-decoration: none;
+        transition: opacity 0.2s ease;
+      }
+
+      .awards-list {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 0.8rem;
+      }
+
+      .contact-email {
+        margin: 1.1rem 0 1.4rem;
+        font-family: "Space Grotesk", sans-serif;
+        font-size: clamp(1.9rem, 4vw, 2.8rem);
+        font-weight: 700;
+        line-height: 1.03;
+        letter-spacing: -0.06em;
+        overflow-wrap: anywhere;
+      }
+
+      #online-clipboard {
+        position: relative;
+      }
+
+      .clipboard-layout {
+        display: grid;
+        grid-template-columns: minmax(280px, 0.92fr) 1fr;
+        gap: 1.5rem;
+        align-items: start;
+      }
+
+      .clipboard-heading h2 {
+        margin-bottom: 0.9rem;
+      }
+
+      .clipboard-description {
+        margin: 0;
+        color: var(--gray-text);
+        font-size: 0.98rem;
+        line-height: 1.85;
+      }
+
+      .clipboard-form {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+      }
+
+      .clipboard-form label {
+        font-size: 0.8rem;
+        font-weight: 700;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: var(--gray-text);
+      }
+
+      .clipboard-form textarea {
+        width: 100%;
+        min-height: 170px;
+        padding: 1rem 1.1rem;
+        border: 1px solid rgba(255, 255, 255, 0.16);
+        border-radius: 18px;
+        background: rgba(7, 17, 31, 0.6);
+        color: var(--text-color);
+        resize: vertical;
+        font:
+          500 0.96rem/1.7 "IBM Plex Mono",
+          monospace;
+        transition:
+          border-color 0.2s ease,
+          box-shadow 0.2s ease,
+          transform 0.2s ease;
+      }
+
+      .clipboard-form textarea::placeholder {
+        color: rgba(167, 183, 204, 0.76);
+      }
+
+      .clipboard-form textarea:focus {
+        outline: none;
+        border-color: var(--accent-color);
+        box-shadow: 0 0 0 4px rgba(119, 208, 255, 0.12);
+        transform: translateY(-1px);
+      }
+
+      .clipboard-btn {
+        width: fit-content;
+        min-width: 170px;
+        border-radius: 999px;
+        font-family: "Space Grotesk", sans-serif;
+        font-size: 0.9rem;
+        font-weight: 700;
+        letter-spacing: 0.04em;
+        padding: 0.88rem 1.35rem;
+        cursor: pointer;
+        transition:
+          transform 0.2s ease,
+          box-shadow 0.2s ease,
+          opacity 0.2s ease;
+      }
+
+      .clipboard-btn:disabled {
+        opacity: 0.45;
+        cursor: not-allowed;
+        transform: none;
+        box-shadow: none;
+      }
+
+      .clipboard-status {
+        min-height: 1.5rem;
+        margin-top: 0.15rem;
+        margin-bottom: 1.2rem;
+        color: var(--gray-text);
+        font-size: 0.92rem;
+        font-weight: 600;
+      }
+
+      .clipboard-status.error {
+        color: #ff9b92;
+      }
+
+      .clipboard-list {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 0.95rem;
+      }
+
+      .clipboard-item {
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid var(--border-color);
+        border-radius: 20px;
+        padding: 1rem;
+        transition:
+          border-color 0.2s ease,
+          transform 0.2s ease,
+          background-color 0.2s ease;
+      }
+
+      .clipboard-item:hover {
+        border-color: rgba(119, 208, 255, 0.28);
+        background: rgba(255, 255, 255, 0.08);
+        transform: translateY(-1px);
+      }
+
+      .clipboard-item-row {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+      }
+
+      .clipboard-item-text {
+        white-space: pre-wrap;
+        overflow-wrap: anywhere;
+        font-family: "IBM Plex Mono", monospace;
+        font-size: 0.95rem;
+        color: #edf3fb;
+        background: rgba(7, 17, 31, 0.48);
+        border-left: 3px solid var(--accent-color);
+        border-radius: 16px;
+        padding: 1rem;
+      }
+
+      .clipboard-item-actions {
+        display: flex;
+        justify-content: flex-end;
+        gap: 0.6rem;
+      }
+
+      .clipboard-action-btn {
+        border: 1px solid var(--border-color);
+        border-radius: 999px;
+        background: transparent;
+        color: var(--text-color);
+        padding: 0.55rem 1rem;
+        font-size: 0.78rem;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        cursor: pointer;
+        transition: all 0.2s ease;
+      }
+
+      .clipboard-action-btn:hover {
+        background: var(--text-color);
+        color: var(--bg-color);
+      }
+
+      .clipboard-action-btn:disabled {
+        opacity: 0.45;
+        cursor: not-allowed;
+      }
+
+      body.modal-open {
+        overflow: hidden;
+      }
+
+      .visitor-modal {
+        position: fixed;
+        inset: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 1.5rem;
+        background: rgba(3, 7, 18, 0.72);
+        backdrop-filter: blur(10px);
+        opacity: 0;
+        visibility: hidden;
+        pointer-events: none;
+        transition:
+          opacity 0.25s ease,
+          visibility 0.25s ease;
+        z-index: 1000;
+      }
+
+      .visitor-modal.is-visible {
+        opacity: 1;
+        visibility: visible;
+        pointer-events: auto;
+      }
+
+      .visitor-modal-dialog {
+        width: min(840px, 100%);
+        max-height: min(88vh, 920px);
+        display: flex;
+        flex-direction: column;
+        background: linear-gradient(
+          180deg,
+          rgba(15, 29, 52, 0.96),
+          rgba(6, 12, 23, 0.98)
+        );
+        border: 1px solid rgba(119, 208, 255, 0.2);
+        border-radius: 30px;
+        box-shadow: 0 34px 90px rgba(0, 0, 0, 0.45);
+        overflow: hidden;
+        transform: translateY(24px);
+        transition: transform 0.25s ease;
+      }
+
+      .visitor-modal.is-visible .visitor-modal-dialog {
+        transform: translateY(0);
+      }
+
+      .visitor-modal-header {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 1rem;
+        padding: 1.5rem 1.5rem 1rem;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      }
+
+      .visitor-modal-eyebrow {
+        margin: 0 0 0.55rem;
+        color: var(--accent-color);
+        font-size: 0.75rem;
+        font-weight: 700;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+      }
+
+      .visitor-modal-title {
+        margin: 0;
+        font-family: "Space Grotesk", sans-serif;
+        font-size: 1.8rem;
+        line-height: 1.15;
+        letter-spacing: -0.04em;
+      }
+
+      .visitor-modal-subtitle {
+        margin: 0.65rem 0 0;
+        color: var(--gray-text);
+        font-size: 0.94rem;
+        line-height: 1.75;
+      }
+
+      .visitor-modal-close {
+        flex: 0 0 auto;
+        border: 1px solid var(--border-color);
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.03);
+        color: var(--text-color);
+        padding: 0.62rem 1rem;
+        font-size: 0.78rem;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        cursor: pointer;
+        transition: all 0.2s ease;
+      }
+
+      .visitor-modal-close:hover {
+        background: var(--text-color);
+        color: var(--bg-color);
+      }
+
+      .visitor-modal-body {
+        overflow-y: auto;
+        padding: 1.4rem;
+      }
+
+      .visitor-summary {
+        padding: 1.25rem;
+        border: 1px solid var(--border-color);
+        border-radius: 20px;
+        background: linear-gradient(
+          160deg,
+          rgba(119, 208, 255, 0.12),
+          rgba(255, 255, 255, 0.03)
+        );
+      }
+
+      .visitor-summary-text {
+        margin: 0;
+        color: #e6edf6;
+        font-size: 1rem;
+        line-height: 1.85;
+      }
+
+      .visitor-summary-grid,
+      .visitor-info-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 0.85rem;
+      }
+
+      .visitor-summary-grid {
+        margin-top: 1rem;
+      }
+
+      .visitor-info-section + .visitor-info-section {
+        margin-top: 1.35rem;
+      }
+
+      .visitor-section-title {
+        margin: 0 0 0.75rem;
+        color: var(--gray-text);
+        font-size: 0.78rem;
+        font-weight: 700;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+      }
+
+      .visitor-info-card {
+        min-width: 0;
+        padding: 1rem;
+        border: 1px solid var(--border-color);
+        border-radius: 18px;
+        background: rgba(255, 255, 255, 0.04);
+      }
+
+      .visitor-info-label {
+        margin-bottom: 0.35rem;
+        color: var(--gray-text);
+        font-size: 0.75rem;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+
+      .visitor-info-value {
+        font-size: 1rem;
+        font-weight: 600;
+        line-height: 1.7;
+        overflow-wrap: anywhere;
+      }
+
+      .visitor-note {
+        margin-top: 1.25rem;
+        padding-top: 1rem;
+        border-top: 1px solid rgba(255, 255, 255, 0.08);
+        color: var(--gray-text);
+        font-size: 0.88rem;
+        line-height: 1.75;
+      }
+
+      .visitor-loading {
+        display: flex;
+        flex-direction: column;
+        gap: 0.75rem;
+      }
+
+      .visitor-loading-bar {
+        height: 14px;
+        border-radius: 999px;
+        background: linear-gradient(
+          90deg,
+          rgba(255, 255, 255, 0.08),
+          rgba(119, 208, 255, 0.26),
+          rgba(255, 255, 255, 0.08)
+        );
+        background-size: 200% 100%;
+        animation: visitor-loading 1.4s linear infinite;
+      }
+
+      .visitor-loading-bar:nth-child(1) {
+        width: 70%;
+      }
+
+      .visitor-loading-bar:nth-child(2) {
+        width: 100%;
+      }
+
+      .visitor-loading-bar:nth-child(3) {
+        width: 82%;
+      }
+
+      footer {
+        text-align: center;
+        padding: 2.6rem 1rem 1rem;
+        color: var(--gray-text);
+        font-size: 0.84rem;
+      }
+
+      @keyframes visitor-loading {
+        from {
+          background-position: 200% 0;
+        }
+        to {
+          background-position: -200% 0;
+        }
+      }
+
+      @keyframes lift-in {
+        from {
+          opacity: 0;
+          transform: translateY(24px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      @media (max-width: 1024px) {
+        .site-header {
+          border-radius: 28px;
+          flex-wrap: wrap;
         }
 
-        body {
-            font-family: 'Helvetica Neue', Arial, 'Hiragino Kaku Gothic ProN', 'Hiragino Sans', Meiryo, sans-serif;
-            line-height: 1.8;
-            color: var(--text-color);
-            margin: 0;
-            padding: 0;
-            background-color: var(--bg-color);
-            -webkit-font-smoothing: antialiased;
+        .top-nav {
+          order: 3;
+          justify-content: flex-start;
+          flex: 1 1 100%;
         }
 
+        .hero,
+        .section-grid,
+        .contact-grid,
+        .clipboard-layout {
+          grid-template-columns: 1fr;
+        }
+
+        .projects-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      @media (max-width: 720px) {
         .container {
-            max-width: 720px;
-            margin: 0 auto;
-            padding: 0 1.5rem;
+          padding: 1rem 0.95rem 3rem;
         }
 
-        header {
-            padding: 6rem 0 3rem;
-            margin-bottom: 4rem;
-            border-bottom: 2px solid var(--border-color);
-        }
-        .access-counter {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.45rem;
-            margin-bottom: 1.2rem;
-            padding: 0.35rem 0.75rem;
-            border: 1px solid #dddddd;
-            background: #fafafa;
-            color: var(--gray-text);
-            font-size: 0.8rem;
-            font-weight: 700;
-            letter-spacing: 0.08em;
-            text-transform: uppercase;
-        }
-        .access-counter strong {
-            color: var(--text-color);
-            font-size: 0.9rem;
-            letter-spacing: 0.03em;
-        }
-        header h1 {
-            margin: 0;
-            font-size: 3rem;
-            font-weight: 800;
-            letter-spacing: -0.02em;
-            line-height: 1.2;
-        }
-        header p {
-            margin: 1rem 0 0;
-            font-size: 0.9rem;
-            color: var(--gray-text);
-            letter-spacing: 0.1em;
-            text-transform: uppercase;
-        }
-
-        section {
-            margin-bottom: 5rem;
-        }
-        h2 {
-            font-size: 1.5rem;
-            font-weight: 700;
-            margin-top: 0;
-            margin-bottom: 2rem;
-            letter-spacing: 0.05em;
-            text-transform: uppercase;
-        }
-
-        /* Online clipboard */
+        .site-header,
+        .hero,
+        .section-card,
+        .timeline-panel,
+        .projects-panel,
+        .awards-card,
+        .contact-card,
         #online-clipboard {
-            margin-top: 1rem;
-            padding: 2.5rem 2rem;
-            background-color: #fafafa;
-            border: 1px solid #eaeaea;
-        }
-        #online-clipboard h2 {
-            margin-top: 0;
-        }
-        .clipboard-description {
-            margin-top: -1rem;
-            margin-bottom: 1.5rem;
-            color: var(--gray-text);
-            font-size: 0.95rem;
-        }
-        .clipboard-form {
-            display: flex;
-            flex-direction: column;
-            gap: 1rem;
-        }
-        .clipboard-form label {
-            font-weight: 700;
-            letter-spacing: 0.03em;
-            font-size: 0.9rem;
-        }
-        .clipboard-form textarea {
-            width: 100%;
-            min-height: 120px;
-            padding: 1rem;
-            border: 1px solid #cccccc;
-            resize: vertical;
-            font: inherit;
-            box-sizing: border-box;
-            line-height: 1.6;
-            color: var(--text-color);
-            background: #ffffff;
-            transition: all 0.2s ease;
-        }
-        .clipboard-form textarea:focus {
-            outline: none;
-            border-color: var(--border-color);
-            box-shadow: 4px 4px 0px rgba(17, 17, 17, 0.1);
-        }
-        .clipboard-btn {
-            width: fit-content;
-            min-width: 150px;
-            border: 2px solid var(--border-color);
-            background: var(--text-color);
-            color: var(--bg-color);
-            font-weight: 700;
-            letter-spacing: 0.06em;
-            padding: 0.8rem 1.5rem;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-        .clipboard-btn:hover {
-            background: transparent;
-            color: var(--text-color);
-            transform: translateY(-2px);
-        }
-        .clipboard-btn:disabled {
-            opacity: 0.45;
-            cursor: not-allowed;
-            transform: none;
-        }
-        .clipboard-status {
-            min-height: 1.5rem;
-            margin-top: 1rem;
-            margin-bottom: 1.5rem;
-            color: var(--gray-text);
-            font-size: 0.95rem;
-            font-weight: bold;
-        }
-        .clipboard-status.error {
-            color: #d93025;
+          border-radius: 26px;
         }
 
-        /* Clipboard List (Card Style) */
-        .clipboard-list {
-            list-style: none;
-            margin: 0;
-            padding: 0;
-            display: flex;
-            flex-direction: column;
-            gap: 1rem;
-        }
-        .clipboard-item {
-            background: #ffffff;
-            border: 1px solid #eeeeee;
-            padding: 1.25rem;
-            transition: all 0.2s ease;
-        }
-        .clipboard-item:hover {
-            border-color: #cccccc;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
-        }
-        .clipboard-item-row {
-            display: flex;
-            flex-direction: column;
-            gap: 1rem;
-        }
-        .clipboard-item-text {
-            white-space: pre-wrap;
-            overflow-wrap: anywhere;
-            font-family: monospace;
-            font-size: 0.95rem;
-            color: #333333;
-            background: #f9f9f9;
-            padding: 1rem;
-            border-left: 3px solid var(--border-color);
-        }
-        .clipboard-item-actions {
-            display: flex;
-            justify-content: flex-end;
-            gap: 0.5rem;
-        }
-        .clipboard-action-btn {
-            border: 1px solid var(--border-color);
-            background: transparent;
-            color: var(--text-color);
-            padding: 0.4rem 1rem;
-            font-size: 0.8rem;
-            font-weight: 700;
-            letter-spacing: 0.04em;
-            cursor: pointer;
-            transition: all 0.2s ease;
-        }
-        .clipboard-action-btn:hover {
-            background: var(--text-color);
-            color: var(--bg-color);
-        }
-        .clipboard-action-btn:disabled {
-            opacity: 0.45;
-            cursor: not-allowed;
+        .hero,
+        .section-card,
+        .timeline-panel,
+        .projects-panel,
+        .awards-card,
+        .contact-card,
+        #online-clipboard {
+          padding: 1.35rem;
         }
 
-        #about p {
-            font-size: 1.1rem;
+        .hero h1 {
+          max-width: none;
         }
 
-        .meta {
-            margin-top: 1.25rem;
-            color: var(--gray-text);
-            font-size: 0.95rem;
-        }
-        .meta strong {
-            color: var(--text-color);
-            font-weight: 700;
-        }
-
-        /* Timeline */
-        .timeline {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-        }
-        .timeline-item {
-            display: flex;
-            padding: 1.5rem 0;
-            border-bottom: 1px solid #eeeeee;
-        }
-        .timeline-item:last-child {
-            border-bottom: none;
-            padding-bottom: 0;
-        }
-        .timeline-date {
-            flex: 0 0 160px;
-            font-weight: 600;
-            color: var(--text-color);
-            font-family: 'Helvetica Neue', Arial, sans-serif;
-            font-size: 0.95rem;
-        }
-        .timeline-content {
-            flex: 1;
-            font-size: 1rem;
-            color: var(--text-color);
-        }
-        .timeline-title {
-            font-weight: 700;
-            margin-bottom: 0.25rem;
-        }
-        .timeline-sub {
-            color: var(--gray-text);
-            font-size: 0.95rem;
-            margin-top: 0.35rem;
-        }
-        .inline-link {
-            color: var(--text-color);
-            text-decoration: none;
-            border-bottom: 1px solid var(--text-color);
-            padding-bottom: 2px;
-            transition: opacity 0.3s ease;
-            font-weight: 700;
-        }
-        .inline-link:hover { opacity: 0.5; }
-
-        @media (max-width: 600px) {
-            .timeline-item { flex-direction: column; }
-            .timeline-date {
-                margin-bottom: 0.5rem;
-                color: var(--gray-text);
-                flex: 1 1 auto;
-            }
-        }
-
-        /* Lists */
-        .bullets {
-            margin: 0;
-            padding-left: 1.25rem;
-        }
-        .bullets li { margin: 0.4rem 0; }
-
-        /* Projects */
-        .project {
-            margin-bottom: 3rem;
-            padding-bottom: 2rem;
-            border-bottom: 1px solid #eeeeee;
-        }
-        .project:last-child {
-            margin-bottom: 0;
-            padding-bottom: 0;
-            border-bottom: none;
-        }
-        .project h3 {
-            margin: 0 0 0.5rem 0;
-            font-size: 1.25rem;
-        }
-        .project p {
-            color: var(--gray-text);
-            margin-bottom: 1.25rem;
-        }
-        .project a {
-            display: inline-block;
-            color: var(--text-color);
-            text-decoration: none;
-            font-weight: 700;
-            font-size: 0.9rem;
-            border-bottom: 1px solid var(--text-color);
-            padding-bottom: 2px;
-            transition: opacity 0.3s ease;
-        }
-        .project a:hover { opacity: 0.5; }
-
-        /* Button */
-        .contact-btn {
-            display: inline-block;
-            background: transparent;
-            color: var(--text-color);
-            text-decoration: none;
-            padding: 1rem 3rem;
-            border: 2px solid var(--border-color);
-            font-weight: bold;
-            letter-spacing: 0.1em;
-            transition: all 0.3s ease;
-        }
-        .contact-btn:hover {
-            background: var(--text-color);
-            color: var(--bg-color);
-        }
-
-        /* Visitor Modal */
-        body.modal-open {
-            overflow: hidden;
-        }
-        .visitor-modal {
-            position: fixed;
-            inset: 0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 1.5rem;
-            background: rgba(17, 17, 17, 0.58);
-            backdrop-filter: blur(8px);
-            opacity: 0;
-            visibility: hidden;
-            pointer-events: none;
-            transition: opacity 0.25s ease, visibility 0.25s ease;
-            z-index: 1000;
-        }
-        .visitor-modal.is-visible {
-            opacity: 1;
-            visibility: visible;
-            pointer-events: auto;
-        }
-        .visitor-modal-dialog {
-            width: min(760px, 100%);
-            max-height: min(88vh, 920px);
-            display: flex;
-            flex-direction: column;
-            background: #ffffff;
-            border: 2px solid var(--border-color);
-            box-shadow: 0 24px 80px rgba(0, 0, 0, 0.2);
-            transform: translateY(24px);
-            transition: transform 0.25s ease;
-        }
-        .visitor-modal.is-visible .visitor-modal-dialog {
-            transform: translateY(0);
-        }
-        .visitor-modal-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            gap: 1rem;
-            padding: 1.5rem 1.5rem 1rem;
-            border-bottom: 1px solid #eeeeee;
-        }
-        .visitor-modal-eyebrow {
-            margin: 0 0 0.6rem;
-            color: var(--gray-text);
-            font-size: 0.75rem;
-            font-weight: 700;
-            letter-spacing: 0.12em;
-            text-transform: uppercase;
-        }
-        .visitor-modal-title {
-            margin: 0;
-            font-size: 1.75rem;
-            line-height: 1.25;
-            letter-spacing: -0.02em;
-        }
-        .visitor-modal-subtitle {
-            margin: 0.65rem 0 0;
-            color: var(--gray-text);
-            font-size: 0.95rem;
-            line-height: 1.7;
-        }
-        .visitor-modal-close {
-            flex: 0 0 auto;
-            border: 1px solid var(--border-color);
-            background: transparent;
-            color: var(--text-color);
-            padding: 0.55rem 0.95rem;
-            font-size: 0.8rem;
-            font-weight: 700;
-            letter-spacing: 0.06em;
-            text-transform: uppercase;
-            cursor: pointer;
-            transition: all 0.2s ease;
-        }
-        .visitor-modal-close:hover {
-            background: var(--text-color);
-            color: var(--bg-color);
-        }
-        .visitor-modal-body {
-            overflow-y: auto;
-            padding: 1.5rem;
-        }
-        .visitor-summary {
-            padding: 1.25rem;
-            border: 1px solid #e6e6e6;
-            background:
-                linear-gradient(135deg, rgba(17, 17, 17, 0.03), rgba(17, 17, 17, 0)),
-                #fafafa;
-        }
-        .visitor-summary-text {
-            margin: 0;
-            font-size: 1rem;
-            line-height: 1.8;
-        }
+        .metric-grid,
+        .bullets,
         .visitor-summary-grid,
         .visitor-info-grid {
-            display: grid;
-            grid-template-columns: repeat(2, minmax(0, 1fr));
-            gap: 0.9rem;
-        }
-        .visitor-summary-grid {
-            margin-top: 1rem;
-        }
-        .visitor-info-section + .visitor-info-section {
-            margin-top: 1.5rem;
-        }
-        .visitor-section-title {
-            margin: 0 0 0.8rem;
-            font-size: 0.8rem;
-            font-weight: 700;
-            color: var(--gray-text);
-            letter-spacing: 0.12em;
-            text-transform: uppercase;
-        }
-        .visitor-info-card {
-            min-width: 0;
-            padding: 1rem;
-            border: 1px solid #eeeeee;
-            background: #ffffff;
-        }
-        .visitor-info-label {
-            margin-bottom: 0.35rem;
-            color: var(--gray-text);
-            font-size: 0.75rem;
-            font-weight: 700;
-            letter-spacing: 0.08em;
-            text-transform: uppercase;
-        }
-        .visitor-info-value {
-            font-size: 1rem;
-            font-weight: 600;
-            line-height: 1.6;
-            overflow-wrap: anywhere;
-        }
-        .visitor-note {
-            margin-top: 1.25rem;
-            padding-top: 1rem;
-            border-top: 1px solid #eeeeee;
-            color: var(--gray-text);
-            font-size: 0.88rem;
-            line-height: 1.7;
-        }
-        .visitor-loading {
-            display: flex;
-            flex-direction: column;
-            gap: 0.75rem;
-        }
-        .visitor-loading-bar {
-            height: 14px;
-            border-radius: 999px;
-            background: linear-gradient(90deg, #f1f1f1, #e5e5e5, #f1f1f1);
-            background-size: 200% 100%;
-            animation: visitor-loading 1.4s linear infinite;
-        }
-        .visitor-loading-bar:nth-child(1) {
-            width: 70%;
-        }
-        .visitor-loading-bar:nth-child(2) {
-            width: 100%;
-        }
-        .visitor-loading-bar:nth-child(3) {
-            width: 82%;
-        }
-        @keyframes visitor-loading {
-            from {
-                background-position: 200% 0;
-            }
-            to {
-                background-position: -200% 0;
-            }
+          grid-template-columns: 1fr;
         }
 
-        footer {
-            text-align: center;
-            padding: 3rem 1rem;
-            color: var(--gray-text);
-            font-size: 0.85rem;
-            border-top: 1px solid #eeeeee;
+        .timeline-item {
+          grid-template-columns: 1fr;
         }
 
-        @media (max-width: 720px) {
-            .visitor-modal {
-                padding: 0.75rem;
-            }
-            .visitor-modal-dialog {
-                max-height: 92vh;
-            }
-            .visitor-modal-header {
-                padding: 1.1rem 1.1rem 0.9rem;
-                flex-direction: column;
-            }
-            .visitor-modal-title {
-                font-size: 1.35rem;
-            }
-            .visitor-modal-close {
-                align-self: flex-end;
-            }
-            .visitor-modal-body {
-                padding: 1.1rem;
-            }
-            .visitor-summary-grid,
-            .visitor-info-grid {
-                grid-template-columns: 1fr;
-            }
+        .timeline-date {
+          margin-bottom: 0.25rem;
         }
+
+        .visitor-modal {
+          padding: 0.8rem;
+        }
+
+        .visitor-modal-dialog {
+          max-height: 92vh;
+          border-radius: 24px;
+        }
+
+        .visitor-modal-header {
+          flex-direction: column;
+          padding: 1.1rem 1.1rem 0.9rem;
+        }
+
+        .visitor-modal-close {
+          align-self: flex-end;
+        }
+
+        .visitor-modal-body {
+          padding: 1.1rem;
+        }
+      }
+
+      @media (max-width: 560px) {
+        .brand-block {
+          width: 100%;
+        }
+
+        .header-cta {
+          width: 100%;
+        }
+
+        .hero-actions,
+        .contact-links {
+          flex-direction: column;
+        }
+
+        .primary-btn,
+        .secondary-btn,
+        .contact-btn,
+        .clipboard-btn {
+          width: 100%;
+        }
+      }
     </style>
-</head>
-<body>
+  </head>
+  <body>
     <div class="container">
-        <header>
-            <p class="access-counter" aria-live="polite">Access Count: <strong id="access-count-value">...</strong></p>
-            <h1>池田 有之介</h1>
-            <p>IKEDA Yunosuke / CEO @ Ellipsys / Bioengineering × Computer Science</p>
-        </header>
+      <header class="site-header">
+        <a href="/" class="brand-block">
+          <span class="brand-mark">IY</span>
+          <span class="brand-text">
+            <span class="brand-name">IKEDA Yunosuke</span>
+            <span class="brand-role">Bioengineering x Software</span>
+          </span>
+        </a>
+        <nav class="top-nav">
+          <a href="#about">About</a>
+          <a href="#experience">Experience</a>
+          <a href="#projects">Projects</a>
+          <a href="#online-clipboard">Clipboard</a>
+          <a href="#contact">Contact</a>
+        </nav>
+        <a href="/dashboard.html" class="header-cta">Open Dashboard</a>
+      </header>
 
-        <section id="about">
-            <h2>About</h2>
-            <p>
-                生物工学とコンピュータサイエンスの交差領域で、研究現場の課題を「ソフトウェア化」して解くことに取り組んでいます。
-                広島大学（生物工学）でのバックグラウンドと、University of MinnesotaでのCS留学経験をベースに、
-                画像解析・Web/API・プロダクト開発を横断して、研究室DXや新規事業の立案/開発を推進しています。
+      <main class="page-content">
+        <section class="hero panel reveal">
+          <div class="hero-copy">
+            <p class="eyebrow">
+              Developer Portfolio / Research Product Builder
             </p>
+            <p class="access-counter" aria-live="polite">
+              Access Count: <strong id="access-count-value">...</strong>
+            </p>
+            <h1>池田 有之介</h1>
+            <p class="hero-lead">
+              生物工学とコンピュータサイエンスの交差点で、研究現場の課題を実装可能なプロダクトへ変換しています。
+              画像解析、Web/API、研究室
+              DX、新規事業開発を横断しながら、現場の運用まで見据えたソフトウェア設計を進めています。
+            </p>
+            <div class="hero-meta">
+              <span class="meta-chip">CEO @ Ellipsys</span>
+              <span class="meta-chip">Bioengineering x Computer Science</span>
+              <span class="meta-chip">Web / API / Product Development</span>
+            </div>
+            <div class="hero-actions">
+              <a href="#projects" class="primary-btn">Selected Work</a>
+              <a href="mailto:ikeda@ellipsys.co.jp" class="secondary-btn"
+                >Contact</a
+              >
+            </div>
+          </div>
+
+          <div class="hero-side">
+            <article class="highlight-card">
+              <div class="highlight-label">Current Focus</div>
+              <div class="highlight-value">
+                研究現場の DX を、導入できる形で実装する
+              </div>
+              <p class="highlight-copy">
+                ラボ向けソフトウェア、画像解析基盤、研究運用の Web
+                化を中心に、現場で使われ続けることを前提にした開発を行っています。
+              </p>
+            </article>
+
+            <div class="metric-grid">
+              <article class="metric-card">
+                <div class="metric-value">LabSocket</div>
+                <div class="metric-label">Product</div>
+                <div class="metric-text">
+                  研究室 DX を目的としたプロダクトを立ち上げ。
+                </div>
+              </article>
+              <article class="metric-card">
+                <div class="metric-value">PhenoPixel</div>
+                <div class="metric-label">Analysis</div>
+                <div class="metric-text">
+                  細胞画像解析ソフトを継続開発し、研究現場へ展開。
+                </div>
+              </article>
+              <article class="metric-card">
+                <div class="metric-value">Hiroshima</div>
+                <div class="metric-label">Base</div>
+                <div class="metric-text">
+                  大学院研究と実装開発を接続する活動基盤。
+                </div>
+              </article>
+              <article class="metric-card">
+                <div class="metric-value">Bilingual</div>
+                <div class="metric-label">Communication</div>
+                <div class="metric-text">
+                  研究・事業・国際環境をまたぐ日英コミュニケーション。
+                </div>
+              </article>
+            </div>
+          </div>
         </section>
 
-        <section id="skills">
-            <h2>Skills</h2>
+        <section id="about" class="section-grid reveal">
+          <article class="panel section-card">
+            <div class="section-intro">
+              <div>
+                <p class="section-kicker">About</p>
+                <h2>研究現場から逆算して、必要なソフトウェアを形にする</h2>
+              </div>
+            </div>
+            <p class="section-copy">
+              広島大学での生物工学バックグラウンドと、University of Minnesota
+              での CS 留学経験をベースに、 研究現場で本当に必要とされる機能を
+              Web / API / ローカル環境へ落とし込む開発に取り組んでいます。
+            </p>
+            <p class="story-note">
+              企画だけで終わらせず、導入障壁の低い UI、運用できる
+              API、継続的に改善できる構成まで含めて設計することを重視しています。
+            </p>
+            <div class="meta">
+              <span
+                ><strong>Focus</strong> Research Software / Product Design /
+                Backend Systems</span
+              >
+              <span
+                ><strong>Approach</strong>
+                現場要件と運用要件を同時に満たす設計</span
+              >
+            </div>
+          </article>
+
+          <article class="panel section-card">
+            <div class="section-intro">
+              <div>
+                <p class="section-kicker">Skills</p>
+                <h2>実装と運用に直結する領域</h2>
+              </div>
+            </div>
             <ul class="bullets">
-                <li>フルスタックWeb開発（バックエンド中心）</li>
-                <li>API高速展開（Vercel / NEON / v0 / MCP / n8n / 各種API）</li>
-                <li>画像解析・研究向けソフトウェア開発（ローカルサーバー展開/運用）</li>
-                <li>日英通訳</li>
+              <li>フルスタック Web 開発（バックエンド中心）</li>
+              <li>API 高速展開（Vercel / NEON / v0 / MCP / n8n / 各種 API）</li>
+              <li>
+                画像解析・研究向けソフトウェア開発（ローカルサーバー展開/運用）
+              </li>
+              <li>日英通訳</li>
             </ul>
+            <div class="quick-stats">
+              <div class="quick-stat">
+                <strong>Product Lens</strong>
+                技術実装だけでなく、導入時の体験と継続運用のしやすさまで見ます。
+              </div>
+              <div class="quick-stat">
+                <strong>Execution Style</strong>
+                要件整理から実装、現場での調整、改善サイクルの立ち上げまで一気通貫で進めます。
+              </div>
+            </div>
+          </article>
         </section>
 
-        <section id="experience">
-            <h2>Experience</h2>
-            <ul class="timeline">
-                <li class="timeline-item">
-                    <div class="timeline-date">2025.05 – 現在</div>
-                    <div class="timeline-content">
-                        <div class="timeline-title">トグルホールディングス株式会社 / CTO室（インターン）</div>
-                        <div class="timeline-sub">
-                            Vercel, NEON, v0, MCP（codex/claude code）, n8n と各種APIを用いた高速なWebサービス開発の経験を蓄積。
-                        </div>
-                    </div>
-                </li>
+        <section id="experience" class="panel timeline-panel reveal">
+          <div class="section-intro">
+            <div>
+              <p class="section-kicker">Experience</p>
+              <h2>研究、事業、インターンを横断した実装経験</h2>
+            </div>
+          </div>
+          <ul class="timeline">
+            <li class="timeline-item">
+              <div class="timeline-date">2025.05 – 現在</div>
+              <div class="timeline-content">
+                <div class="timeline-title">
+                  トグルホールディングス株式会社 / CTO室（インターン）
+                </div>
+                <div class="timeline-sub">
+                  Vercel, NEON, v0, MCP（codex/claude code）, n8n と各種 API
+                  を用いた高速な Web サービス開発の経験を蓄積。
+                </div>
+              </div>
+            </li>
 
-                <li class="timeline-item">
-                    <div class="timeline-date">2025.04 – 現在</div>
-                    <div class="timeline-content">
-                        <div class="timeline-title">
-                            <a class="inline-link" href="https://ellipsys.co.jp/" target="_blank" rel="noopener noreferrer">合同会社Ellipsys</a>
-                            / CEO
-                        </div>
-                        <div class="timeline-sub">新規事業立案/開発 等。</div>
-                    </div>
-                </li>
+            <li class="timeline-item">
+              <div class="timeline-date">2025.04 – 現在</div>
+              <div class="timeline-content">
+                <div class="timeline-title">
+                  <a
+                    class="inline-link"
+                    href="https://ellipsys.co.jp/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    >合同会社Ellipsys</a
+                  >
+                  / CEO
+                </div>
+                <div class="timeline-sub">新規事業立案/開発 等。</div>
+              </div>
+            </li>
 
-                <li class="timeline-item">
-                    <div class="timeline-date">2025.04 – 現在</div>
-                    <div class="timeline-content">
-                        <div class="timeline-title">広島大学 / 教育特別研究員</div>
-                        <div class="timeline-sub">
-                            画像解析ソフトの開発およびローカルネットワーク内でのソフトウェア展開。
-                            （参考:
-                            <a class="inline-link" href="https://github.com/ikeda042/PhenoPixel6.0?tab=readme-ov-file#phenopixel60" target="_blank" rel="noopener noreferrer">PhenoPixel</a>
-                            ）
-                        </div>
-                    </div>
-                </li>
+            <li class="timeline-item">
+              <div class="timeline-date">2025.04 – 現在</div>
+              <div class="timeline-content">
+                <div class="timeline-title">広島大学 / 教育特別研究員</div>
+                <div class="timeline-sub">
+                  画像解析ソフトの開発およびローカルネットワーク内でのソフトウェア展開。
+                  （参考:
+                  <a
+                    class="inline-link"
+                    href="https://github.com/ikeda042/PhenoPixel6.0?tab=readme-ov-file#phenopixel60"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    >PhenoPixel</a
+                  >
+                  ）
+                </div>
+              </div>
+            </li>
 
-                <li class="timeline-item">
-                    <div class="timeline-date">2025.01</div>
-                    <div class="timeline-content">
-                        <div class="timeline-title">ミズノ株式会社 / データ活用部門 スポーツデータ解析（インターン）</div>
-                        <div class="timeline-sub">NDAにより詳細非公開。</div>
-                    </div>
-                </li>
+            <li class="timeline-item">
+              <div class="timeline-date">2025.01</div>
+              <div class="timeline-content">
+                <div class="timeline-title">
+                  ミズノ株式会社 / データ活用部門
+                  スポーツデータ解析（インターン）
+                </div>
+                <div class="timeline-sub">NDA により詳細非公開。</div>
+              </div>
+            </li>
 
-                <li class="timeline-item">
-                    <div class="timeline-date">2024.12</div>
-                    <div class="timeline-content">
-                        <div class="timeline-title">（株）ブリヂストン / データ解析（インターン）</div>
-                        <div class="timeline-sub">NDAにより詳細非公開。</div>
-                    </div>
-                </li>
+            <li class="timeline-item">
+              <div class="timeline-date">2024.12</div>
+              <div class="timeline-content">
+                <div class="timeline-title">
+                  （株）ブリヂストン / データ解析（インターン）
+                </div>
+                <div class="timeline-sub">NDA により詳細非公開。</div>
+              </div>
+            </li>
 
-                <li class="timeline-item">
-                    <div class="timeline-date">2024.12</div>
-                    <div class="timeline-content">
-                        <div class="timeline-title">キリンホールディングス株式会社 / デジタルICT部門（インターン）</div>
-                        <div class="timeline-sub">2024年冬インターン（NDAにより詳細非公開）。</div>
-                    </div>
-                </li>
+            <li class="timeline-item">
+              <div class="timeline-date">2024.12</div>
+              <div class="timeline-content">
+                <div class="timeline-title">
+                  キリンホールディングス株式会社 / デジタルICT部門（インターン）
+                </div>
+                <div class="timeline-sub">
+                  2024年冬インターン（NDA により詳細非公開）。
+                </div>
+              </div>
+            </li>
 
-                <li class="timeline-item">
-                    <div class="timeline-date">2024.09</div>
-                    <div class="timeline-content">
-                        <div class="timeline-title">サントリーホールディングス株式会社 / D&amp;T（インターン）</div>
-                        <div class="timeline-sub">2024年夏インターン（NDAにより詳細非公開）。</div>
-                    </div>
-                </li>
+            <li class="timeline-item">
+              <div class="timeline-date">2024.09</div>
+              <div class="timeline-content">
+                <div class="timeline-title">
+                  サントリーホールディングス株式会社 / D&amp;T（インターン）
+                </div>
+                <div class="timeline-sub">
+                  2024年夏インターン（NDA により詳細非公開）。
+                </div>
+              </div>
+            </li>
 
-                <li class="timeline-item">
-                    <div class="timeline-date">2024.08 – 2024.09</div>
-                    <div class="timeline-content">
-                        <div class="timeline-title">ExaWizards Inc. / C&amp;I部門（インターン）</div>
-                        <div class="timeline-sub">
-                            NDAにより記載不可（概要等）。
-                        </div>
-                    </div>
-                </li>
+            <li class="timeline-item">
+              <div class="timeline-date">2024.08 – 2024.09</div>
+              <div class="timeline-content">
+                <div class="timeline-title">
+                  ExaWizards Inc. / C&amp;I部門（インターン）
+                </div>
+                <div class="timeline-sub">NDA により記載不可（概要等）。</div>
+              </div>
+            </li>
 
-                <li class="timeline-item">
-                    <div class="timeline-date">2024.07 – 現在</div>
-                    <div class="timeline-content">
-                        <div class="timeline-title">UT-LAB / メンバー</div>
-                        <div class="timeline-sub">コミュニティ活動。</div>
-                    </div>
-                </li>
+            <li class="timeline-item">
+              <div class="timeline-date">2024.07 – 現在</div>
+              <div class="timeline-content">
+                <div class="timeline-title">UT-LAB / メンバー</div>
+                <div class="timeline-sub">コミュニティ活動。</div>
+              </div>
+            </li>
 
-                <li class="timeline-item">
-                    <div class="timeline-date">2024.04 – 現在</div>
-                    <div class="timeline-content">
-                        <div class="timeline-title">広島大学 人間社会科学研究科 氏間研究室 / フルスタックエンジニア</div>
-                        <div class="timeline-sub">
-                            文科省プロジェクトUD-Bookのシステム開発（参考:
-                            <a class="inline-link" href="https://home.hiroshima-u.ac.jp/ujima/onsei/index.html" target="_blank" rel="noopener noreferrer">研究室ページ</a>
-                            ）。
-                        </div>
-                    </div>
-                </li>
+            <li class="timeline-item">
+              <div class="timeline-date">2024.04 – 現在</div>
+              <div class="timeline-content">
+                <div class="timeline-title">
+                  広島大学 人間社会科学研究科 氏間研究室 /
+                  フルスタックエンジニア
+                </div>
+                <div class="timeline-sub">
+                  文科省プロジェクト UD-Book のシステム開発（参考:
+                  <a
+                    class="inline-link"
+                    href="https://home.hiroshima-u.ac.jp/ujima/onsei/index.html"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    >研究室ページ</a
+                  >
+                  ）。
+                </div>
+              </div>
+            </li>
 
-                <li class="timeline-item">
-                    <div class="timeline-date">2024.04 – 現在</div>
-                    <div class="timeline-content">
-                        <div class="timeline-title">広島大学大学院 / 統合生命科学研究科 生物工学プログラム（修士）</div>
-                        <div class="timeline-sub">研究とプロダクト開発を接続するテーマで活動。</div>
-                    </div>
-                </li>
+            <li class="timeline-item">
+              <div class="timeline-date">2024.04 – 現在</div>
+              <div class="timeline-content">
+                <div class="timeline-title">
+                  広島大学大学院 / 統合生命科学研究科 生物工学プログラム（修士）
+                </div>
+                <div class="timeline-sub">
+                  研究とプロダクト開発を接続するテーマで活動。
+                </div>
+              </div>
+            </li>
 
-                <li class="timeline-item">
-                    <div class="timeline-date">2022.10 – 2024.03</div>
-                    <div class="timeline-content">
-                        <div class="timeline-title">合同会社Ellipsys / CTO</div>
-                        <div class="timeline-sub">
-                            バックエンド中心にシステム開発（MongoDB / MariaDB / FastAPI / React / Docker）。
-                        </div>
-                    </div>
-                </li>
+            <li class="timeline-item">
+              <div class="timeline-date">2022.10 – 2024.03</div>
+              <div class="timeline-content">
+                <div class="timeline-title">合同会社Ellipsys / CTO</div>
+                <div class="timeline-sub">
+                  バックエンド中心にシステム開発（MongoDB / MariaDB / FastAPI /
+                  React / Docker）。
+                </div>
+              </div>
+            </li>
 
-                <li class="timeline-item">
-                    <div class="timeline-date">2022.09 – 2023.06</div>
-                    <div class="timeline-content">
-                        <div class="timeline-title">University of Minnesota Twin Cities / CSE（留学）</div>
-                    </div>
-                </li>
+            <li class="timeline-item">
+              <div class="timeline-date">2022.09 – 2023.06</div>
+              <div class="timeline-content">
+                <div class="timeline-title">
+                  University of Minnesota Twin Cities / CSE（留学）
+                </div>
+              </div>
+            </li>
 
-                <li class="timeline-item">
-                    <div class="timeline-date">2020.02 – 2020.03</div>
-                    <div class="timeline-content">
-                        <div class="timeline-title">IIT Bombay / 都市工学（短期）</div>
-                        <div class="timeline-sub">渋滞回避問題などを学習。</div>
-                    </div>
-                </li>
+            <li class="timeline-item">
+              <div class="timeline-date">2020.02 – 2020.03</div>
+              <div class="timeline-content">
+                <div class="timeline-title">IIT Bombay / 都市工学（短期）</div>
+                <div class="timeline-sub">渋滞回避問題などを学習。</div>
+              </div>
+            </li>
 
-                <li class="timeline-item">
-                    <div class="timeline-date">2019.08 – 2019.09</div>
-                    <div class="timeline-content">
-                        <div class="timeline-title">フリンダース大学 / 国際協力（短期研修）</div>
-                        <div class="timeline-sub">人生初の海外研修として参加。</div>
-                    </div>
-                </li>
+            <li class="timeline-item">
+              <div class="timeline-date">2019.08 – 2019.09</div>
+              <div class="timeline-content">
+                <div class="timeline-title">
+                  フリンダース大学 / 国際協力（短期研修）
+                </div>
+                <div class="timeline-sub">人生初の海外研修として参加。</div>
+              </div>
+            </li>
 
-                <li class="timeline-item">
-                    <div class="timeline-date">2019.06 – 2020.03</div>
-                    <div class="timeline-content">
-                        <div class="timeline-title">合同会社エキスパーツ / CTO</div>
-                        <div class="timeline-sub">家庭教師サービスのシステム担当。</div>
-                    </div>
-                </li>
+            <li class="timeline-item">
+              <div class="timeline-date">2019.06 – 2020.03</div>
+              <div class="timeline-content">
+                <div class="timeline-title">合同会社エキスパーツ / CTO</div>
+                <div class="timeline-sub">家庭教師サービスのシステム担当。</div>
+              </div>
+            </li>
 
-                <li class="timeline-item">
-                    <div class="timeline-date">2018.08 – 2019.04</div>
-                    <div class="timeline-content">
-                        <div class="timeline-title">NPO法人ドットジェイピー / アナリティクス（インターン）</div>
-                        <div class="timeline-sub">顧客の情報収集・分析。</div>
-                    </div>
-                </li>
+            <li class="timeline-item">
+              <div class="timeline-date">2018.08 – 2019.04</div>
+              <div class="timeline-content">
+                <div class="timeline-title">
+                  NPO法人ドットジェイピー / アナリティクス（インターン）
+                </div>
+                <div class="timeline-sub">顧客の情報収集・分析。</div>
+              </div>
+            </li>
 
-                <li class="timeline-item">
-                    <div class="timeline-date">2018.04 – 2024.03</div>
-                    <div class="timeline-content">
-                        <div class="timeline-title">広島大学 工学部 第3類（一般入試）</div>
-                        <div class="timeline-sub">発酵工学を中心に学習。</div>
-                    </div>
-                </li>
+            <li class="timeline-item">
+              <div class="timeline-date">2018.04 – 2024.03</div>
+              <div class="timeline-content">
+                <div class="timeline-title">
+                  広島大学 工学部 第3類（一般入試）
+                </div>
+                <div class="timeline-sub">発酵工学を中心に学習。</div>
+              </div>
+            </li>
 
-                <li class="timeline-item">
-                    <div class="timeline-date">2026.04 –</div>
-                    <div class="timeline-content">
-                        <div class="timeline-title">広島大学大学院 / 統合生命科学研究科 生物工学プログラム（博士課程）</div>
-                        <div class="timeline-sub">進学予定。</div>
-                    </div>
-                </li>
+            <li class="timeline-item">
+              <div class="timeline-date">2026.04 –</div>
+              <div class="timeline-content">
+                <div class="timeline-title">
+                  広島大学大学院 / 統合生命科学研究科
+                  生物工学プログラム（博士課程）
+                </div>
+                <div class="timeline-sub">進学予定。</div>
+              </div>
+            </li>
+          </ul>
+        </section>
+
+        <section id="projects" class="panel projects-panel reveal">
+          <div class="section-intro">
+            <div>
+              <p class="section-kicker">Projects</p>
+              <h2>実運用を前提にした、研究と事業のプロジェクト群</h2>
+            </div>
+          </div>
+          <div class="projects-grid">
+            <div class="project">
+              <h3>LabSocket（研究室DXプロダクト）</h3>
+              <p>
+                これまでの経験を統合して、研究室 DX
+                を行うプロダクトをローンチしました（広島大学スタートアップチャレンジ2025）。
+                研究現場のオペレーションを「ソフトウェア/API」に落とし込み、導入障壁を下げることを狙っています。
+              </p>
+              <a
+                href="https://www.labsocket.info/"
+                target="_blank"
+                rel="noopener noreferrer"
+                >View details &rarr;</a
+              >
+            </div>
+
+            <div class="project">
+              <h3>PhenoPixel（細胞画像解析ソフト）</h3>
+              <p>
+                顕微鏡データから細胞情報を高速に抽出し、夜間の自動解析まで含めたパイプラインを構築。
+                ローカルサーバーに展開し、ラボ内の全員が同一プログラム/APIへブラウザからアクセスできる形で運用しています。
+              </p>
+              <a
+                href="https://www.labsocket.info/products/phenopixel5/index.html"
+                target="_blank"
+                rel="noopener noreferrer"
+                >Product page &rarr;</a
+              >
+            </div>
+
+            <div class="project">
+              <h3>UD-Book（文科省プロジェクト / システム開発）</h3>
+              <p>
+                広島大学 人間社会科学研究科 氏間研究室にて、UD-Book
+                のシステム開発を担当。
+                研究要件と運用要件を両立する形で、実装と改善サイクルを回しています。
+              </p>
+              <a
+                href="https://home.hiroshima-u.ac.jp/ujima/onsei/index.html"
+                target="_blank"
+                rel="noopener noreferrer"
+                >Lab page &rarr;</a
+              >
+            </div>
+
+            <div class="project">
+              <h3>令和5年度 広島大学秋季学位記授与式（英語司会）</h3>
+              <p>
+                令和5年度 広島大学秋季学位記授与式にて、英語司会を務めました。
+              </p>
+              <a
+                href="https://www.hiroshima-u.ac.jp/news/79005"
+                target="_blank"
+                rel="noopener noreferrer"
+                >View details &rarr;</a
+              >
+            </div>
+
+            <div class="project">
+              <h3>令和の虎（プロダクト開発）</h3>
+              <p>
+                プロダクト開発の実務経験を積み、要件定義〜実装・改善までの一連を学びました。
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <section class="contact-grid reveal">
+          <article id="awards" class="panel awards-card">
+            <div class="section-intro">
+              <div>
+                <p class="section-kicker">Awards</p>
+                <h2>進捗を後押しした実績</h2>
+              </div>
+            </div>
+            <ul class="awards-list">
+              <li>広島大学スタートアップチャレンジ2025（2025.12）</li>
+              <li>大学院学費免除2025（2025.06）</li>
+              <li>PSI学生アイデアピッチ - 中国銀行賞（2025.02）</li>
+              <li>広島大学スタートアップチャレンジ2024（2024.12）</li>
+              <li>広島大学スタートアップチャレンジ2023（2023.12）</li>
             </ul>
+          </article>
+
+          <article id="contact" class="panel contact-card">
+            <div class="section-intro">
+              <div>
+                <p class="section-kicker">Contact</p>
+                <h2>研究、プロジェクト、事業の相談はこちらから</h2>
+              </div>
+            </div>
+            <p class="section-copy">
+              共同研究、研究室
+              DX、画像解析ソフト開発、新規事業の立ち上げに関するご相談を受け付けています。
+            </p>
+            <p class="contact-email">ikeda@ellipsys.co.jp</p>
+            <div class="contact-links">
+              <a href="mailto:ikeda@ellipsys.co.jp" class="contact-btn"
+                >Send Email</a
+              >
+              <a
+                href="https://github.com/ikeda042/ikeda042.github.io"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="secondary-btn"
+                >GitHub Repository</a
+              >
+            </div>
+          </article>
         </section>
 
-        <section id="projects">
-            <h2>Projects</h2>
-
-            <div class="project">
-                <h3>LabSocket（研究室DXプロダクト）</h3>
-                <p>
-                    これまでの経験を統合して、研究室DXを行うプロダクトをローンチしました（広島大学スタートアップチャレンジ2025）。
-                    研究現場のオペレーションを「ソフトウェア/API」に落とし込み、導入障壁を下げることを狙っています。
-                </p>
-                <a href="https://www.labsocket.info/" target="_blank" rel="noopener noreferrer">View details &rarr;</a>
+        <section id="online-clipboard" class="panel reveal">
+          <div class="clipboard-layout">
+            <div class="clipboard-heading">
+              <p class="section-kicker">Online Clipboard</p>
+              <h2>訪問先でも、そのままテキストを受け渡せるメモスペース</h2>
+              <p class="clipboard-description">
+                保存したテキストは新しい順で表示されます。
+              </p>
+              <div class="meta">
+                <span
+                  ><strong>Use Case</strong>
+                  作業中の断片メモ、共有テキスト、一時保管</span
+                >
+                <span
+                  ><strong>Behavior</strong>
+                  保存・コピー・削除をブラウザから実行</span
+                >
+              </div>
             </div>
 
-            <div class="project">
-                <h3>PhenoPixel（細胞画像解析ソフト）</h3>
-                <p>
-                    顕微鏡データから細胞情報を高速に抽出し、夜間の自動解析まで含めたパイプラインを構築。
-                    ローカルサーバーに展開し、ラボ内の全員が同一プログラム/APIへブラウザからアクセスできる形で運用しています。
-                </p>
-                <a href="https://www.labsocket.info/products/phenopixel5/index.html" target="_blank" rel="noopener noreferrer">Product page &rarr;</a>
-            </div>
-
-            <div class="project">
-                <h3>UD-Book（文科省プロジェクト / システム開発）</h3>
-                <p>
-                    広島大学 人間社会科学研究科 氏間研究室にて、UD-Bookのシステム開発を担当。
-                    研究要件と運用要件を両立する形で、実装と改善サイクルを回しています。
-                </p>
-                <a href="https://home.hiroshima-u.ac.jp/ujima/onsei/index.html" target="_blank" rel="noopener noreferrer">Lab page &rarr;</a>
-            </div>
-
-            <div class="project">
-                <h3>令和5年度 広島大学秋季学位記授与式（英語司会）</h3>
-                <p>令和5年度 広島大学秋季学位記授与式にて、英語司会を務めました。</p>
-                <a href="https://www.hiroshima-u.ac.jp/news/79005" target="_blank" rel="noopener noreferrer">View details &rarr;</a>
-            </div>
-
-            <div class="project">
-                <h3>令和の虎（プロダクト開発）</h3>
-                <p>
-                    プロダクト開発の実務経験を積み、要件定義〜実装・改善までの一連を学びました。
-                </p>
-            </div>
-        </section>
-
-        <section id="awards">
-            <h2>Awards</h2>
-            <ul class="bullets">
-                <li>広島大学スタートアップチャレンジ2025（2025.12）</li>
-                <li>大学院学費免除2025（2025.06）</li>
-                <li>PSI学生アイデアピッチ - 中国銀行賞（2025.02）</li>
-                <li>広島大学スタートアップチャレンジ2024（2024.12）</li>
-                <li>広島大学スタートアップチャレンジ2023（2023.12）</li>
-            </ul>
-        </section>
-
-        <section id="contact">
-            <h2>Contact</h2>
-            <p>研究やプロジェクト、事業に関するお問い合わせは、以下のメールアドレスまでご連絡ください。</p>
-            <p style="margin-top: 2rem; font-size: 1.1rem; font-weight: 700;">ikeda@ellipsys.co.jp</p>
-        </section>
-
-        <section id="online-clipboard">
-            <h2>Online Clipboard</h2>
-            <p class="clipboard-description">保存したテキストは新しい順で表示されます。</p>
-            <form id="clipboard-form" class="clipboard-form">
+            <div>
+              <form id="clipboard-form" class="clipboard-form">
                 <label for="clipboard-input">テキストを保存</label>
-                <textarea id="clipboard-input" name="str" placeholder="ここに文字列を入力" required></textarea>
-                <button id="clipboard-submit" class="clipboard-btn" type="submit">Save Text</button>
-            </form>
-            <p id="clipboard-status" class="clipboard-status" aria-live="polite"></p>
-            <ul id="clipboard-list" class="clipboard-list"></ul>
+                <textarea
+                  id="clipboard-input"
+                  name="str"
+                  placeholder="ここに文字列を入力"
+                  required
+                ></textarea>
+                <button
+                  id="clipboard-submit"
+                  class="clipboard-btn"
+                  type="submit"
+                >
+                  Save Text
+                </button>
+              </form>
+              <p
+                id="clipboard-status"
+                class="clipboard-status"
+                aria-live="polite"
+              ></p>
+              <ul id="clipboard-list" class="clipboard-list"></ul>
+            </div>
+          </div>
         </section>
+      </main>
     </div>
 
     <div id="visitor-modal" class="visitor-modal" aria-hidden="true">
-        <div class="visitor-modal-dialog" role="dialog" aria-modal="true" aria-labelledby="visitor-modal-title">
-            <div class="visitor-modal-header">
-                <div>
-                    <p class="visitor-modal-eyebrow">Visitor Snapshot</p>
-                    <h2 id="visitor-modal-title" class="visitor-modal-title">アクセス情報を確認中...</h2>
-                    <p id="visitor-modal-subtitle" class="visitor-modal-subtitle">このブラウザから送られた情報を整形して表示します。</p>
-                </div>
-                <button id="visitor-modal-close" class="visitor-modal-close" type="button" aria-label="ポップアップを閉じる">Close</button>
-            </div>
-            <div id="visitor-modal-body" class="visitor-modal-body">
-                <div class="visitor-loading" aria-hidden="true">
-                    <div class="visitor-loading-bar"></div>
-                    <div class="visitor-loading-bar"></div>
-                    <div class="visitor-loading-bar"></div>
-                </div>
-            </div>
+      <div
+        class="visitor-modal-dialog"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="visitor-modal-title"
+      >
+        <div class="visitor-modal-header">
+          <div>
+            <p class="visitor-modal-eyebrow">Visitor Snapshot</p>
+            <h2 id="visitor-modal-title" class="visitor-modal-title">
+              アクセス情報を確認中...
+            </h2>
+            <p id="visitor-modal-subtitle" class="visitor-modal-subtitle">
+              このブラウザから送られた情報を整形して表示します。
+            </p>
+          </div>
+          <button
+            id="visitor-modal-close"
+            class="visitor-modal-close"
+            type="button"
+            aria-label="ポップアップを閉じる"
+          >
+            Close
+          </button>
         </div>
+        <div id="visitor-modal-body" class="visitor-modal-body">
+          <div class="visitor-loading" aria-hidden="true">
+            <div class="visitor-loading-bar"></div>
+            <div class="visitor-loading-bar"></div>
+            <div class="visitor-loading-bar"></div>
+          </div>
+        </div>
+      </div>
     </div>
 
     <footer>
-        &copy; <span id="footer-year">2026</span> IKEDA Yunosuke. All rights reserved.
+      &copy; <span id="footer-year">2026</span> IKEDA Yunosuke. All rights
+      reserved.
     </footer>
 
     <script>
-        const CLIPBOARD_API_URL = 'https://githubio-api.vercel.app/api/v1/clipboards';
-        const ACCESS_COUNT_API_URL = 'https://githubio-api.vercel.app/api/v1/count';
-        const REQUEST_INFO_API_URL = 'https://githubio-api.vercel.app/api/v1/request-info';
+      const CLIPBOARD_API_URL =
+        "https://githubio-api.vercel.app/api/v1/clipboards";
+      const ACCESS_COUNT_API_URL =
+        "https://githubio-api.vercel.app/api/v1/count";
+      const REQUEST_INFO_API_URL =
+        "https://githubio-api.vercel.app/api/v1/request-info";
 
-        const clipboardForm = document.getElementById('clipboard-form');
-        const clipboardInput = document.getElementById('clipboard-input');
-        const clipboardSubmit = document.getElementById('clipboard-submit');
-        const clipboardStatus = document.getElementById('clipboard-status');
-        const clipboardList = document.getElementById('clipboard-list');
-        const accessCountValue = document.getElementById('access-count-value');
-        const visitorModal = document.getElementById('visitor-modal');
-        const visitorModalTitle = document.getElementById('visitor-modal-title');
-        const visitorModalSubtitle = document.getElementById('visitor-modal-subtitle');
-        const visitorModalBody = document.getElementById('visitor-modal-body');
-        const visitorModalClose = document.getElementById('visitor-modal-close');
+      const clipboardForm = document.getElementById("clipboard-form");
+      const clipboardInput = document.getElementById("clipboard-input");
+      const clipboardSubmit = document.getElementById("clipboard-submit");
+      const clipboardStatus = document.getElementById("clipboard-status");
+      const clipboardList = document.getElementById("clipboard-list");
+      const accessCountValue = document.getElementById("access-count-value");
+      const visitorModal = document.getElementById("visitor-modal");
+      const visitorModalTitle = document.getElementById("visitor-modal-title");
+      const visitorModalSubtitle = document.getElementById(
+        "visitor-modal-subtitle",
+      );
+      const visitorModalBody = document.getElementById("visitor-modal-body");
+      const visitorModalClose = document.getElementById("visitor-modal-close");
 
-        const setClipboardStatus = (message, isError = false) => {
-            clipboardStatus.textContent = message;
-            clipboardStatus.classList.toggle('error', isError);
-        };
+      const setClipboardStatus = (message, isError = false) => {
+        clipboardStatus.textContent = message;
+        clipboardStatus.classList.toggle("error", isError);
+      };
 
-        const parseJsonSafely = async (response) => {
-            try {
-                return await response.json();
-            } catch (_error) {
-                return null;
-            }
-        };
+      const parseJsonSafely = async (response) => {
+        try {
+          return await response.json();
+        } catch (_error) {
+          return null;
+        }
+      };
 
-        const renderAccessCount = (count) => {
-            if (typeof count !== 'number' || !Number.isFinite(count) || count < 0) {
-                accessCountValue.textContent = '--';
-                return;
-            }
-            accessCountValue.textContent = count.toLocaleString('ja-JP');
-        };
+      const renderAccessCount = (count) => {
+        if (typeof count !== "number" || !Number.isFinite(count) || count < 0) {
+          accessCountValue.textContent = "--";
+          return;
+        }
+        accessCountValue.textContent = count.toLocaleString("ja-JP");
+      };
 
-        const displayNames = {
-            country: typeof Intl.DisplayNames === 'function' ? new Intl.DisplayNames(['ja'], { type: 'region' }) : null,
-            language: typeof Intl.DisplayNames === 'function' ? new Intl.DisplayNames(['ja'], { type: 'language' }) : null
-        };
+      const displayNames = {
+        country:
+          typeof Intl.DisplayNames === "function"
+            ? new Intl.DisplayNames(["ja"], { type: "region" })
+            : null,
+        language:
+          typeof Intl.DisplayNames === "function"
+            ? new Intl.DisplayNames(["ja"], { type: "language" })
+            : null,
+      };
 
-        const normalizeQuotedValue = (value) => typeof value === 'string'
-            ? value.replace(/^"+|"+$/g, '').trim()
-            : '';
+      const normalizeQuotedValue = (value) =>
+        typeof value === "string" ? value.replace(/^"+|"+$/g, "").trim() : "";
 
-        const formatCountry = (countryCode) => {
-            if (!countryCode) {
-                return '';
-            }
+      const formatCountry = (countryCode) => {
+        if (!countryCode) {
+          return "";
+        }
 
-            try {
-                return displayNames.country ? displayNames.country.of(countryCode.toUpperCase()) : countryCode.toUpperCase();
-            } catch (_error) {
-                return countryCode.toUpperCase();
-            }
-        };
+        try {
+          return displayNames.country
+            ? displayNames.country.of(countryCode.toUpperCase())
+            : countryCode.toUpperCase();
+        } catch (_error) {
+          return countryCode.toUpperCase();
+        }
+      };
 
-        const formatLanguage = (languageCode) => {
-            if (!languageCode) {
-                return '';
-            }
+      const formatLanguage = (languageCode) => {
+        if (!languageCode) {
+          return "";
+        }
 
-            try {
-                return displayNames.language ? displayNames.language.of(languageCode) : languageCode;
-            } catch (_error) {
-                return languageCode;
-            }
-        };
+        try {
+          return displayNames.language
+            ? displayNames.language.of(languageCode)
+            : languageCode;
+        } catch (_error) {
+          return languageCode;
+        }
+      };
 
-        const formatDateTime = (value, timeZone) => {
-            if (!value) {
-                return '不明';
-            }
+      const formatDateTime = (value, timeZone) => {
+        if (!value) {
+          return "不明";
+        }
 
-            try {
-                return new Intl.DateTimeFormat('ja-JP', {
-                    dateStyle: 'long',
-                    timeStyle: 'short',
-                    timeZone: timeZone || 'Asia/Tokyo'
-                }).format(new Date(value));
-            } catch (_error) {
-                return value;
-            }
-        };
+        try {
+          return new Intl.DateTimeFormat("ja-JP", {
+            dateStyle: "long",
+            timeStyle: "short",
+            timeZone: timeZone || "Asia/Tokyo",
+          }).format(new Date(value));
+        } catch (_error) {
+          return value;
+        }
+      };
 
-        const parseAcceptLanguage = (acceptLanguage) => {
-            if (!acceptLanguage) {
-                return [];
-            }
+      const parseAcceptLanguage = (acceptLanguage) => {
+        if (!acceptLanguage) {
+          return [];
+        }
 
-            return acceptLanguage
-                .split(',')
-                .map((item) => {
-                    const [language, qualityValue] = item.trim().split(';q=');
-                    const quality = qualityValue ? Number(qualityValue) : 1;
-                    return {
-                        language: language ? language.trim() : '',
-                        quality: Number.isFinite(quality) ? quality : 1
-                    };
-                })
-                .filter((item) => item.language);
-        };
-
-        const formatLanguageList = (client) => {
-            const candidates = Array.isArray(client.preferredLanguages) && client.preferredLanguages.length
-                ? client.preferredLanguages
-                : parseAcceptLanguage(client.acceptLanguage);
-
-            if (!candidates.length) {
-                return '取得できませんでした';
-            }
-
-            return candidates
-                .map(({ language, quality }) => {
-                    const label = formatLanguage(language) || language;
-                    if (typeof quality === 'number' && quality > 0 && quality < 1) {
-                        return `${label} (${Math.round(quality * 100)}%)`;
-                    }
-                    return label;
-                })
-                .join(' / ');
-        };
-
-        const detectBrowser = (client) => {
-            const userAgent = client.userAgent || '';
-            const findVersion = (pattern) => {
-                const match = userAgent.match(pattern);
-                return match ? match[1].split('.')[0] : '';
+        return acceptLanguage
+          .split(",")
+          .map((item) => {
+            const [language, qualityValue] = item.trim().split(";q=");
+            const quality = qualityValue ? Number(qualityValue) : 1;
+            return {
+              language: language ? language.trim() : "",
+              quality: Number.isFinite(quality) ? quality : 1,
             };
+          })
+          .filter((item) => item.language);
+      };
 
-            if (/Edg\/([\d.]+)/.test(userAgent)) {
-                const version = findVersion(/Edg\/([\d.]+)/);
-                return version ? `Microsoft Edge ${version}` : 'Microsoft Edge';
-            }
-            if (/OPR\/([\d.]+)/.test(userAgent)) {
-                const version = findVersion(/OPR\/([\d.]+)/);
-                return version ? `Opera ${version}` : 'Opera';
-            }
-            if (/Firefox\/([\d.]+)/.test(userAgent)) {
-                const version = findVersion(/Firefox\/([\d.]+)/);
-                return version ? `Firefox ${version}` : 'Firefox';
-            }
-            if (/Version\/([\d.]+).*Safari\//.test(userAgent) && !/Chrome|Chromium|CriOS/.test(userAgent)) {
-                const version = findVersion(/Version\/([\d.]+)/);
-                return version ? `Safari ${version}` : 'Safari';
-            }
-            if (/Chrome\/([\d.]+)/.test(userAgent) && !/Edg|OPR/.test(userAgent)) {
-                const version = findVersion(/Chrome\/([\d.]+)/);
-                return version ? `Google Chrome ${version}` : 'Google Chrome';
-            }
+      const formatLanguageList = (client) => {
+        const candidates =
+          Array.isArray(client.preferredLanguages) &&
+          client.preferredLanguages.length
+            ? client.preferredLanguages
+            : parseAcceptLanguage(client.acceptLanguage);
 
-            const secChUa = client.secChUa || '';
-            if (secChUa.includes('Chromium')) {
-                return 'Chromium系ブラウザ';
-            }
+        if (!candidates.length) {
+          return "取得できませんでした";
+        }
 
-            return '判定できませんでした';
+        return candidates
+          .map(({ language, quality }) => {
+            const label = formatLanguage(language) || language;
+            if (typeof quality === "number" && quality > 0 && quality < 1) {
+              return `${label} (${Math.round(quality * 100)}%)`;
+            }
+            return label;
+          })
+          .join(" / ");
+      };
+
+      const detectBrowser = (client) => {
+        const userAgent = client.userAgent || "";
+        const findVersion = (pattern) => {
+          const match = userAgent.match(pattern);
+          return match ? match[1].split(".")[0] : "";
         };
 
-        const detectOperatingSystem = (client) => {
-            const platform = normalizeQuotedValue(client.secChUaPlatform);
-            if (platform) {
-                return platform;
-            }
+        if (/Edg\/([\d.]+)/.test(userAgent)) {
+          const version = findVersion(/Edg\/([\d.]+)/);
+          return version ? `Microsoft Edge ${version}` : "Microsoft Edge";
+        }
+        if (/OPR\/([\d.]+)/.test(userAgent)) {
+          const version = findVersion(/OPR\/([\d.]+)/);
+          return version ? `Opera ${version}` : "Opera";
+        }
+        if (/Firefox\/([\d.]+)/.test(userAgent)) {
+          const version = findVersion(/Firefox\/([\d.]+)/);
+          return version ? `Firefox ${version}` : "Firefox";
+        }
+        if (
+          /Version\/([\d.]+).*Safari\//.test(userAgent) &&
+          !/Chrome|Chromium|CriOS/.test(userAgent)
+        ) {
+          const version = findVersion(/Version\/([\d.]+)/);
+          return version ? `Safari ${version}` : "Safari";
+        }
+        if (/Chrome\/([\d.]+)/.test(userAgent) && !/Edg|OPR/.test(userAgent)) {
+          const version = findVersion(/Chrome\/([\d.]+)/);
+          return version ? `Google Chrome ${version}` : "Google Chrome";
+        }
 
-            const userAgent = client.userAgent || '';
-            if (/Mac OS X/.test(userAgent)) {
-                return 'macOS';
-            }
-            if (/Windows NT/.test(userAgent)) {
-                return 'Windows';
-            }
-            if (/iPhone|iPad|iPod/.test(userAgent)) {
-                return 'iOS';
-            }
-            if (/Android/.test(userAgent)) {
-                return 'Android';
-            }
-            if (/Linux/.test(userAgent)) {
-                return 'Linux';
-            }
-            return '判定できませんでした';
-        };
+        const secChUa = client.secChUa || "";
+        if (secChUa.includes("Chromium")) {
+          return "Chromium系ブラウザ";
+        }
 
-        const detectDeviceType = (client) => {
-            if (client.secChUaMobile === '?1') {
-                return 'Mobile';
-            }
+        return "判定できませんでした";
+      };
 
-            const userAgent = client.userAgent || '';
-            if (/iPad|Tablet/.test(userAgent)) {
-                return 'Tablet';
-            }
-            if (/Mobile|iPhone|Android/.test(userAgent)) {
-                return 'Mobile';
-            }
-            return 'Desktop';
-        };
+      const detectOperatingSystem = (client) => {
+        const platform = normalizeQuotedValue(client.secChUaPlatform);
+        if (platform) {
+          return platform;
+        }
 
-        const createInfoCard = (label, value) => {
-            const card = document.createElement('article');
-            card.className = 'visitor-info-card';
+        const userAgent = client.userAgent || "";
+        if (/Mac OS X/.test(userAgent)) {
+          return "macOS";
+        }
+        if (/Windows NT/.test(userAgent)) {
+          return "Windows";
+        }
+        if (/iPhone|iPad|iPod/.test(userAgent)) {
+          return "iOS";
+        }
+        if (/Android/.test(userAgent)) {
+          return "Android";
+        }
+        if (/Linux/.test(userAgent)) {
+          return "Linux";
+        }
+        return "判定できませんでした";
+      };
 
-            const labelElement = document.createElement('div');
-            labelElement.className = 'visitor-info-label';
-            labelElement.textContent = label;
+      const detectDeviceType = (client) => {
+        if (client.secChUaMobile === "?1") {
+          return "Mobile";
+        }
 
-            const valueElement = document.createElement('div');
-            valueElement.className = 'visitor-info-value';
-            valueElement.textContent = value || '--';
+        const userAgent = client.userAgent || "";
+        if (/iPad|Tablet/.test(userAgent)) {
+          return "Tablet";
+        }
+        if (/Mobile|iPhone|Android/.test(userAgent)) {
+          return "Mobile";
+        }
+        return "Desktop";
+      };
 
-            card.appendChild(labelElement);
-            card.appendChild(valueElement);
-            return card;
-        };
+      const createInfoCard = (label, value) => {
+        const card = document.createElement("article");
+        card.className = "visitor-info-card";
 
-        const createInfoSection = (title, items) => {
-            const section = document.createElement('section');
-            section.className = 'visitor-info-section';
+        const labelElement = document.createElement("div");
+        labelElement.className = "visitor-info-label";
+        labelElement.textContent = label;
 
-            const heading = document.createElement('h3');
-            heading.className = 'visitor-section-title';
-            heading.textContent = title;
+        const valueElement = document.createElement("div");
+        valueElement.className = "visitor-info-value";
+        valueElement.textContent = value || "--";
 
-            const grid = document.createElement('div');
-            grid.className = 'visitor-info-grid';
-            items.forEach((item) => {
-                grid.appendChild(createInfoCard(item.label, item.value));
-            });
+        card.appendChild(labelElement);
+        card.appendChild(valueElement);
+        return card;
+      };
 
-            section.appendChild(heading);
-            section.appendChild(grid);
-            return section;
-        };
+      const createInfoSection = (title, items) => {
+        const section = document.createElement("section");
+        section.className = "visitor-info-section";
 
-        const openVisitorModal = () => {
-            visitorModal.classList.add('is-visible');
-            visitorModal.setAttribute('aria-hidden', 'false');
-            document.body.classList.add('modal-open');
-            window.requestAnimationFrame(() => visitorModalClose.focus());
-        };
+        const heading = document.createElement("h3");
+        heading.className = "visitor-section-title";
+        heading.textContent = title;
 
-        const closeVisitorModal = () => {
-            visitorModal.classList.remove('is-visible');
-            visitorModal.setAttribute('aria-hidden', 'true');
-            document.body.classList.remove('modal-open');
-        };
+        const grid = document.createElement("div");
+        grid.className = "visitor-info-grid";
+        items.forEach((item) => {
+          grid.appendChild(createInfoCard(item.label, item.value));
+        });
 
-        const renderVisitorLoading = () => {
-            visitorModalTitle.textContent = 'アクセス情報を確認中...';
-            visitorModalSubtitle.textContent = 'このブラウザから送られた情報を整形しています。';
-            visitorModalBody.innerHTML = '';
+        section.appendChild(heading);
+        section.appendChild(grid);
+        return section;
+      };
 
-            const loading = document.createElement('div');
-            loading.className = 'visitor-loading';
-            loading.setAttribute('aria-hidden', 'true');
+      const openVisitorModal = () => {
+        visitorModal.classList.add("is-visible");
+        visitorModal.setAttribute("aria-hidden", "false");
+        document.body.classList.add("modal-open");
+        window.requestAnimationFrame(() => visitorModalClose.focus());
+      };
 
-            for (let i = 0; i < 3; i += 1) {
-                const bar = document.createElement('div');
-                bar.className = 'visitor-loading-bar';
-                loading.appendChild(bar);
-            }
+      const closeVisitorModal = () => {
+        visitorModal.classList.remove("is-visible");
+        visitorModal.setAttribute("aria-hidden", "true");
+        document.body.classList.remove("modal-open");
+      };
 
-            visitorModalBody.appendChild(loading);
-        };
+      const renderVisitorLoading = () => {
+        visitorModalTitle.textContent = "アクセス情報を確認中...";
+        visitorModalSubtitle.textContent =
+          "このブラウザから送られた情報を整形しています。";
+        visitorModalBody.innerHTML = "";
 
-        const renderVisitorError = () => {
-            visitorModalTitle.textContent = 'アクセス情報を取得できませんでした';
-            visitorModalSubtitle.textContent = 'API との通信に失敗したため、今回は表示できません。';
-            visitorModalBody.innerHTML = '';
+        const loading = document.createElement("div");
+        loading.className = "visitor-loading";
+        loading.setAttribute("aria-hidden", "true");
 
-            const summary = document.createElement('section');
-            summary.className = 'visitor-summary';
+        for (let i = 0; i < 3; i += 1) {
+          const bar = document.createElement("div");
+          bar.className = "visitor-loading-bar";
+          loading.appendChild(bar);
+        }
 
-            const text = document.createElement('p');
-            text.className = 'visitor-summary-text';
-            text.textContent = '時間をおいて再読み込みすると取得できる可能性があります。アクセスカウンターやクリップボード機能には影響しません。';
+        visitorModalBody.appendChild(loading);
+      };
 
-            summary.appendChild(text);
-            visitorModalBody.appendChild(summary);
-        };
+      const renderVisitorError = () => {
+        visitorModalTitle.textContent = "アクセス情報を取得できませんでした";
+        visitorModalSubtitle.textContent =
+          "API との通信に失敗したため、今回は表示できません。";
+        visitorModalBody.innerHTML = "";
 
-        const renderVisitorSnapshot = (payload) => {
-            const request = payload.request || {};
-            const network = payload.network || {};
-            const geo = payload.geo || {};
-            const client = payload.client || {};
-            const vercel = payload.vercel || {};
-            const vercelSystem = vercel.system || {};
+        const summary = document.createElement("section");
+        summary.className = "visitor-summary";
 
-            const locationLabel = [geo.city, formatCountry(geo.country)].filter(Boolean).join(', ') || '位置情報を取得できませんでした';
-            const browserLabel = detectBrowser(client);
-            const osLabel = detectOperatingSystem(client);
-            const deviceLabel = detectDeviceType(client);
-            const languageLabel = formatLanguageList(client);
-            const timeZoneLabel = geo.timezone || '不明';
-            const visitTimeLabel = formatDateTime(payload.requestedAt, geo.timezone);
-            const ipAddress = network.clientIp
-                || (network.forwarded && (network.forwarded.realIp || network.forwarded.forwardedFor))
-                || '取得できませんでした';
+        const text = document.createElement("p");
+        text.className = "visitor-summary-text";
+        text.textContent =
+          "時間をおいて再読み込みすると取得できる可能性があります。アクセスカウンターやクリップボード機能には影響しません。";
 
-            visitorModalTitle.textContent = `${locationLabel} 付近からのアクセスです`;
-            visitorModalSubtitle.textContent = `${browserLabel} / ${osLabel} / ${deviceLabel} / ${visitTimeLabel}`;
-            visitorModalBody.innerHTML = '';
+        summary.appendChild(text);
+        visitorModalBody.appendChild(summary);
+      };
 
-            const summary = document.createElement('section');
-            summary.className = 'visitor-summary';
+      const renderVisitorSnapshot = (payload) => {
+        const request = payload.request || {};
+        const network = payload.network || {};
+        const geo = payload.geo || {};
+        const client = payload.client || {};
+        const vercel = payload.vercel || {};
+        const vercelSystem = vercel.system || {};
 
-            const summaryText = document.createElement('p');
-            summaryText.className = 'visitor-summary-text';
-            summaryText.textContent = geo.isApproximate
-                ? '位置情報は都市レベルの概算です。ブラウザ環境や通信メタデータも合わせて、このアクセスのスナップショットを表示しています。'
-                : 'ブラウザ環境と通信メタデータをまとめた、今回のアクセスのスナップショットです。';
+        const locationLabel =
+          [geo.city, formatCountry(geo.country)].filter(Boolean).join(", ") ||
+          "位置情報を取得できませんでした";
+        const browserLabel = detectBrowser(client);
+        const osLabel = detectOperatingSystem(client);
+        const deviceLabel = detectDeviceType(client);
+        const languageLabel = formatLanguageList(client);
+        const timeZoneLabel = geo.timezone || "不明";
+        const visitTimeLabel = formatDateTime(
+          payload.requestedAt,
+          geo.timezone,
+        );
+        const ipAddress =
+          network.clientIp ||
+          (network.forwarded &&
+            (network.forwarded.realIp || network.forwarded.forwardedFor)) ||
+          "取得できませんでした";
 
-            const summaryGrid = document.createElement('div');
-            summaryGrid.className = 'visitor-summary-grid';
-            [
-                { label: '推定エリア', value: locationLabel },
-                { label: '公開 IP', value: ipAddress },
-                { label: 'ブラウザ', value: browserLabel },
-                { label: '表示言語', value: languageLabel }
-            ].forEach((item) => {
-                summaryGrid.appendChild(createInfoCard(item.label, item.value));
-            });
+        visitorModalTitle.textContent = `${locationLabel} 付近からのアクセスです`;
+        visitorModalSubtitle.textContent = `${browserLabel} / ${osLabel} / ${deviceLabel} / ${visitTimeLabel}`;
+        visitorModalBody.innerHTML = "";
 
-            summary.appendChild(summaryText);
-            summary.appendChild(summaryGrid);
-            visitorModalBody.appendChild(summary);
+        const summary = document.createElement("section");
+        summary.className = "visitor-summary";
 
-            visitorModalBody.appendChild(createInfoSection('アクセス環境', [
-                { label: 'タイムゾーン', value: timeZoneLabel },
-                { label: 'デバイス種別', value: deviceLabel },
-                { label: 'OS', value: osLabel },
-                { label: 'User-Agent', value: client.userAgent || '取得できませんでした' }
-            ]));
+        const summaryText = document.createElement("p");
+        summaryText.className = "visitor-summary-text";
+        summaryText.textContent = geo.isApproximate
+          ? "位置情報は都市レベルの概算です。ブラウザ環境や通信メタデータも合わせて、このアクセスのスナップショットを表示しています。"
+          : "ブラウザ環境と通信メタデータをまとめた、今回のアクセスのスナップショットです。";
 
-            visitorModalBody.appendChild(createInfoSection('リクエスト', [
-                { label: 'リクエスト', value: `${request.method || 'GET'} ${request.pathname || '/'}` },
-                { label: 'ヘッダー数', value: typeof request.headerCount === 'number' ? `${request.headerCount} headers` : '不明' },
-                { label: 'Referer', value: client.referer || 'なし' },
-                { label: 'Accept', value: client.accept || '不明' }
-            ]));
+        const summaryGrid = document.createElement("div");
+        summaryGrid.className = "visitor-summary-grid";
+        [
+          { label: "推定エリア", value: locationLabel },
+          { label: "公開 IP", value: ipAddress },
+          { label: "ブラウザ", value: browserLabel },
+          { label: "表示言語", value: languageLabel },
+        ].forEach((item) => {
+          summaryGrid.appendChild(createInfoCard(item.label, item.value));
+        });
 
-            visitorModalBody.appendChild(createInfoSection('デプロイ環境', [
-                { label: '配信リージョン', value: vercelSystem.region || '不明' },
-                { label: '実行環境', value: vercelSystem.env || vercelSystem.targetEnv || '不明' },
-                { label: '公開 URL', value: vercelSystem.projectProductionUrl || vercel.deploymentUrl || '不明' },
-                { label: 'Invocation ID', value: vercel.id || '不明' }
-            ]));
+        summary.appendChild(summaryText);
+        summary.appendChild(summaryGrid);
+        visitorModalBody.appendChild(summary);
 
-            const note = document.createElement('p');
-            note.className = 'visitor-note';
-            note.textContent = 'この情報は request-info API へのアクセス時点で取得した値です。位置情報は Vercel のリクエストヘッダー由来で、都市レベルの推定になる場合があります。';
-            visitorModalBody.appendChild(note);
-        };
+        visitorModalBody.appendChild(
+          createInfoSection("アクセス環境", [
+            { label: "タイムゾーン", value: timeZoneLabel },
+            { label: "デバイス種別", value: deviceLabel },
+            { label: "OS", value: osLabel },
+            {
+              label: "User-Agent",
+              value: client.userAgent || "取得できませんでした",
+            },
+          ]),
+        );
 
-        const fetchRequestInfo = async () => {
-            const response = await fetch(REQUEST_INFO_API_URL, {
-                method: 'GET',
-                headers: { Accept: 'application/json' }
-            });
-            const payload = await parseJsonSafely(response);
+        visitorModalBody.appendChild(
+          createInfoSection("リクエスト", [
+            {
+              label: "リクエスト",
+              value: `${request.method || "GET"} ${request.pathname || "/"}`,
+            },
+            {
+              label: "ヘッダー数",
+              value:
+                typeof request.headerCount === "number"
+                  ? `${request.headerCount} headers`
+                  : "不明",
+            },
+            { label: "Referer", value: client.referer || "なし" },
+            { label: "Accept", value: client.accept || "不明" },
+          ]),
+        );
 
-            if (!response.ok || !payload || typeof payload !== 'object') {
-                throw new Error('failed_to_fetch_request_info');
-            }
+        visitorModalBody.appendChild(
+          createInfoSection("デプロイ環境", [
+            { label: "配信リージョン", value: vercelSystem.region || "不明" },
+            {
+              label: "実行環境",
+              value: vercelSystem.env || vercelSystem.targetEnv || "不明",
+            },
+            {
+              label: "公開 URL",
+              value:
+                vercelSystem.projectProductionUrl ||
+                vercel.deploymentUrl ||
+                "不明",
+            },
+            { label: "Invocation ID", value: vercel.id || "不明" },
+          ]),
+        );
 
-            return payload;
-        };
+        const note = document.createElement("p");
+        note.className = "visitor-note";
+        note.textContent =
+          "この情報は request-info API へのアクセス時点で取得した値です。位置情報は Vercel のリクエストヘッダー由来で、都市レベルの推定になる場合があります。";
+        visitorModalBody.appendChild(note);
+      };
 
-        const notifySlack = async (text) => {
+      const fetchRequestInfo = async () => {
+        const response = await fetch(REQUEST_INFO_API_URL, {
+          method: "GET",
+          headers: { Accept: "application/json" },
+        });
+        const payload = await parseJsonSafely(response);
+
+        if (!response.ok || !payload || typeof payload !== "object") {
+          throw new Error("failed_to_fetch_request_info");
+        }
+
+        return payload;
+      };
+
+      const notifySlack = async (text) => {
+        try {
+          await fetch("https://vercel-webhook-sandy.vercel.app/slack", {
+            method: "POST",
+            headers: {
+              accept: "application/json",
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ text, call_key: "githubio" }),
+          });
+        } catch (_error) {
+          // Ignore notification errors silently
+        }
+      };
+
+      const buildSnapshotSummary = (payload) => {
+        const request = payload.request || {};
+        const network = payload.network || {};
+        const geo = payload.geo || {};
+        const client = payload.client || {};
+        const vercel = payload.vercel || {};
+        const vercelSystem = vercel.system || {};
+
+        const locationLabel =
+          [geo.city, formatCountry(geo.country)].filter(Boolean).join(", ") ||
+          "不明";
+        const browserLabel = detectBrowser(client);
+        const osLabel = detectOperatingSystem(client);
+        const deviceLabel = detectDeviceType(client);
+        const visitTimeLabel = formatDateTime(
+          payload.requestedAt,
+          geo.timezone,
+        );
+        const ipAddress =
+          network.clientIp ||
+          (network.forwarded &&
+            (network.forwarded.realIp || network.forwarded.forwardedFor)) ||
+          "不明";
+        const region = vercelSystem.region || "不明";
+
+        return `[Visitor Snapshot] Location: ${locationLabel} | IP: ${ipAddress} | Browser: ${browserLabel} | OS: ${osLabel} | Device: ${deviceLabel} | Time: ${visitTimeLabel} | Region: ${region} | Path: ${request.pathname || "/"}`;
+      };
+
+      const showVisitorInfoModalOnVisit = async () => {
+        openVisitorModal();
+        renderVisitorLoading();
+
+        try {
+          const payload = await fetchRequestInfo();
+          renderVisitorSnapshot(payload);
+          notifySlack(buildSnapshotSummary(payload));
+        } catch (_error) {
+          renderVisitorError();
+        }
+      };
+
+      const fetchAccessCount = async () => {
+        const response = await fetch(ACCESS_COUNT_API_URL, {
+          method: "GET",
+          headers: { "Content-Type": "application/json" },
+        });
+        const payload = await parseJsonSafely(response);
+
+        if (!response.ok || typeof payload !== "number") {
+          throw new Error("failed_to_fetch_access_count");
+        }
+
+        return payload;
+      };
+
+      const updateAccessCountOnVisit = async () => {
+        try {
+          await fetch(ACCESS_COUNT_API_URL, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+          });
+        } catch (_error) {
+          // Ignore increment error and still try fetching the latest total.
+        }
+
+        try {
+          const total = await fetchAccessCount();
+          renderAccessCount(total);
+        } catch (_error) {
+          renderAccessCount(null);
+        }
+      };
+
+      const deleteClipboardEntry = async (text) => {
+        const candidates = [
+          {
+            url: CLIPBOARD_API_URL,
+            init: {
+              method: "DELETE",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ str: text }),
+            },
+          },
+          {
+            url: CLIPBOARD_API_URL,
+            init: {
+              method: "DELETE",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ text }),
+            },
+          },
+          {
+            url: `${CLIPBOARD_API_URL}?str=${encodeURIComponent(text)}`,
+            init: { method: "DELETE" },
+          },
+        ];
+
+        let lastError = "削除に失敗しました。";
+
+        for (const candidate of candidates) {
+          const response = await fetch(candidate.url, candidate.init);
+          const payload = await parseJsonSafely(response);
+
+          if (response.ok) {
+            return;
+          }
+
+          lastError = payload && payload.error ? payload.error : lastError;
+        }
+
+        throw new Error(lastError);
+      };
+
+      const renderClipboardList = (items) => {
+        clipboardList.innerHTML = "";
+
+        if (!items.length) {
+          const li = document.createElement("li");
+          li.className = "clipboard-item";
+          li.style.textAlign = "center";
+          li.style.color = "var(--gray-text)";
+          li.style.background = "transparent";
+          li.style.border = "1px dashed #cccccc";
+          li.textContent = "まだ保存されたテキストはありません。";
+          clipboardList.appendChild(li);
+          return;
+        }
+
+        items.forEach((item) => {
+          const li = document.createElement("li");
+          li.className = "clipboard-item";
+
+          const row = document.createElement("div");
+          row.className = "clipboard-item-row";
+
+          const text = document.createElement("div");
+          text.className = "clipboard-item-text";
+          text.textContent = item;
+
+          const actions = document.createElement("div");
+          actions.className = "clipboard-item-actions";
+
+          const copyBtn = document.createElement("button");
+          copyBtn.type = "button";
+          copyBtn.className = "clipboard-action-btn copy-btn";
+          copyBtn.textContent = "Copy";
+          copyBtn.addEventListener("click", async () => {
             try {
-                await fetch('https://vercel-webhook-sandy.vercel.app/slack', {
-                    method: 'POST',
-                    headers: {
-                        'accept': 'application/json',
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({ text, call_key: 'githubio' })
-                });
+              await navigator.clipboard.writeText(item);
+              copyBtn.textContent = "Copied!";
+              copyBtn.style.background = "var(--text-color)";
+              copyBtn.style.color = "var(--bg-color)";
+              setTimeout(() => {
+                copyBtn.textContent = "Copy";
+                copyBtn.style.background = "transparent";
+                copyBtn.style.color = "var(--text-color)";
+              }, 2000);
             } catch (_error) {
-                // Ignore notification errors silently
+              alert("コピーに失敗しました");
             }
-        };
+          });
 
-        const buildSnapshotSummary = (payload) => {
-            const request = payload.request || {};
-            const network = payload.network || {};
-            const geo = payload.geo || {};
-            const client = payload.client || {};
-            const vercel = payload.vercel || {};
-            const vercelSystem = vercel.system || {};
-
-            const locationLabel = [geo.city, formatCountry(geo.country)].filter(Boolean).join(', ') || '不明';
-            const browserLabel = detectBrowser(client);
-            const osLabel = detectOperatingSystem(client);
-            const deviceLabel = detectDeviceType(client);
-            const visitTimeLabel = formatDateTime(payload.requestedAt, geo.timezone);
-            const ipAddress = network.clientIp
-                || (network.forwarded && (network.forwarded.realIp || network.forwarded.forwardedFor))
-                || '不明';
-            const region = vercelSystem.region || '不明';
-
-            return `[Visitor Snapshot] Location: ${locationLabel} | IP: ${ipAddress} | Browser: ${browserLabel} | OS: ${osLabel} | Device: ${deviceLabel} | Time: ${visitTimeLabel} | Region: ${region} | Path: ${request.pathname || '/'}`;
-        };
-
-        const showVisitorInfoModalOnVisit = async () => {
-            openVisitorModal();
-            renderVisitorLoading();
+          const deleteBtn = document.createElement("button");
+          deleteBtn.type = "button";
+          deleteBtn.className = "clipboard-action-btn delete-btn";
+          deleteBtn.textContent = "Delete";
+          deleteBtn.addEventListener("click", async () => {
+            deleteBtn.disabled = true;
+            copyBtn.disabled = true;
+            setClipboardStatus("削除中...");
 
             try {
-                const payload = await fetchRequestInfo();
-                renderVisitorSnapshot(payload);
-                notifySlack(buildSnapshotSummary(payload));
-            } catch (_error) {
-                renderVisitorError();
-            }
-        };
-
-        const fetchAccessCount = async () => {
-            const response = await fetch(ACCESS_COUNT_API_URL, {
-                method: 'GET',
-                headers: { 'Content-Type': 'application/json' }
-            });
-            const payload = await parseJsonSafely(response);
-
-            if (!response.ok || typeof payload !== 'number') {
-                throw new Error('failed_to_fetch_access_count');
-            }
-
-            return payload;
-        };
-
-        const updateAccessCountOnVisit = async () => {
-            try {
-                await fetch(ACCESS_COUNT_API_URL, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' }
-                });
-            } catch (_error) {
-                // Ignore increment error and still try fetching the latest total.
-            }
-
-            try {
-                const total = await fetchAccessCount();
-                renderAccessCount(total);
-            } catch (_error) {
-                renderAccessCount(null);
-            }
-        };
-
-        const deleteClipboardEntry = async (text) => {
-            const candidates = [
-                {
-                    url: CLIPBOARD_API_URL,
-                    init: {
-                        method: 'DELETE',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ str: text })
-                    }
-                },
-                {
-                    url: CLIPBOARD_API_URL,
-                    init: {
-                        method: 'DELETE',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ text })
-                    }
-                },
-                {
-                    url: `${CLIPBOARD_API_URL}?str=${encodeURIComponent(text)}`,
-                    init: { method: 'DELETE' }
-                }
-            ];
-
-            let lastError = '削除に失敗しました。';
-
-            for (const candidate of candidates) {
-                const response = await fetch(candidate.url, candidate.init);
-                const payload = await parseJsonSafely(response);
-
-                if (response.ok) {
-                    return;
-                }
-
-                lastError = payload && payload.error ? payload.error : lastError;
-            }
-
-            throw new Error(lastError);
-        };
-
-        const renderClipboardList = (items) => {
-            clipboardList.innerHTML = '';
-
-            if (!items.length) {
-                const li = document.createElement('li');
-                li.className = 'clipboard-item';
-                li.style.textAlign = 'center';
-                li.style.color = 'var(--gray-text)';
-                li.style.background = 'transparent';
-                li.style.border = '1px dashed #cccccc';
-                li.textContent = 'まだ保存されたテキストはありません。';
-                clipboardList.appendChild(li);
-                return;
-            }
-
-            items.forEach((item) => {
-                const li = document.createElement('li');
-                li.className = 'clipboard-item';
-
-                const row = document.createElement('div');
-                row.className = 'clipboard-item-row';
-
-                const text = document.createElement('div');
-                text.className = 'clipboard-item-text';
-                text.textContent = item;
-
-                const actions = document.createElement('div');
-                actions.className = 'clipboard-item-actions';
-
-                const copyBtn = document.createElement('button');
-                copyBtn.type = 'button';
-                copyBtn.className = 'clipboard-action-btn copy-btn';
-                copyBtn.textContent = 'Copy';
-                copyBtn.addEventListener('click', async () => {
-                    try {
-                        await navigator.clipboard.writeText(item);
-                        copyBtn.textContent = 'Copied!';
-                        copyBtn.style.background = 'var(--text-color)';
-                        copyBtn.style.color = 'var(--bg-color)';
-                        setTimeout(() => {
-                            copyBtn.textContent = 'Copy';
-                            copyBtn.style.background = 'transparent';
-                            copyBtn.style.color = 'var(--text-color)';
-                        }, 2000);
-                    } catch (_error) {
-                        alert('コピーに失敗しました');
-                    }
-                });
-
-                const deleteBtn = document.createElement('button');
-                deleteBtn.type = 'button';
-                deleteBtn.className = 'clipboard-action-btn delete-btn';
-                deleteBtn.textContent = 'Delete';
-                deleteBtn.addEventListener('click', async () => {
-                    deleteBtn.disabled = true;
-                    copyBtn.disabled = true;
-                    setClipboardStatus('削除中...');
-
-                    try {
-                        await deleteClipboardEntry(item);
-                        setClipboardStatus('削除しました。');
-                        await loadClipboardList();
-                        setTimeout(() => setClipboardStatus(''), 3000);
-                    } catch (error) {
-                        const message = error instanceof Error ? error.message : '削除に失敗しました。';
-                        setClipboardStatus(`削除に失敗しました: ${message}`, true);
-                        deleteBtn.disabled = false;
-                        copyBtn.disabled = false;
-                    }
-                });
-
-                actions.appendChild(copyBtn);
-                actions.appendChild(deleteBtn);
-
-                row.appendChild(text);
-                row.appendChild(actions);
-                li.appendChild(row);
-                clipboardList.appendChild(li);
-            });
-        };
-
-        const loadClipboardList = async () => {
-            setClipboardStatus('読み込み中...');
-            try {
-                const response = await fetch(CLIPBOARD_API_URL, {
-                    method: 'GET',
-                    headers: { 'Content-Type': 'application/json' }
-                });
-                const payload = await parseJsonSafely(response);
-
-                if (!response.ok || !Array.isArray(payload)) {
-                    throw new Error('failed_to_fetch');
-                }
-
-                renderClipboardList(payload);
-                setClipboardStatus('');
-            } catch (_error) {
-                renderClipboardList([]);
-                setClipboardStatus('一覧の取得に失敗しました。時間をおいて再試行してください。', true);
-            }
-        };
-
-        clipboardForm.addEventListener('submit', async (event) => {
-            event.preventDefault();
-            const value = clipboardInput.value.trim();
-
-            if (!value) {
-                setClipboardStatus('文字列を入力してください。', true);
-                return;
-            }
-
-            clipboardSubmit.disabled = true;
-            setClipboardStatus('保存中...');
-
-            try {
-                const response = await fetch(CLIPBOARD_API_URL, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ str: value })
-                });
-                const payload = await parseJsonSafely(response);
-
-                if (!response.ok) {
-                    const message = payload && payload.error ? payload.error : '保存に失敗しました。';
-                    throw new Error(message);
-                }
-
-                clipboardInput.value = '';
-                setClipboardStatus('保存しました。');
-                await loadClipboardList();
+              await deleteClipboardEntry(item);
+              setClipboardStatus("削除しました。");
+              await loadClipboardList();
+              setTimeout(() => setClipboardStatus(""), 3000);
             } catch (error) {
-                const message = error instanceof Error ? error.message : '保存に失敗しました。';
-                setClipboardStatus(`保存に失敗しました: ${message}`, true);
-            } finally {
-                clipboardSubmit.disabled = false;
+              const message =
+                error instanceof Error ? error.message : "削除に失敗しました。";
+              setClipboardStatus(`削除に失敗しました: ${message}`, true);
+              deleteBtn.disabled = false;
+              copyBtn.disabled = false;
             }
-        });
+          });
 
-        visitorModalClose.addEventListener('click', closeVisitorModal);
-        visitorModal.addEventListener('click', (event) => {
-            if (event.target === visitorModal) {
-                closeVisitorModal();
-            }
-        });
-        document.addEventListener('keydown', (event) => {
-            if (event.key === 'Escape' && visitorModal.classList.contains('is-visible')) {
-                closeVisitorModal();
-            }
-        });
+          actions.appendChild(copyBtn);
+          actions.appendChild(deleteBtn);
 
-        showVisitorInfoModalOnVisit();
-        updateAccessCountOnVisit();
-        loadClipboardList();
-        document.getElementById('footer-year').textContent = new Date().getFullYear();
+          row.appendChild(text);
+          row.appendChild(actions);
+          li.appendChild(row);
+          clipboardList.appendChild(li);
+        });
+      };
+
+      const loadClipboardList = async () => {
+        setClipboardStatus("読み込み中...");
+        try {
+          const response = await fetch(CLIPBOARD_API_URL, {
+            method: "GET",
+            headers: { "Content-Type": "application/json" },
+          });
+          const payload = await parseJsonSafely(response);
+
+          if (!response.ok || !Array.isArray(payload)) {
+            throw new Error("failed_to_fetch");
+          }
+
+          renderClipboardList(payload);
+          setClipboardStatus("");
+        } catch (_error) {
+          renderClipboardList([]);
+          setClipboardStatus(
+            "一覧の取得に失敗しました。時間をおいて再試行してください。",
+            true,
+          );
+        }
+      };
+
+      clipboardForm.addEventListener("submit", async (event) => {
+        event.preventDefault();
+        const value = clipboardInput.value.trim();
+
+        if (!value) {
+          setClipboardStatus("文字列を入力してください。", true);
+          return;
+        }
+
+        clipboardSubmit.disabled = true;
+        setClipboardStatus("保存中...");
+
+        try {
+          const response = await fetch(CLIPBOARD_API_URL, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ str: value }),
+          });
+          const payload = await parseJsonSafely(response);
+
+          if (!response.ok) {
+            const message =
+              payload && payload.error ? payload.error : "保存に失敗しました。";
+            throw new Error(message);
+          }
+
+          clipboardInput.value = "";
+          setClipboardStatus("保存しました。");
+          await loadClipboardList();
+        } catch (error) {
+          const message =
+            error instanceof Error ? error.message : "保存に失敗しました。";
+          setClipboardStatus(`保存に失敗しました: ${message}`, true);
+        } finally {
+          clipboardSubmit.disabled = false;
+        }
+      });
+
+      visitorModalClose.addEventListener("click", closeVisitorModal);
+      visitorModal.addEventListener("click", (event) => {
+        if (event.target === visitorModal) {
+          closeVisitorModal();
+        }
+      });
+      document.addEventListener("keydown", (event) => {
+        if (
+          event.key === "Escape" &&
+          visitorModal.classList.contains("is-visible")
+        ) {
+          closeVisitorModal();
+        }
+      });
+
+      showVisitorInfoModalOnVisit();
+      updateAccessCountOnVisit();
+      loadClipboardList();
+      document.getElementById("footer-year").textContent =
+        new Date().getFullYear();
     </script>
-</body>
+  </body>
 </html>
