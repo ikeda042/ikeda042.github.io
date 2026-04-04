@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Clipboard Question</title>
+  <style>
+    :root {
+      --bg: #f6f2ea;
+      --surface: #ffffff;
+      --border: #d8d3c8;
+      --text: #111111;
+      --muted: #6b6b6b;
+      --ok: #0f766e;
+      --error: #b91c1c;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Helvetica Neue', Arial, 'Hiragino Kaku Gothic ProN', 'Hiragino Sans', Meiryo, sans-serif;
+      padding: 1rem;
+    }
+
+    main {
+      width: min(680px, 100%);
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 1.2rem;
+    }
+
+    h1 {
+      margin: 0 0 0.45rem;
+      font-size: 1.25rem;
+    }
+
+    p {
+      margin: 0 0 1rem;
+      color: var(--muted);
+      font-size: 0.92rem;
+      line-height: 1.55;
+    }
+
+    label {
+      display: block;
+      font-size: 0.86rem;
+      font-weight: 700;
+      margin-bottom: 0.4rem;
+    }
+
+    textarea {
+      width: 100%;
+      min-height: 130px;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 0.7rem;
+      font: inherit;
+      resize: vertical;
+    }
+
+    .row {
+      margin-top: 0.8rem;
+      display: flex;
+      gap: 0.6rem;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    button,
+    a.btn {
+      border: 1px solid #111;
+      background: #111;
+      color: #fff;
+      border-radius: 8px;
+      padding: 0.55rem 0.9rem;
+      font: inherit;
+      font-size: 0.9rem;
+      font-weight: 700;
+      text-decoration: none;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    a.btn.secondary {
+      background: transparent;
+      color: #111;
+    }
+
+    .status {
+      margin-top: 0.8rem;
+      font-size: 0.9rem;
+      min-height: 1.3em;
+      word-break: break-word;
+    }
+
+    .status.ok { color: var(--ok); }
+    .status.error { color: var(--error); }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>質問ページ（クリップボード登録）</h1>
+    <p>入力した文言をクリップボードへコピーし、同時に集計データへ保存します。</p>
+
+    <form id="question-form">
+      <label for="message">文言</label>
+      <textarea id="message" name="message" required maxlength="1000" placeholder="ここにコピーさせたい文言を入力"></textarea>
+      <div class="row">
+        <button type="submit">クリップボードに登録して送信</button>
+        <a class="btn secondary" href="/">一覧へ戻る</a>
+      </div>
+    </form>
+
+    <div id="status" class="status" role="status" aria-live="polite"></div>
+  </main>
+
+  <script>
+    const STORAGE_KEY = 'clipboard-submissions-v1';
+    let fallbackCounter = 0;
+    const form = document.getElementById('question-form');
+    const messageInput = document.getElementById('message');
+    const statusEl = document.getElementById('status');
+
+    const setStatus = (message, kind) => {
+      statusEl.textContent = message;
+      statusEl.className = `status ${kind || ''}`.trim();
+    };
+
+    const loadItems = () => {
+      try {
+        const parsed = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+        return Array.isArray(parsed) ? parsed : [];
+      } catch {
+        return [];
+      }
+    };
+
+    const createFallbackId = () => {
+      fallbackCounter += 1;
+      return `${Date.now()}-${fallbackCounter}-${Math.random().toString(36).slice(2, 12)}`;
+    };
+
+    const saveItem = (text) => {
+      const items = loadItems();
+      const item = {
+        id: crypto?.randomUUID ? crypto.randomUUID() : createFallbackId(),
+        text,
+        createdAt: new Date().toISOString()
+      };
+      items.push(item);
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
+      return item;
+    };
+
+    form.addEventListener('submit', async (event) => {
+      event.preventDefault();
+      const text = messageInput.value.trim();
+
+      if (!text) {
+        setStatus('文言を入力してください。', 'error');
+        return;
+      }
+
+      try {
+        await navigator.clipboard.writeText(text);
+      } catch {
+        setStatus('クリップボードへの登録に失敗しました。ブラウザ権限を確認してください。', 'error');
+        return;
+      }
+
+      const item = saveItem(text);
+      setStatus(`登録しました（ID: ${item.id}）。`, 'ok');
+      form.reset();
+      messageInput.focus();
+    });
+  </script>
+</body>
+</html>
