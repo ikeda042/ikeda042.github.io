@@ -146,15 +146,13 @@
 
     const createFallbackId = () => {
       fallbackCounter += 1;
-      return `${Date.now()}-${fallbackCounter}-${Math.random().toString(16).slice(2, 12)}`;
+      return `${Date.now()}-${fallbackCounter}-${Math.random().toString(36).slice(2, 12)}`;
     };
 
     const saveItem = (text) => {
       const items = loadItems();
       const item = {
-        id: (globalThis.crypto && crypto.randomUUID)
-          ? crypto.randomUUID()
-          : createFallbackId(),
+        id: crypto?.randomUUID ? crypto.randomUUID() : createFallbackId(),
         text,
         createdAt: new Date().toISOString()
       };
