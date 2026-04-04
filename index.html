@@ -125,6 +125,8 @@
     const STORAGE_KEY = 'clipboard-submissions-v1';
     const rows = document.getElementById('rows');
     const lastUpdated = document.getElementById('last-updated');
+    let previousSnapshot = '';
+    let pollTimer = null;
 
     const loadItems = () => {
       try {
@@ -149,13 +151,21 @@
     };
 
     const render = () => {
-      const items = loadItems()
+      const items = loadItems();
+      const snapshot = JSON.stringify(items);
+      if (snapshot === previousSnapshot) {
+        lastUpdated.textContent = `最終更新: ${formatDateTime(new Date().toISOString())}`;
+        return;
+      }
+      previousSnapshot = snapshot;
+
+      const sortedItems = items
         .slice()
         .sort((a, b) => String(b.createdAt || '').localeCompare(String(a.createdAt || '')));
 
       rows.innerHTML = '';
 
-      if (items.length === 0) {
+      if (sortedItems.length === 0) {
         const tr = document.createElement('tr');
         const td = document.createElement('td');
         td.colSpan = 4;
@@ -163,7 +173,7 @@
         tr.appendChild(td);
         rows.appendChild(tr);
       } else {
-        items.forEach((item, index) => {
+        sortedItems.forEach((item, index) => {
           const tr = document.createElement('tr');
 
           const no = document.createElement('td');
@@ -190,8 +200,25 @@
       lastUpdated.textContent = `最終更新: ${formatDateTime(new Date().toISOString())}`;
     };
 
+    const startPolling = () => {
+      if (!pollTimer) pollTimer = window.setInterval(render, 3000);
+    };
+
+    const stopPolling = () => {
+      if (!pollTimer) return;
+      window.clearInterval(pollTimer);
+      pollTimer = null;
+    };
+
     render();
-    window.setInterval(render, 3000);
+    startPolling();
+    document.addEventListener('visibilitychange', () => {
+      if (document.hidden) stopPolling();
+      else {
+        render();
+        startPolling();
+      }
+    });
     window.addEventListener('storage', render);
   </script>
 </body>

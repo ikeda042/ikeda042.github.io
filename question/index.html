@@ -144,12 +144,17 @@
       }
     };
 
+    const createFallbackId = () => {
+      fallbackCounter += 1;
+      return `${Date.now()}-${fallbackCounter}-${Math.random().toString(16).slice(2, 12)}`;
+    };
+
     const saveItem = (text) => {
       const items = loadItems();
       const item = {
         id: (globalThis.crypto && crypto.randomUUID)
           ? crypto.randomUUID()
-          : `${Date.now()}-${(++fallbackCounter)}-${Math.random().toString(16).slice(2, 12)}`,
+          : createFallbackId(),
         text,
         createdAt: new Date().toISOString()
       };
