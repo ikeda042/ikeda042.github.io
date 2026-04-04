@@ -108,12 +108,11 @@
 </head>
 <body>
   <main>
-    <h1>質問ページ（クリップボード登録）</h1>
-    <p>入力した文言をクリップボードへコピーし、同時に集計データへ保存します。</p>
+    <h1>やってみなはれボックス</h1>
 
     <form id="question-form">
       <label for="message">文言</label>
-      <textarea id="message" name="message" required maxlength="1000" placeholder="ここにコピーさせたい文言を入力"></textarea>
+      <textarea id="message" name="message" required maxlength="1000"></textarea>
       <div class="row">
         <button type="submit">クリップボードに登録して送信</button>
         <a class="btn secondary" href="/">一覧へ戻る</a>
@@ -177,8 +176,8 @@
         return;
       }
 
-      const item = saveItem(text);
-      setStatus(`登録しました（ID: ${item.id}）。`, 'ok');
+      saveItem(text);
+      setStatus('登録しました。', 'ok');
       form.reset();
       messageInput.focus();
     });
