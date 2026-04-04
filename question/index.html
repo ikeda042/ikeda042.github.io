@@ -125,6 +125,7 @@
 
   <script>
     const STORAGE_KEY = 'clipboard-submissions-v1';
+    let fallbackCounter = 0;
     const form = document.getElementById('question-form');
     const messageInput = document.getElementById('message');
     const statusEl = document.getElementById('status');
@@ -146,7 +147,9 @@
     const saveItem = (text) => {
       const items = loadItems();
       const item = {
-        id: (globalThis.crypto && crypto.randomUUID) ? crypto.randomUUID() : `${Date.now()}-${Math.random().toString(16).slice(2)}`,
+        id: (globalThis.crypto && crypto.randomUUID)
+          ? crypto.randomUUID()
+          : `${Date.now()}-${(++fallbackCounter)}-${Math.random().toString(16).slice(2, 12)}`,
         text,
         createdAt: new Date().toISOString()
       };

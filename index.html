@@ -151,7 +151,7 @@
     const render = () => {
       const items = loadItems()
         .slice()
-        .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+        .sort((a, b) => String(b.createdAt || '').localeCompare(String(a.createdAt || '')));
 
       rows.innerHTML = '';
 
