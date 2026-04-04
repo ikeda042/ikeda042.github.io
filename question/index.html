@@ -55,6 +55,19 @@
       margin-bottom: 0.4rem;
     }
 
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      clip-path: inset(50%);
+      white-space: nowrap;
+      border: 0;
+    }
+
     textarea {
       width: 100%;
       min-height: 130px;
@@ -111,10 +124,10 @@
     <h1>やってみなはれボックス</h1>
 
     <form id="question-form">
-      <label for="message">文言</label>
+      <label for="message" class="sr-only">質問内容</label>
       <textarea id="message" name="message" required maxlength="1000"></textarea>
       <div class="row">
-        <button type="submit">クリップボードに登録して送信</button>
+        <button type="submit">送信</button>
         <a class="btn secondary" href="/">一覧へ戻る</a>
       </div>
     </form>
