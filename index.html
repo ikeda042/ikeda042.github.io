@@ -171,7 +171,7 @@
         .map((entry, index) => {
           if (typeof entry === 'string') {
             return {
-              id: `text-${index}-${entry}`,
+              id: `text-${index}`,
               text: entry,
               createdAt: ''
             };
@@ -241,7 +241,7 @@
         lastError = payload && payload.error ? payload.error : lastError;
       }
 
-      throw new Error(lastError);
+      throw new Error(`削除に失敗しました。(${lastError})`);
     };
 
     const render = (items) => {
