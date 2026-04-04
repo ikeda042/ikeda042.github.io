@@ -136,8 +136,7 @@
   </main>
 
   <script>
-    const STORAGE_KEY = 'clipboard-submissions-v1';
-    let fallbackCounter = 0;
+    const CLIPBOARD_API_URL = 'https://githubio-api.vercel.app/api/v1/clipboards';
     const form = document.getElementById('question-form');
     const messageInput = document.getElementById('message');
     const statusEl = document.getElementById('status');
@@ -147,30 +146,12 @@
       statusEl.className = `status ${kind || ''}`.trim();
     };
 
-    const loadItems = () => {
+    const parseJsonSafely = async (response) => {
       try {
-        const parsed = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
-        return Array.isArray(parsed) ? parsed : [];
+        return await response.json();
       } catch {
-        return [];
+        return null;
       }
-    };
-
-    const createFallbackId = () => {
-      fallbackCounter += 1;
-      return `${Date.now()}-${fallbackCounter}-${Math.random().toString(36).slice(2, 12)}`;
-    };
-
-    const saveItem = (text) => {
-      const items = loadItems();
-      const item = {
-        id: crypto?.randomUUID ? crypto.randomUUID() : createFallbackId(),
-        text,
-        createdAt: new Date().toISOString()
-      };
-      items.push(item);
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
-      return item;
     };
 
     form.addEventListener('submit', async (event) => {
@@ -189,7 +170,23 @@
         return;
       }
 
-      saveItem(text);
+      try {
+        const response = await fetch(CLIPBOARD_API_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ str: text })
+        });
+        const payload = await parseJsonSafely(response);
+        if (!response.ok) {
+          const message = payload && payload.error ? payload.error : '登録に失敗しました。';
+          throw new Error(message);
+        }
+      } catch (error) {
+        const message = error instanceof Error ? error.message : '登録に失敗しました。';
+        setStatus(`登録に失敗しました: ${message}`, 'error');
+        return;
+      }
+
       setStatus('登録しました。', 'ok');
       form.reset();
       messageInput.focus();

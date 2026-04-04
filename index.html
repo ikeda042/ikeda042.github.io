@@ -150,24 +150,48 @@
   </main>
 
   <script>
-    const STORAGE_KEY = 'clipboard-submissions-v1';
+    const CLIPBOARD_API_URL = 'https://githubio-api.vercel.app/api/v1/clipboards';
     const POLL_INTERVAL_MS = 3000;
     const rows = document.getElementById('rows');
     const lastUpdated = document.getElementById('last-updated');
     let previousSnapshot = '';
     let pollTimer = null;
 
-    const loadItems = () => {
+    const parseJsonSafely = async (response) => {
       try {
-        const parsed = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
-        return Array.isArray(parsed) ? parsed : [];
+        return await response.json();
       } catch {
-        return [];
+        return null;
       }
     };
 
-    const saveItems = (items) => {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
+    const normalizeItems = (payload) => {
+      if (!Array.isArray(payload)) return [];
+      return payload
+        .map((entry, index) => {
+          if (typeof entry === 'string') {
+            return {
+              id: `text-${index}-${entry}`,
+              text: entry,
+              createdAt: ''
+            };
+          }
+
+          if (entry && typeof entry === 'object') {
+            const text = typeof entry.text === 'string'
+              ? entry.text
+              : (typeof entry.str === 'string' ? entry.str : '');
+            if (!text) return null;
+            return {
+              id: String(entry.id || entry._id || `${index}-${text}`),
+              text,
+              createdAt: String(entry.createdAt || entry.created_at || '')
+            };
+          }
+
+          return null;
+        })
+        .filter(Boolean);
     };
 
     const formatDateTime = (isoString) => {
@@ -183,8 +207,44 @@
       }).format(date);
     };
 
-    const render = () => {
-      const items = loadItems();
+    const deleteClipboardEntry = async (text) => {
+      const candidates = [
+        {
+          url: CLIPBOARD_API_URL,
+          init: {
+            method: 'DELETE',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ str: text })
+          }
+        },
+        {
+          url: CLIPBOARD_API_URL,
+          init: {
+            method: 'DELETE',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ text })
+          }
+        },
+        {
+          url: `${CLIPBOARD_API_URL}?str=${encodeURIComponent(text)}`,
+          init: { method: 'DELETE' }
+        }
+      ];
+
+      let lastError = '削除に失敗しました。';
+
+      for (const candidate of candidates) {
+        const response = await fetch(candidate.url, candidate.init);
+        const payload = await parseJsonSafely(response);
+
+        if (response.ok) return;
+        lastError = payload && payload.error ? payload.error : lastError;
+      }
+
+      throw new Error(lastError);
+    };
+
+    const render = (items) => {
       const snapshot = JSON.stringify(items);
       if (snapshot === previousSnapshot) {
         lastUpdated.textContent = `最終更新: ${formatDateTime(new Date().toISOString())}`;
@@ -225,12 +285,17 @@
           deleteBtn.type = 'button';
           deleteBtn.className = 'delete-btn';
           deleteBtn.textContent = '削除';
-          deleteBtn.addEventListener('click', () => {
+          deleteBtn.addEventListener('click', async () => {
             if (!window.confirm('このコメントを削除しますか？')) return;
-            const latestItems = loadItems();
-            const nextItems = latestItems.filter((candidate) => candidate.id !== item.id);
-            saveItems(nextItems);
-            render();
+            deleteBtn.disabled = true;
+            try {
+              await deleteClipboardEntry(String(item.text || ''));
+              await loadAndRender();
+            } catch (error) {
+              const message = error instanceof Error ? error.message : '削除に失敗しました。';
+              window.alert(message);
+              deleteBtn.disabled = false;
+            }
           });
           action.appendChild(deleteBtn);
 
@@ -245,8 +310,22 @@
       lastUpdated.textContent = `最終更新: ${formatDateTime(new Date().toISOString())}`;
     };
 
+    const loadAndRender = async () => {
+      try {
+        const response = await fetch(CLIPBOARD_API_URL, {
+          method: 'GET',
+          headers: { 'Content-Type': 'application/json' }
+        });
+        const payload = await parseJsonSafely(response);
+        if (!response.ok) throw new Error('failed_to_fetch');
+        render(normalizeItems(payload));
+      } catch {
+        render([]);
+      }
+    };
+
     const startPolling = () => {
-      if (!pollTimer) pollTimer = window.setInterval(render, POLL_INTERVAL_MS);
+      if (!pollTimer) pollTimer = window.setInterval(loadAndRender, POLL_INTERVAL_MS);
     };
 
     const stopPolling = () => {
@@ -255,16 +334,15 @@
       pollTimer = null;
     };
 
-    render();
+    loadAndRender();
     startPolling();
     document.addEventListener('visibilitychange', () => {
       if (document.hidden) stopPolling();
       else {
-        render();
+        loadAndRender();
         startPolling();
       }
     });
-    window.addEventListener('storage', render);
   </script>
 </body>
 </html>
