@@ -94,13 +94,36 @@
       color: var(--muted);
       white-space: nowrap;
     }
+
+    .comment-cell {
+      max-width: 560px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .delete-btn {
+      border: 1px solid #111;
+      background: #fff;
+      color: #111;
+      border-radius: 6px;
+      padding: 0.3rem 0.55rem;
+      font: inherit;
+      font-size: 0.82rem;
+      cursor: pointer;
+    }
+
+    .delete-btn:hover {
+      background: #111;
+      color: #fff;
+    }
   </style>
 </head>
 <body>
   <main>
     <div class="header">
       <div>
-        <h1>クリップボード投稿 リアルタイム一覧</h1>
+        <h1>やってみなはれボックス</h1>
         <p class="meta">3秒ポーリングで更新 / 投稿ページ: <a href="/question">/question</a></p>
       </div>
       <div class="mono" id="last-updated">最終更新: -</div>
@@ -112,8 +135,8 @@
           <tr>
             <th style="width: 70px;">No.</th>
             <th style="width: 190px;">投稿時刻</th>
-            <th>文言</th>
-            <th style="width: 180px;">ID</th>
+            <th>コメント</th>
+            <th style="width: 100px;">操作</th>
           </tr>
         </thead>
         <tbody id="rows"></tbody>
@@ -136,6 +159,10 @@
       } catch {
         return [];
       }
+    };
+
+    const saveItems = (items) => {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
     };
 
     const formatDateTime = (isoString) => {
@@ -184,16 +211,27 @@
           createdAt.textContent = formatDateTime(item.createdAt);
 
           const text = document.createElement('td');
+          text.className = 'comment-cell';
           text.textContent = String(item.text || '');
+          text.title = String(item.text || '');
 
-          const id = document.createElement('td');
-          id.className = 'mono';
-          id.textContent = String(item.id || '-');
+          const action = document.createElement('td');
+          const deleteBtn = document.createElement('button');
+          deleteBtn.type = 'button';
+          deleteBtn.className = 'delete-btn';
+          deleteBtn.textContent = '削除';
+          deleteBtn.addEventListener('click', () => {
+            const latestItems = loadItems();
+            const nextItems = latestItems.filter((candidate) => candidate.id !== item.id);
+            saveItems(nextItems);
+            render();
+          });
+          action.appendChild(deleteBtn);
 
           tr.appendChild(no);
           tr.appendChild(createdAt);
           tr.appendChild(text);
-          tr.appendChild(id);
+          tr.appendChild(action);
           rows.appendChild(tr);
         });
       }
