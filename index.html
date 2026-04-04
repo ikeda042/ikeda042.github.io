@@ -234,10 +234,18 @@
       let lastError = '削除に失敗しました。';
 
       for (const candidate of candidates) {
-        const response = await fetch(candidate.url, candidate.init);
-        const payload = await parseJsonSafely(response);
+        let response;
+        let payload;
+
+        try {
+          response = await fetch(candidate.url, candidate.init);
+          payload = await parseJsonSafely(response);
+        } catch {
+          continue;
+        }
 
         if (response.ok) return;
+        if (response.status >= 500) break;
         lastError = payload && payload.error ? payload.error : lastError;
       }
 
@@ -317,7 +325,7 @@
           headers: { 'Content-Type': 'application/json' }
         });
         const payload = await parseJsonSafely(response);
-        if (!response.ok) throw new Error('failed_to_fetch');
+        if (!response.ok) throw new Error('取得に失敗しました。');
         render(normalizeItems(payload));
       } catch {
         render([]);

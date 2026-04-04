@@ -183,7 +183,7 @@
         }
       } catch (error) {
         const message = error instanceof Error ? error.message : '登録に失敗しました。';
-        setStatus(`登録に失敗しました: ${message}`, 'error');
+        setStatus(message, 'error');
         return;
       }
 
