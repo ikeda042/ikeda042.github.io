@@ -117,6 +117,11 @@
       background: #111;
       color: #fff;
     }
+
+    .delete-btn:focus-visible {
+      outline: 3px solid #2563eb;
+      outline-offset: 2px;
+    }
   </style>
 </head>
 <body>
@@ -221,6 +226,7 @@
           deleteBtn.className = 'delete-btn';
           deleteBtn.textContent = '削除';
           deleteBtn.addEventListener('click', () => {
+            if (!window.confirm('このコメントを削除しますか？')) return;
             const latestItems = loadItems();
             const nextItems = latestItems.filter((candidate) => candidate.id !== item.id);
             saveItems(nextItems);
