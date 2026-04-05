@@ -262,6 +262,7 @@
     const statusEl = document.getElementById('status');
     const sentinel = document.getElementById('sentinel');
     const summaryCount = document.getElementById('summary-count');
+    const hero = document.querySelector('.hero');
 
     let allItems = [];
     let visibleCount = 0;
@@ -429,7 +430,53 @@
       statusEl.textContent = message;
     };
 
-    const render = () => {
+    const captureScrollAnchor = () => {
+      if (window.scrollY <= 0 || feed.hidden || feed.childElementCount === 0) return null;
+
+      const heroBottom = hero ? hero.getBoundingClientRect().bottom : 0;
+      const posts = Array.from(feed.querySelectorAll('.post'));
+      const anchorPost = posts.find((post) => post.getBoundingClientRect().bottom > heroBottom + 1);
+
+      if (!anchorPost) {
+        return {
+          itemId: '',
+          topOffset: 0,
+          scrollY: window.scrollY
+        };
+      }
+
+      return {
+        itemId: anchorPost.dataset.itemId || '',
+        topOffset: anchorPost.getBoundingClientRect().top - heroBottom,
+        scrollY: window.scrollY
+      };
+    };
+
+    const restoreScrollAnchor = (anchor) => {
+      if (!anchor) return;
+
+      if (!anchor.itemId) {
+        window.scrollTo(0, anchor.scrollY);
+        return;
+      }
+
+      const heroBottom = hero ? hero.getBoundingClientRect().bottom : 0;
+      const anchorPost = Array.from(feed.querySelectorAll('.post')).find(
+        (post) => post.dataset.itemId === anchor.itemId
+      );
+
+      if (!anchorPost) {
+        window.scrollTo(0, anchor.scrollY);
+        return;
+      }
+
+      const delta = anchorPost.getBoundingClientRect().top - heroBottom - anchor.topOffset;
+      if (Math.abs(delta) > 1) {
+        window.scrollBy(0, delta);
+      }
+    };
+
+    const render = ({ preserveScroll = false } = {}) => {
       const visibleItems = allItems.slice(0, visibleCount);
       const hasMore = visibleCount < allItems.length;
       const snapshot = JSON.stringify(
@@ -450,8 +497,10 @@
         setStatus('まだ投稿がありません。');
         sentinel.hidden = true;
         if (snapshot !== previousSnapshot) {
+          const scrollAnchor = preserveScroll ? captureScrollAnchor() : null;
           previousSnapshot = snapshot;
-          feed.innerHTML = '';
+          feed.replaceChildren();
+          restoreScrollAnchor(scrollAnchor);
         }
         return;
       }
@@ -460,12 +509,14 @@
       setStatus(hasMore ? '下へスクロールすると続きを表示します。' : 'ここまでで最新分をすべて表示しています。');
 
       if (snapshot === previousSnapshot) return;
+      const scrollAnchor = preserveScroll ? captureScrollAnchor() : null;
       previousSnapshot = snapshot;
-      feed.innerHTML = '';
+      const fragment = document.createDocumentFragment();
 
       visibleItems.forEach((item, index) => {
         const post = document.createElement('article');
         post.className = 'post';
+        post.dataset.itemId = String(item.id);
 
         // Left Column (Avatar + Thread line)
         const leftCol = document.createElement('div');
@@ -530,7 +581,7 @@
 
           if (currentState === LIKE_STATE_UNLIKED) {
             setLikeState(item.id, LIKE_STATE_LIKED);
-            render();
+            render({ preserveScroll: true });
             return;
           }
 
@@ -551,7 +602,7 @@
             } else {
               setLikeState(item.id, LIKE_STATE_LIKED);
             }
-            render();
+            render({ preserveScroll: true });
           } catch (error) {
             const message = error instanceof Error
               ? error.message
@@ -569,14 +620,17 @@
 
         post.appendChild(leftCol);
         post.appendChild(rightCol);
-        feed.appendChild(post);
+        fragment.appendChild(post);
       });
+
+      feed.replaceChildren(fragment);
+      restoreScrollAnchor(scrollAnchor);
     };
 
     const expandVisibleItems = () => {
       if (visibleCount >= allItems.length) return;
       visibleCount = Math.min(allItems.length, visibleCount + BATCH_SIZE);
-      render();
+      render({ preserveScroll: true });
     };
 
     const ensureObserver = () => {
@@ -592,6 +646,12 @@
     };
 
     const loadFeed = async ({ preserveVisibleCount } = {}) => {
+      const previousItems = allItems;
+      const previousVisibleCount = visibleCount;
+      const lastPreviouslyVisibleItem = previousVisibleCount > 0
+        ? previousItems[Math.min(previousVisibleCount, previousItems.length) - 1]
+        : null;
+
       try {
         const response = await fetch(CLIPBOARD_DETAIL_API_URL, {
           method: 'GET',
@@ -601,24 +661,33 @@
         if (!response.ok) throw new Error('取得に失敗しました。');
 
         const nextItems = await syncLegacyUnlikeStates(normalizeItems(payload));
-        const wasShowingAll = visibleCount >= allItems.length;
+        const wasShowingAll = previousVisibleCount >= previousItems.length;
         allItems = nextItems;
 
         if (allItems.length === 0) {
           visibleCount = 0;
-        } else if (preserveVisibleCount && visibleCount > 0) {
-          visibleCount = wasShowingAll
-            ? allItems.length
-            : Math.min(allItems.length, Math.max(visibleCount, INITIAL_BATCH_SIZE));
+        } else if (preserveVisibleCount && previousVisibleCount > 0) {
+          if (wasShowingAll) {
+            visibleCount = allItems.length;
+          } else if (lastPreviouslyVisibleItem) {
+            const nextLastVisibleIndex = allItems.findIndex(
+              (item) => item.id === lastPreviouslyVisibleItem.id
+            );
+            visibleCount = nextLastVisibleIndex >= 0
+              ? Math.min(allItems.length, Math.max(INITIAL_BATCH_SIZE, nextLastVisibleIndex + 1))
+              : Math.min(allItems.length, Math.max(previousVisibleCount, INITIAL_BATCH_SIZE));
+          } else {
+            visibleCount = Math.min(allItems.length, Math.max(previousVisibleCount, INITIAL_BATCH_SIZE));
+          }
         } else {
           visibleCount = Math.min(allItems.length, INITIAL_BATCH_SIZE);
         }
 
-        render();
+        render({ preserveScroll: preserveVisibleCount });
       } catch {
         allItems = [];
         visibleCount = 0;
-        render();
+        render({ preserveScroll: preserveVisibleCount });
         setStatus('読み込みに失敗しました。少し待ってから再読み込みしてください。');
       }
     };
