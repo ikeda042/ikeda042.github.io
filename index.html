@@ -138,7 +138,6 @@
         <thead>
           <tr>
             <th style="width: 70px;">No.</th>
-            <th style="width: 190px;">投稿時刻</th>
             <th>コメント</th>
             <th style="width: 100px;">操作</th>
           </tr>
@@ -190,19 +189,6 @@
           return null;
         })
         .filter(Boolean);
-    };
-
-    const formatDateTime = (isoString) => {
-      const date = new Date(isoString);
-      if (Number.isNaN(date.getTime())) return '-';
-      return new Intl.DateTimeFormat('ja-JP', {
-        year: 'numeric',
-        month: '2-digit',
-        day: '2-digit',
-        hour: '2-digit',
-        minute: '2-digit',
-        second: '2-digit'
-      }).format(date);
     };
 
     const deleteClipboardEntry = async (text) => {
@@ -264,7 +250,7 @@
       if (sortedItems.length === 0) {
         const tr = document.createElement('tr');
         const td = document.createElement('td');
-        td.colSpan = 4;
+        td.colSpan = 3;
         td.textContent = '投稿はまだありません。';
         tr.appendChild(td);
         rows.appendChild(tr);
@@ -274,9 +260,6 @@
 
           const no = document.createElement('td');
           no.textContent = String(index + 1);
-
-          const createdAt = document.createElement('td');
-          createdAt.textContent = formatDateTime(item.createdAt);
 
           const text = document.createElement('td');
           text.className = 'comment-cell';
@@ -303,7 +286,6 @@
           action.appendChild(deleteBtn);
 
           tr.appendChild(no);
-          tr.appendChild(createdAt);
           tr.appendChild(text);
           tr.appendChild(action);
           rows.appendChild(tr);
