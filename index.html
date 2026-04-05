@@ -195,8 +195,34 @@
     }
 
     .like-btn.is-liked {
-      background: #111;
+      border-color: transparent;
+      background: linear-gradient(135deg, #ec4899, #f97316);
+      box-shadow: 0 10px 22px rgba(249, 115, 22, 0.24);
       color: #fff;
+    }
+
+    .like-btn.is-liked:hover {
+      background: linear-gradient(135deg, #ec4899, #f97316);
+      color: #fff;
+    }
+
+    .like-btn {
+      min-width: 6.5rem;
+      border-color: #fbcfe8;
+      background: linear-gradient(180deg, #fff7fb 0%, #fff 100%);
+      color: #be185d;
+      font-weight: 700;
+      letter-spacing: 0.01em;
+    }
+
+    .like-btn:hover {
+      border-color: #f472b6;
+      background: linear-gradient(180deg, #fff1f7 0%, #fff7fb 100%);
+      color: #9d174d;
+    }
+
+    .like-btn[disabled] {
+      box-shadow: none;
     }
 
     @media (max-width: 640px) {
@@ -265,9 +291,9 @@
           <tr>
             <th class="col-no" style="width: 70px;">No.</th>
             <th>コメント</th>
-            <th class="col-like" style="width: 90px;">いいね</th>
-            <th class="col-like-action" style="width: 130px;">いいねする</th>
             <th class="col-detail" style="width: 110px;" aria-label="全文表示"></th>
+            <th class="col-like-action" style="width: 130px;">いいねする</th>
+            <th class="col-like" style="width: 90px;">いいね</th>
             <th class="col-action" style="width: 100px;">操作</th>
           </tr>
         </thead>
@@ -581,7 +607,7 @@
 
           const currentLikeState = getLikeState(item.id);
           const isLiked = currentLikeState === LIKE_STATE_LIKED;
-          likeBtn.textContent = isLiked ? 'いいね解除' : 'いいね';
+          likeBtn.textContent = isLiked ? '♥ 解除' : '♡ いいね';
           likeBtn.setAttribute('aria-pressed', isLiked ? 'true' : 'false');
           if (isLiked) likeBtn.classList.add('is-liked');
           if (typeof item.id !== 'number') {
@@ -664,9 +690,9 @@
 
           tr.appendChild(no);
           tr.appendChild(text);
-          tr.appendChild(likeCount);
-          tr.appendChild(likeAction);
           tr.appendChild(detail);
+          tr.appendChild(likeAction);
+          tr.appendChild(likeCount);
           tr.appendChild(action);
           rows.appendChild(tr);
         });
