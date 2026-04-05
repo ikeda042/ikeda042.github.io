@@ -54,7 +54,7 @@
 
     table {
       width: 100%;
-      min-width: 620px;
+      min-width: 820px;
       border-collapse: collapse;
       table-layout: fixed;
     }
@@ -103,6 +103,11 @@
       font-size: 0.82rem;
       cursor: pointer;
       white-space: nowrap;
+    }
+
+    .row-btn[disabled] {
+      cursor: wait;
+      opacity: 0.65;
     }
 
     .row-btn:hover {
@@ -171,6 +176,10 @@
 
     .col-no,
     .cell-no,
+    .col-like,
+    .cell-like,
+    .col-like-action,
+    .cell-like-action,
     .col-detail,
     .cell-detail,
     .col-action,
@@ -178,9 +187,16 @@
       white-space: nowrap;
     }
 
+    .cell-like,
+    .cell-like-action,
     .cell-detail,
     .cell-action {
       text-align: center;
+    }
+
+    .like-btn.is-liked {
+      background: #111;
+      color: #fff;
     }
 
     @media (max-width: 640px) {
@@ -205,7 +221,7 @@
       }
 
       table {
-        min-width: 540px;
+        min-width: 720px;
       }
 
       .comment-cell {
@@ -249,6 +265,8 @@
           <tr>
             <th class="col-no" style="width: 70px;">No.</th>
             <th>コメント</th>
+            <th class="col-like" style="width: 90px;">いいね</th>
+            <th class="col-like-action" style="width: 130px;">いいねする</th>
             <th class="col-detail" style="width: 110px;" aria-label="全文表示"></th>
             <th class="col-action" style="width: 100px;">操作</th>
           </tr>
@@ -270,13 +288,19 @@
 
   <script>
     const CLIPBOARD_API_URL = 'https://githubio-api.vercel.app/api/v1/clipboards';
+    const CLIPBOARD_DETAIL_API_URL = `${CLIPBOARD_API_URL}?detail=1`;
+    const LIKE_STORAGE_KEY = 'clipboard-like-states-v1';
+    const LIKE_STATE_LIKED = 'liked';
+    const LIKE_STATE_UNLIKED = 'unliked';
     const POLL_INTERVAL_MS = 1000;
     const rows = document.getElementById('rows');
     const messageModal = document.getElementById('message-modal');
     const messageModalBody = document.getElementById('message-modal-body');
     const messageModalClose = document.getElementById('message-modal-close');
     let previousSnapshot = '';
+    let currentItems = [];
     let pollTimer = null;
+    let likeStateMap = loadLikeStateMap();
 
     const parseJsonSafely = async (response) => {
       try {
@@ -284,6 +308,44 @@
       } catch {
         return null;
       }
+    };
+
+    function loadLikeStateMap() {
+      try {
+        const raw = window.localStorage.getItem(LIKE_STORAGE_KEY);
+        if (!raw) return {};
+        const parsed = JSON.parse(raw);
+        return parsed && typeof parsed === 'object' ? parsed : {};
+      } catch {
+        return {};
+      }
+    }
+
+    const saveLikeStateMap = () => {
+      try {
+        window.localStorage.setItem(LIKE_STORAGE_KEY, JSON.stringify(likeStateMap));
+      } catch {
+        // localStorage unavailable.
+      }
+    };
+
+    const getLikeState = (id) => {
+      const value = likeStateMap[String(id)];
+      return value === LIKE_STATE_LIKED || value === LIKE_STATE_UNLIKED ? value : null;
+    };
+
+    const setLikeState = (id, state) => {
+      if (state === LIKE_STATE_LIKED || state === LIKE_STATE_UNLIKED) {
+        likeStateMap[String(id)] = state;
+      } else {
+        delete likeStateMap[String(id)];
+      }
+      saveLikeStateMap();
+    };
+
+    const clearLikeState = (id) => {
+      delete likeStateMap[String(id)];
+      saveLikeStateMap();
     };
 
     const normalizeItems = (payload) => {
@@ -294,7 +356,8 @@
             return {
               id: `text-${index}`,
               text: entry,
-              createdAt: ''
+              createdAt: '',
+              likeCount: 0
             };
           }
 
@@ -303,10 +366,23 @@
               ? entry.text
               : (typeof entry.str === 'string' ? entry.str : '');
             if (!text) return null;
+
+            const rawId = entry.id ?? entry._id ?? `${index}-${text}`;
+            const numericId = Number(rawId);
+            const normalizedId =
+              Number.isInteger(numericId) && numericId > 0
+                ? numericId
+                : String(rawId);
+            const rawLikeCount = Number(entry.like_count ?? entry.likeCount ?? 0);
+
             return {
-              id: String(entry.id || entry._id || `${index}-${text}`),
+              id: normalizedId,
               text,
-              createdAt: String(entry.createdAt || entry.created_at || '')
+              createdAt: String(entry.createdAt || entry.created_at || ''),
+              likeCount:
+                Number.isFinite(rawLikeCount) && rawLikeCount > 0
+                  ? Math.floor(rawLikeCount)
+                  : 0
             };
           }
 
@@ -315,8 +391,22 @@
         .filter(Boolean);
     };
 
-    const deleteClipboardEntry = async (text) => {
-      const candidates = [
+    const deleteClipboardEntry = async (item) => {
+      const text = String(item.text || '');
+      const candidates = [];
+
+      if (typeof item.id === 'number') {
+        candidates.push({
+          url: CLIPBOARD_API_URL,
+          init: {
+            method: 'DELETE',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ id: item.id })
+          }
+        });
+      }
+
+      candidates.push(
         {
           url: CLIPBOARD_API_URL,
           init: {
@@ -326,18 +416,10 @@
           }
         },
         {
-          url: CLIPBOARD_API_URL,
-          init: {
-            method: 'DELETE',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ text })
-          }
-        },
-        {
           url: `${CLIPBOARD_API_URL}?str=${encodeURIComponent(text)}`,
           init: { method: 'DELETE' }
         }
-      ];
+      );
 
       let lastError = '削除に失敗しました。';
 
@@ -358,6 +440,22 @@
       }
 
       throw new Error(`削除に失敗しました。(${lastError})`);
+    };
+
+    const likeClipboardEntry = async (id) => {
+      const response = await fetch(CLIPBOARD_API_URL, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id })
+      });
+      const payload = await parseJsonSafely(response);
+
+      if (!response.ok) {
+        const message = payload && payload.error ? payload.error : 'いいねに失敗しました。';
+        throw new Error(message);
+      }
+
+      return payload;
     };
 
     const openMessageModal = (text) => {
@@ -385,21 +483,38 @@
       if (!clickedInside) closeMessageModal();
     });
 
-    const render = (items) => {
-      const snapshot = JSON.stringify(items);
-      if (snapshot === previousSnapshot) return;
-      previousSnapshot = snapshot;
+    // The API only increments likes, so "unlike" is reflected locally.
+    const getDisplayedLikeCount = (item) => {
+      const likeState = getLikeState(item.id);
+      if (likeState === LIKE_STATE_UNLIKED) {
+        return Math.max(0, Number(item.likeCount || 0) - 1);
+      }
+      return Math.max(0, Number(item.likeCount || 0));
+    };
 
+    const render = (items) => {
       const sortedItems = items
         .slice()
         .sort((a, b) => (b.createdAt || '').localeCompare(a.createdAt || ''));
+
+      const snapshot = JSON.stringify(
+        sortedItems.map((item) => ({
+          id: item.id,
+          text: item.text,
+          createdAt: item.createdAt,
+          likeCount: item.likeCount,
+          likeState: getLikeState(item.id)
+        }))
+      );
+      if (snapshot === previousSnapshot) return;
+      previousSnapshot = snapshot;
 
       rows.innerHTML = '';
 
       if (sortedItems.length === 0) {
         const tr = document.createElement('tr');
         const td = document.createElement('td');
-        td.colSpan = 4;
+        td.colSpan = 6;
         td.textContent = '投稿はまだありません。';
         tr.appendChild(td);
         rows.appendChild(tr);
@@ -415,6 +530,69 @@
           text.className = 'comment-cell';
           text.textContent = String(item.text || '');
           text.title = String(item.text || '');
+
+          const likeCount = document.createElement('td');
+          likeCount.className = 'cell-like mono';
+          likeCount.textContent = String(getDisplayedLikeCount(item));
+
+          const likeAction = document.createElement('td');
+          likeAction.className = 'cell-like-action';
+          const likeBtn = document.createElement('button');
+          likeBtn.type = 'button';
+          likeBtn.className = 'row-btn like-btn';
+
+          const currentLikeState = getLikeState(item.id);
+          const isLiked = currentLikeState === LIKE_STATE_LIKED;
+          likeBtn.textContent = isLiked ? 'いいね解除' : 'いいね';
+          likeBtn.setAttribute('aria-pressed', isLiked ? 'true' : 'false');
+          if (isLiked) likeBtn.classList.add('is-liked');
+          if (typeof item.id !== 'number' && currentLikeState === null) {
+            likeBtn.disabled = true;
+            likeBtn.title = 'いいね対象のIDがありません。';
+          }
+          likeBtn.addEventListener('click', async () => {
+            const likeState = getLikeState(item.id);
+
+            if (likeState === LIKE_STATE_LIKED) {
+              setLikeState(item.id, LIKE_STATE_UNLIKED);
+              render(currentItems);
+              return;
+            }
+
+            if (likeState === LIKE_STATE_UNLIKED) {
+              setLikeState(item.id, LIKE_STATE_LIKED);
+              render(currentItems);
+              return;
+            }
+
+            if (typeof item.id !== 'number') {
+              window.alert('いいね対象のIDを取得できません。');
+              return;
+            }
+
+            likeBtn.disabled = true;
+            try {
+              const payload = await likeClipboardEntry(item.id);
+              const nextCount = Number(payload && payload.count);
+              currentItems = currentItems.map((currentItem) => (
+                currentItem.id === item.id
+                  ? {
+                      ...currentItem,
+                      likeCount: Number.isFinite(nextCount)
+                        ? nextCount
+                        : Number(currentItem.likeCount || 0) + 1
+                    }
+                  : currentItem
+              ));
+              setLikeState(item.id, LIKE_STATE_LIKED);
+              render(currentItems);
+            } catch (error) {
+              const message = error instanceof Error ? error.message : 'いいねに失敗しました。';
+              window.alert(message);
+              likeBtn.disabled = false;
+            }
+          });
+          likeAction.appendChild(likeBtn);
 
           const detail = document.createElement('td');
           detail.className = 'cell-detail';
@@ -437,7 +615,8 @@
             if (!window.confirm('このコメントを削除しますか？')) return;
             deleteBtn.disabled = true;
             try {
-              await deleteClipboardEntry(String(item.text || ''));
+              await deleteClipboardEntry(item);
+              clearLikeState(item.id);
               await loadAndRender();
             } catch (error) {
               const message = error instanceof Error ? error.message : '削除に失敗しました。';
@@ -449,6 +628,8 @@
 
           tr.appendChild(no);
           tr.appendChild(text);
+          tr.appendChild(likeCount);
+          tr.appendChild(likeAction);
           tr.appendChild(detail);
           tr.appendChild(action);
           rows.appendChild(tr);
@@ -458,15 +639,17 @@
 
     const loadAndRender = async () => {
       try {
-        const response = await fetch(CLIPBOARD_API_URL, {
+        const response = await fetch(CLIPBOARD_DETAIL_API_URL, {
           method: 'GET',
           headers: { 'Content-Type': 'application/json' }
         });
         const payload = await parseJsonSafely(response);
         if (!response.ok) throw new Error('取得に失敗しました。');
-        render(normalizeItems(payload));
+        currentItems = normalizeItems(payload);
+        render(currentItems);
       } catch {
-        render([]);
+        currentItems = [];
+        render(currentItems);
       }
     };
 
