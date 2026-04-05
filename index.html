@@ -531,6 +531,20 @@
       return Math.max(0, Number(item.likeCount || 0));
     };
 
+    const compareItemsForDisplay = (a, b) => {
+      const likeCountDiff = getDisplayedLikeCount(b) - getDisplayedLikeCount(a);
+      if (likeCountDiff !== 0) return likeCountDiff;
+
+      const createdAtDiff = (b.createdAt || '').localeCompare(a.createdAt || '');
+      if (createdAtDiff !== 0) return createdAtDiff;
+
+      if (typeof a.id === 'number' && typeof b.id === 'number') {
+        return b.id - a.id;
+      }
+
+      return String(b.id || '').localeCompare(String(a.id || ''));
+    };
+
     const applyLikeCount = (items, id, count, fallbackDelta) => items.map((item) => {
       if (item.id !== id) return item;
 
@@ -569,7 +583,7 @@
     const render = (items) => {
       const sortedItems = items
         .slice()
-        .sort((a, b) => (b.createdAt || '').localeCompare(a.createdAt || ''));
+        .sort(compareItemsForDisplay);
 
       const snapshot = JSON.stringify(
         sortedItems.map((item) => ({
