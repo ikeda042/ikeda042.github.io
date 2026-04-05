@@ -131,7 +131,6 @@
         <h1>やってみなはれボックス</h1>
         <p class="meta">1秒ポーリングで更新 / 投稿ページ: <a href="/question">/question</a></p>
       </div>
-      <div class="mono" id="last-updated">最終更新: -</div>
     </div>
 
     <div class="table-wrap">
@@ -153,7 +152,6 @@
     const CLIPBOARD_API_URL = 'https://githubio-api.vercel.app/api/v1/clipboards';
     const POLL_INTERVAL_MS = 1000;
     const rows = document.getElementById('rows');
-    const lastUpdated = document.getElementById('last-updated');
     let previousSnapshot = '';
     let pollTimer = null;
 
@@ -254,10 +252,7 @@
 
     const render = (items) => {
       const snapshot = JSON.stringify(items);
-      if (snapshot === previousSnapshot) {
-        lastUpdated.textContent = `最終更新: ${formatDateTime(new Date().toISOString())}`;
-        return;
-      }
+      if (snapshot === previousSnapshot) return;
       previousSnapshot = snapshot;
 
       const sortedItems = items
@@ -314,8 +309,6 @@
           rows.appendChild(tr);
         });
       }
-
-      lastUpdated.textContent = `最終更新: ${formatDateTime(new Date().toISOString())}`;
     };
 
     const loadAndRender = async () => {
