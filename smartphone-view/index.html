@@ -110,6 +110,11 @@
       font-size: 0.85rem;
     }
 
+    .avatar svg {
+      width: 24px;
+      height: 24px;
+    }
+
     .thread-line {
       flex-grow: 1;
       width: 2px;
@@ -127,12 +132,8 @@
     .post-header {
       display: flex;
       align-items: baseline;
-      justify-content: space-between;
+      justify-content: flex-end;
       margin-bottom: 0.25rem;
-    }
-
-    .post-header strong {
-      font-size: 0.95rem;
     }
 
     .post-header time {
@@ -471,7 +472,8 @@
 
         const avatar = document.createElement('div');
         avatar.className = 'avatar';
-        avatar.textContent = `#${String(index + 1).padStart(2, '0')}`;
+        avatar.setAttribute('aria-hidden', 'true');
+        avatar.innerHTML = '<svg viewBox="0 0 24 24" focusable="false"><path d="M12 12a4 4 0 1 0-4-4a4 4 0 0 0 4 4Zm0 2c-3.314 0-6 2.239-6 5v1h12v-1c0-2.761-2.686-5-6-5Z" fill="currentColor"/></svg>';
 
         leftCol.appendChild(avatar);
 
@@ -489,13 +491,9 @@
         const header = document.createElement('div');
         header.className = 'post-header';
 
-        const title = document.createElement('strong');
-        title.textContent = 'やってみなはれ';
-
         const time = document.createElement('time');
         time.textContent = formatCreatedAt(item.createdAt);
 
-        header.appendChild(title);
         header.appendChild(time);
 
         const text = document.createElement('p');
