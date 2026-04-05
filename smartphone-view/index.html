@@ -1,0 +1,748 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Smartphone Feed</title>
+  <style>
+    :root {
+      --bg-top: #f7d9bf;
+      --bg-bottom: #f4f7fb;
+      --surface: rgba(255, 255, 255, 0.92);
+      --surface-strong: #ffffff;
+      --text: #1c1b19;
+      --muted: #6c6a66;
+      --line: rgba(28, 27, 25, 0.1);
+      --accent: #ea580c;
+      --accent-soft: rgba(234, 88, 12, 0.12);
+      --shadow: 0 20px 48px rgba(28, 27, 25, 0.08);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background:
+        radial-gradient(circle at top left, rgba(255, 255, 255, 0.72), transparent 34%),
+        linear-gradient(180deg, var(--bg-top) 0%, var(--bg-bottom) 52%, #eef3f8 100%);
+      color: var(--text);
+      font-family: "Avenir Next", "Helvetica Neue", Arial, "Hiragino Kaku Gothic ProN", "Hiragino Sans", Meiryo, sans-serif;
+    }
+
+    a {
+      color: inherit;
+    }
+
+    .app {
+      width: min(100%, 520px);
+      margin: 0 auto;
+      padding: 0 0 4.5rem;
+    }
+
+    .hero {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      padding: 1rem 1rem 0.8rem;
+      backdrop-filter: blur(18px);
+      background: linear-gradient(180deg, rgba(244, 247, 251, 0.88), rgba(244, 247, 251, 0.55));
+    }
+
+    .hero-card {
+      background: rgba(255, 255, 255, 0.76);
+      border: 1px solid rgba(255, 255, 255, 0.66);
+      border-radius: 24px;
+      padding: 1rem;
+      box-shadow: var(--shadow);
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      padding: 0.28rem 0.68rem;
+      border-radius: 999px;
+      background: var(--accent-soft);
+      color: var(--accent);
+      font-size: 0.73rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    h1 {
+      margin: 0.8rem 0 0.35rem;
+      font-size: 1.7rem;
+      line-height: 1.05;
+      letter-spacing: -0.05em;
+    }
+
+    .hero-copy {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.92rem;
+      line-height: 1.6;
+    }
+
+    .hero-actions {
+      display: flex;
+      gap: 0.65rem;
+      margin-top: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .pill,
+    .fab {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 999px;
+      text-decoration: none;
+      font-weight: 700;
+    }
+
+    .pill {
+      min-height: 42px;
+      padding: 0 1rem;
+      border: 1px solid var(--line);
+      background: rgba(255, 255, 255, 0.8);
+      font-size: 0.9rem;
+    }
+
+    .pill.primary {
+      border-color: transparent;
+      background: var(--text);
+      color: #ffffff;
+    }
+
+    .summary {
+      display: flex;
+      justify-content: space-between;
+      gap: 0.8rem;
+      align-items: center;
+      margin-top: 0.95rem;
+      font-size: 0.84rem;
+      color: var(--muted);
+    }
+
+    .feed {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      padding: 0 1rem;
+    }
+
+    .card {
+      position: relative;
+      overflow: hidden;
+      background: var(--surface);
+      border: 1px solid rgba(255, 255, 255, 0.7);
+      border-radius: 28px;
+      padding: 1rem;
+      box-shadow: var(--shadow);
+    }
+
+    .card::before {
+      content: "";
+      position: absolute;
+      inset: 0 auto auto 0;
+      width: 100%;
+      height: 4px;
+      background: linear-gradient(90deg, #fb923c, #f97316, #ea580c);
+      opacity: 0.88;
+    }
+
+    .card-head {
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+      margin-bottom: 0.9rem;
+    }
+
+    .avatar {
+      width: 46px;
+      height: 46px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #fdba74, #f97316);
+      color: #ffffff;
+      display: grid;
+      place-items: center;
+      font-weight: 700;
+      font-size: 0.95rem;
+      flex: none;
+    }
+
+    .meta {
+      min-width: 0;
+    }
+
+    .meta strong,
+    .meta span {
+      display: block;
+    }
+
+    .meta strong {
+      font-size: 0.95rem;
+    }
+
+    .meta span {
+      margin-top: 0.18rem;
+      font-size: 0.8rem;
+      color: var(--muted);
+    }
+
+    .text {
+      margin: 0;
+      font-size: 1rem;
+      line-height: 1.8;
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+
+    .card-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.8rem;
+      margin-top: 1rem;
+      padding-top: 0.85rem;
+      border-top: 1px solid var(--line);
+    }
+
+    .likes {
+      display: flex;
+      align-items: baseline;
+      gap: 0.35rem;
+      min-width: 0;
+    }
+
+    .likes strong {
+      font-size: 1.1rem;
+      letter-spacing: -0.04em;
+    }
+
+    .likes span {
+      font-size: 0.82rem;
+      color: var(--muted);
+    }
+
+    .like-btn {
+      min-width: 112px;
+      min-height: 42px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: var(--surface-strong);
+      color: var(--text);
+      padding: 0 1rem;
+      font: inherit;
+      font-size: 0.9rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: transform 0.16s ease, background-color 0.16s ease, color 0.16s ease;
+    }
+
+    .like-btn:hover {
+      transform: translateY(-1px);
+    }
+
+    .like-btn.is-liked {
+      border-color: transparent;
+      background: var(--text);
+      color: #ffffff;
+    }
+
+    .like-btn[disabled] {
+      cursor: wait;
+      opacity: 0.7;
+      transform: none;
+    }
+
+    .empty,
+    .status {
+      margin: 0 1rem;
+      padding: 1rem 1.15rem;
+      border-radius: 20px;
+      background: rgba(255, 255, 255, 0.72);
+      border: 1px solid rgba(255, 255, 255, 0.7);
+      color: var(--muted);
+      box-shadow: var(--shadow);
+    }
+
+    .status {
+      text-align: center;
+      font-size: 0.86rem;
+    }
+
+    .sentinel {
+      height: 1px;
+      margin: 0 1rem;
+    }
+
+    .fab {
+      position: fixed;
+      right: 1rem;
+      bottom: 1rem;
+      z-index: 12;
+      min-width: 132px;
+      min-height: 50px;
+      padding: 0 1.2rem;
+      background: linear-gradient(135deg, #f97316, #ea580c);
+      color: #ffffff;
+      box-shadow: 0 16px 32px rgba(234, 88, 12, 0.28);
+    }
+
+    @media (min-width: 640px) {
+      .app {
+        padding-bottom: 5.5rem;
+      }
+
+      .hero {
+        padding-top: 1.25rem;
+      }
+
+      .hero-card,
+      .card,
+      .status,
+      .empty {
+        border-radius: 30px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <header class="hero">
+      <div class="hero-card">
+        <div class="eyebrow">Smartphone View</div>
+        <h1>やってみなはれ Feed</h1>
+        <p class="hero-copy">最新の投稿を上から順に流す、スマホ向けの一覧です。スクロールすると続きを自動で読み込みます。</p>
+        <div class="hero-actions">
+          <a class="pill primary" href="/question">投稿する</a>
+          <a class="pill" href="/">PC表示を見る</a>
+        </div>
+        <div class="summary">
+          <span id="summary-count">読み込み中...</span>
+          <span>最新順</span>
+        </div>
+      </div>
+    </header>
+
+    <main class="feed" id="feed" aria-live="polite"></main>
+    <div id="empty" class="empty" hidden>投稿はまだありません。</div>
+    <div id="status" class="status">読み込み中...</div>
+    <div id="sentinel" class="sentinel" aria-hidden="true"></div>
+  </div>
+
+  <a class="fab" href="/question">コメントを書く</a>
+
+  <script>
+    const CLIPBOARD_API_URL = 'https://githubio-api.vercel.app/api/v1/clipboards';
+    const CLIPBOARD_DETAIL_API_URL = `${CLIPBOARD_API_URL}?detail=1`;
+    const LIKE_STORAGE_KEY = 'clipboard-like-states-v1';
+    const LIKE_STATE_LIKED = 'liked';
+    const LIKE_STATE_UNLIKED = 'unliked';
+    const INITIAL_BATCH_SIZE = 8;
+    const BATCH_SIZE = 6;
+    const POLL_INTERVAL_MS = 5000;
+
+    const feed = document.getElementById('feed');
+    const empty = document.getElementById('empty');
+    const statusEl = document.getElementById('status');
+    const sentinel = document.getElementById('sentinel');
+    const summaryCount = document.getElementById('summary-count');
+
+    let allItems = [];
+    let visibleCount = 0;
+    let previousSnapshot = '';
+    let pollTimer = null;
+    let observer = null;
+    let hasAttemptedLegacyUnlikeSync = false;
+    let likeStateMap = loadLikeStateMap();
+
+    const dateFormatter = new Intl.DateTimeFormat('ja-JP', {
+      month: 'short',
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit'
+    });
+
+    const parseJsonSafely = async (response) => {
+      try {
+        return await response.json();
+      } catch {
+        return null;
+      }
+    };
+
+    function loadLikeStateMap() {
+      try {
+        const raw = window.localStorage.getItem(LIKE_STORAGE_KEY);
+        if (!raw) return {};
+        const parsed = JSON.parse(raw);
+        return parsed && typeof parsed === 'object' ? parsed : {};
+      } catch {
+        return {};
+      }
+    }
+
+    const saveLikeStateMap = () => {
+      try {
+        window.localStorage.setItem(LIKE_STORAGE_KEY, JSON.stringify(likeStateMap));
+      } catch {
+        // localStorage unavailable.
+      }
+    };
+
+    const getLikeState = (id) => {
+      const value = likeStateMap[String(id)];
+      return value === LIKE_STATE_LIKED || value === LIKE_STATE_UNLIKED ? value : null;
+    };
+
+    const setLikeState = (id, state) => {
+      if (state === LIKE_STATE_LIKED || state === LIKE_STATE_UNLIKED) {
+        likeStateMap[String(id)] = state;
+      } else {
+        delete likeStateMap[String(id)];
+      }
+      saveLikeStateMap();
+    };
+
+    const clearLikeState = (id) => {
+      delete likeStateMap[String(id)];
+      saveLikeStateMap();
+    };
+
+    const normalizeItems = (payload) => {
+      if (!Array.isArray(payload)) return [];
+      return payload
+        .map((entry, index) => {
+          if (!entry || typeof entry !== 'object') return null;
+
+          const text = typeof entry.text === 'string'
+            ? entry.text
+            : (typeof entry.str === 'string' ? entry.str : '');
+          if (!text) return null;
+
+          const rawId = entry.id ?? entry._id ?? `${index}-${text}`;
+          const numericId = Number(rawId);
+          const normalizedId =
+            Number.isInteger(numericId) && numericId > 0
+              ? numericId
+              : String(rawId);
+          const rawLikeCount = Number(entry.like_count ?? entry.likeCount ?? 0);
+
+          return {
+            id: normalizedId,
+            text,
+            createdAt: String(entry.createdAt || entry.created_at || ''),
+            likeCount:
+              Number.isFinite(rawLikeCount) && rawLikeCount > 0
+                ? Math.floor(rawLikeCount)
+                : 0
+          };
+        })
+        .filter(Boolean)
+        .sort((a, b) => (b.createdAt || '').localeCompare(a.createdAt || ''));
+    };
+
+    const formatCreatedAt = (value) => {
+      if (!value) return '投稿時刻なし';
+      const date = new Date(value);
+      if (Number.isNaN(date.getTime())) return value;
+      return dateFormatter.format(date);
+    };
+
+    const getDisplayedLikeCount = (item) => {
+      const likeState = getLikeState(item.id);
+      if (likeState === LIKE_STATE_UNLIKED) {
+        return Math.max(0, Number(item.likeCount || 0) - 1);
+      }
+      return Math.max(0, Number(item.likeCount || 0));
+    };
+
+    const applyLikeCount = (items, id, count, fallbackDelta) => items.map((item) => {
+      if (item.id !== id) return item;
+
+      const fallbackCount = Math.max(0, Number(item.likeCount || 0) + fallbackDelta);
+      return {
+        ...item,
+        likeCount: Number.isFinite(count) ? Math.max(0, count) : fallbackCount
+      };
+    });
+
+    const updateClipboardLike = async (id, action) => {
+      const response = await fetch(CLIPBOARD_API_URL, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id, action })
+      });
+      const payload = await parseJsonSafely(response);
+
+      if (!response.ok) {
+        const message = payload && payload.error
+          ? payload.error
+          : (action === 'decrement' ? 'いいね解除に失敗しました。' : 'いいねに失敗しました。');
+        throw new Error(message);
+      }
+
+      return payload;
+    };
+
+    const syncLegacyUnlikeStates = async (items) => {
+      if (hasAttemptedLegacyUnlikeSync) return items;
+      hasAttemptedLegacyUnlikeSync = true;
+
+      const targets = items.filter(
+        (item) => typeof item.id === 'number' && getLikeState(item.id) === LIKE_STATE_UNLIKED
+      );
+      if (targets.length === 0) return items;
+
+      let nextItems = items;
+
+      for (const item of targets) {
+        try {
+          const payload = await updateClipboardLike(item.id, 'decrement');
+          const nextCount = Number(payload && payload.count);
+          nextItems = applyLikeCount(nextItems, item.id, nextCount, -1);
+          clearLikeState(item.id);
+        } catch {
+          // Keep the legacy local state when reconciliation fails.
+        }
+      }
+
+      return nextItems;
+    };
+
+    const setStatus = (message) => {
+      statusEl.textContent = message;
+    };
+
+    const render = () => {
+      const visibleItems = allItems.slice(0, visibleCount);
+      const hasMore = visibleCount < allItems.length;
+      const snapshot = JSON.stringify(
+        visibleItems.map((item) => ({
+          id: item.id,
+          text: item.text,
+          createdAt: item.createdAt,
+          likeCount: item.likeCount,
+          likeState: getLikeState(item.id)
+        }))
+      ) + `|${visibleCount}|${allItems.length}`;
+
+      summaryCount.textContent = `${allItems.length}件の投稿`;
+      empty.hidden = allItems.length > 0;
+      feed.hidden = allItems.length === 0;
+
+      if (allItems.length === 0) {
+        setStatus('まだ投稿がありません。');
+        sentinel.hidden = true;
+        if (snapshot !== previousSnapshot) {
+          previousSnapshot = snapshot;
+          feed.innerHTML = '';
+        }
+        return;
+      }
+
+      sentinel.hidden = !hasMore;
+      setStatus(hasMore ? '下へスクロールすると続きを表示します。' : 'ここまでで最新分をすべて表示しています。');
+
+      if (snapshot === previousSnapshot) return;
+      previousSnapshot = snapshot;
+      feed.innerHTML = '';
+
+      visibleItems.forEach((item, index) => {
+        const card = document.createElement('article');
+        card.className = 'card';
+
+        const head = document.createElement('div');
+        head.className = 'card-head';
+
+        const avatar = document.createElement('div');
+        avatar.className = 'avatar';
+        avatar.textContent = `#${String(index + 1).padStart(2, '0')}`;
+
+        const meta = document.createElement('div');
+        meta.className = 'meta';
+
+        const title = document.createElement('strong');
+        title.textContent = 'やってみなはれ';
+
+        const sub = document.createElement('span');
+        sub.textContent = formatCreatedAt(item.createdAt);
+
+        meta.appendChild(title);
+        meta.appendChild(sub);
+        head.appendChild(avatar);
+        head.appendChild(meta);
+
+        const text = document.createElement('p');
+        text.className = 'text';
+        text.textContent = String(item.text || '');
+
+        const footer = document.createElement('div');
+        footer.className = 'card-footer';
+
+        const likes = document.createElement('div');
+        likes.className = 'likes';
+
+        const likeCount = document.createElement('strong');
+        likeCount.textContent = String(getDisplayedLikeCount(item));
+
+        const likeLabel = document.createElement('span');
+        likeLabel.textContent = 'likes';
+
+        likes.appendChild(likeCount);
+        likes.appendChild(likeLabel);
+
+        const likeBtn = document.createElement('button');
+        likeBtn.type = 'button';
+        likeBtn.className = 'like-btn';
+
+        const likeState = getLikeState(item.id);
+        const isLiked = likeState === LIKE_STATE_LIKED;
+        likeBtn.textContent = isLiked ? 'いいね解除' : 'いいね';
+        likeBtn.setAttribute('aria-pressed', isLiked ? 'true' : 'false');
+        if (isLiked) likeBtn.classList.add('is-liked');
+        if (typeof item.id !== 'number') {
+          likeBtn.disabled = true;
+          likeBtn.title = 'いいね対象のIDがありません。';
+        }
+
+        likeBtn.addEventListener('click', async () => {
+          const currentState = getLikeState(item.id);
+
+          if (typeof item.id !== 'number') {
+            window.alert('いいね対象のIDを取得できません。');
+            return;
+          }
+
+          if (currentState === LIKE_STATE_UNLIKED) {
+            setLikeState(item.id, LIKE_STATE_LIKED);
+            render();
+            return;
+          }
+
+          const action = currentState === LIKE_STATE_LIKED ? 'decrement' : 'increment';
+
+          likeBtn.disabled = true;
+          try {
+            const payload = await updateClipboardLike(item.id, action);
+            const nextCount = Number(payload && payload.count);
+            allItems = applyLikeCount(
+              allItems,
+              item.id,
+              nextCount,
+              action === 'decrement' ? -1 : 1
+            );
+            if (action === 'decrement') {
+              clearLikeState(item.id);
+            } else {
+              setLikeState(item.id, LIKE_STATE_LIKED);
+            }
+            render();
+          } catch (error) {
+            const message = error instanceof Error
+              ? error.message
+              : (action === 'decrement' ? 'いいね解除に失敗しました。' : 'いいねに失敗しました。');
+            window.alert(message);
+            likeBtn.disabled = false;
+          }
+        });
+
+        footer.appendChild(likes);
+        footer.appendChild(likeBtn);
+
+        card.appendChild(head);
+        card.appendChild(text);
+        card.appendChild(footer);
+        feed.appendChild(card);
+      });
+    };
+
+    const expandVisibleItems = () => {
+      if (visibleCount >= allItems.length) return;
+      visibleCount = Math.min(allItems.length, visibleCount + BATCH_SIZE);
+      render();
+    };
+
+    const ensureObserver = () => {
+      if (observer || !('IntersectionObserver' in window)) return;
+      observer = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) expandVisibleItems();
+        });
+      }, {
+        rootMargin: '320px 0px 320px 0px'
+      });
+      observer.observe(sentinel);
+    };
+
+    const loadFeed = async ({ preserveVisibleCount } = {}) => {
+      try {
+        const response = await fetch(CLIPBOARD_DETAIL_API_URL, {
+          method: 'GET',
+          headers: { 'Content-Type': 'application/json' }
+        });
+        const payload = await parseJsonSafely(response);
+        if (!response.ok) throw new Error('取得に失敗しました。');
+
+        const nextItems = await syncLegacyUnlikeStates(normalizeItems(payload));
+        const wasShowingAll = visibleCount >= allItems.length;
+        allItems = nextItems;
+
+        if (allItems.length === 0) {
+          visibleCount = 0;
+        } else if (preserveVisibleCount && visibleCount > 0) {
+          visibleCount = wasShowingAll
+            ? allItems.length
+            : Math.min(allItems.length, Math.max(visibleCount, INITIAL_BATCH_SIZE));
+        } else {
+          visibleCount = Math.min(allItems.length, INITIAL_BATCH_SIZE);
+        }
+
+        render();
+      } catch {
+        allItems = [];
+        visibleCount = 0;
+        render();
+        setStatus('読み込みに失敗しました。少し待ってから再読み込みしてください。');
+      }
+    };
+
+    const startPolling = () => {
+      if (!pollTimer) {
+        pollTimer = window.setInterval(() => {
+          loadFeed({ preserveVisibleCount: true });
+        }, POLL_INTERVAL_MS);
+      }
+    };
+
+    const stopPolling = () => {
+      if (!pollTimer) return;
+      window.clearInterval(pollTimer);
+      pollTimer = null;
+    };
+
+    ensureObserver();
+    loadFeed({ preserveVisibleCount: false });
+    startPolling();
+
+    document.addEventListener('visibilitychange', () => {
+      if (document.hidden) {
+        stopPolling();
+      } else {
+        loadFeed({ preserveVisibleCount: true });
+        startPolling();
+      }
+    });
+  </script>
+</body>
+</html>
