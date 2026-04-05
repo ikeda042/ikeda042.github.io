@@ -300,6 +300,7 @@
     let previousSnapshot = '';
     let currentItems = [];
     let pollTimer = null;
+    let hasAttemptedLegacyUnlikeSync = false;
     let likeStateMap = loadLikeStateMap();
 
     const parseJsonSafely = async (response) => {
@@ -442,16 +443,18 @@
       throw new Error(`削除に失敗しました。(${lastError})`);
     };
 
-    const likeClipboardEntry = async (id) => {
+    const updateClipboardLike = async (id, action) => {
       const response = await fetch(CLIPBOARD_API_URL, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ id })
+        body: JSON.stringify({ id, action })
       });
       const payload = await parseJsonSafely(response);
 
       if (!response.ok) {
-        const message = payload && payload.error ? payload.error : 'いいねに失敗しました。';
+        const message = payload && payload.error
+          ? payload.error
+          : (action === 'decrement' ? 'いいね解除に失敗しました。' : 'いいねに失敗しました。');
         throw new Error(message);
       }
 
@@ -483,13 +486,48 @@
       if (!clickedInside) closeMessageModal();
     });
 
-    // The API only increments likes, so "unlike" is reflected locally.
+    // Legacy local-only unlikes are shown optimistically until they are reconciled.
     const getDisplayedLikeCount = (item) => {
       const likeState = getLikeState(item.id);
       if (likeState === LIKE_STATE_UNLIKED) {
         return Math.max(0, Number(item.likeCount || 0) - 1);
       }
       return Math.max(0, Number(item.likeCount || 0));
+    };
+
+    const applyLikeCount = (items, id, count, fallbackDelta) => items.map((item) => {
+      if (item.id !== id) return item;
+
+      const fallbackCount = Math.max(0, Number(item.likeCount || 0) + fallbackDelta);
+      return {
+        ...item,
+        likeCount: Number.isFinite(count) ? Math.max(0, count) : fallbackCount
+      };
+    });
+
+    const syncLegacyUnlikeStates = async (items) => {
+      if (hasAttemptedLegacyUnlikeSync) return items;
+      hasAttemptedLegacyUnlikeSync = true;
+
+      const targets = items.filter(
+        (item) => typeof item.id === 'number' && getLikeState(item.id) === LIKE_STATE_UNLIKED
+      );
+      if (targets.length === 0) return items;
+
+      let nextItems = items;
+
+      for (const item of targets) {
+        try {
+          const payload = await updateClipboardLike(item.id, 'decrement');
+          const nextCount = Number(payload && payload.count);
+          nextItems = applyLikeCount(nextItems, item.id, nextCount, -1);
+          clearLikeState(item.id);
+        } catch {
+          // Keep the legacy local state when reconciliation fails.
+        }
+      }
+
+      return nextItems;
     };
 
     const render = (items) => {
@@ -546,16 +584,15 @@
           likeBtn.textContent = isLiked ? 'いいね解除' : 'いいね';
           likeBtn.setAttribute('aria-pressed', isLiked ? 'true' : 'false');
           if (isLiked) likeBtn.classList.add('is-liked');
-          if (typeof item.id !== 'number' && currentLikeState === null) {
+          if (typeof item.id !== 'number') {
             likeBtn.disabled = true;
             likeBtn.title = 'いいね対象のIDがありません。';
           }
           likeBtn.addEventListener('click', async () => {
             const likeState = getLikeState(item.id);
 
-            if (likeState === LIKE_STATE_LIKED) {
-              setLikeState(item.id, LIKE_STATE_UNLIKED);
-              render(currentItems);
+            if (typeof item.id !== 'number') {
+              window.alert('いいね対象のIDを取得できません。');
               return;
             }
 
@@ -565,29 +602,28 @@
               return;
             }
 
-            if (typeof item.id !== 'number') {
-              window.alert('いいね対象のIDを取得できません。');
-              return;
-            }
+            const action = likeState === LIKE_STATE_LIKED ? 'decrement' : 'increment';
 
             likeBtn.disabled = true;
             try {
-              const payload = await likeClipboardEntry(item.id);
+              const payload = await updateClipboardLike(item.id, action);
               const nextCount = Number(payload && payload.count);
-              currentItems = currentItems.map((currentItem) => (
-                currentItem.id === item.id
-                  ? {
-                      ...currentItem,
-                      likeCount: Number.isFinite(nextCount)
-                        ? nextCount
-                        : Number(currentItem.likeCount || 0) + 1
-                    }
-                  : currentItem
-              ));
-              setLikeState(item.id, LIKE_STATE_LIKED);
+              currentItems = applyLikeCount(
+                currentItems,
+                item.id,
+                nextCount,
+                action === 'decrement' ? -1 : 1
+              );
+              if (action === 'decrement') {
+                clearLikeState(item.id);
+              } else {
+                setLikeState(item.id, LIKE_STATE_LIKED);
+              }
               render(currentItems);
             } catch (error) {
-              const message = error instanceof Error ? error.message : 'いいねに失敗しました。';
+              const message = error instanceof Error
+                ? error.message
+                : (action === 'decrement' ? 'いいね解除に失敗しました。' : 'いいねに失敗しました。');
               window.alert(message);
               likeBtn.disabled = false;
             }
@@ -646,6 +682,7 @@
         const payload = await parseJsonSafely(response);
         if (!response.ok) throw new Error('取得に失敗しました。');
         currentItems = normalizeItems(payload);
+        currentItems = await syncLegacyUnlikeStates(currentItems);
         render(currentItems);
       } catch {
         currentItems = [];
