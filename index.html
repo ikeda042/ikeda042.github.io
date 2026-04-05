@@ -90,7 +90,7 @@
       text-overflow: ellipsis;
     }
 
-    .delete-btn {
+    .row-btn {
       border: 1px solid #111;
       background: #fff;
       color: #111;
@@ -101,14 +101,68 @@
       cursor: pointer;
     }
 
-    .delete-btn:hover {
+    .row-btn:hover {
       background: #111;
       color: #fff;
     }
 
-    .delete-btn:focus-visible {
+    .row-btn:focus-visible {
       outline: 3px solid #2563eb;
       outline-offset: 2px;
+    }
+
+    .modal {
+      width: min(720px, calc(100vw - 2rem));
+      max-height: calc(100vh - 2rem);
+      border: 0;
+      border-radius: 18px;
+      padding: 0;
+      box-shadow: 0 24px 60px rgba(0, 0, 0, 0.24);
+    }
+
+    .modal::backdrop {
+      background: rgba(0, 0, 0, 0.48);
+    }
+
+    .modal-content {
+      display: flex;
+      flex-direction: column;
+      background: var(--surface);
+    }
+
+    .modal-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      padding: 1rem 1.2rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .modal-title {
+      margin: 0;
+      font-size: 1rem;
+    }
+
+    .modal-close {
+      border: 0;
+      background: transparent;
+      color: var(--muted);
+      padding: 0;
+      font: inherit;
+      font-size: 1.4rem;
+      line-height: 1;
+      cursor: pointer;
+    }
+
+    .modal-body {
+      max-height: min(65vh, 520px);
+      overflow: auto;
+      padding: 1.2rem;
+      font-size: 0.95rem;
+      line-height: 1.7;
+      white-space: pre-wrap;
+      word-break: break-word;
     }
   </style>
 </head>
@@ -126,6 +180,7 @@
           <tr>
             <th style="width: 70px;">No.</th>
             <th>コメント</th>
+            <th style="width: 110px;" aria-label="全文表示"></th>
             <th style="width: 100px;">操作</th>
           </tr>
         </thead>
@@ -134,10 +189,23 @@
     </div>
   </main>
 
+  <dialog id="message-modal" class="modal" aria-labelledby="message-modal-title">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 id="message-modal-title" class="modal-title">コメント全文</h2>
+        <button type="button" id="message-modal-close" class="modal-close" aria-label="閉じる">×</button>
+      </div>
+      <div id="message-modal-body" class="modal-body"></div>
+    </div>
+  </dialog>
+
   <script>
     const CLIPBOARD_API_URL = 'https://githubio-api.vercel.app/api/v1/clipboards';
     const POLL_INTERVAL_MS = 1000;
     const rows = document.getElementById('rows');
+    const messageModal = document.getElementById('message-modal');
+    const messageModalBody = document.getElementById('message-modal-body');
+    const messageModalClose = document.getElementById('message-modal-close');
     let previousSnapshot = '';
     let pollTimer = null;
 
@@ -223,6 +291,31 @@
       throw new Error(`削除に失敗しました。(${lastError})`);
     };
 
+    const openMessageModal = (text) => {
+      messageModalBody.textContent = text;
+      messageModalBody.scrollTop = 0;
+      if (typeof messageModal.showModal === 'function') {
+        if (!messageModal.open) messageModal.showModal();
+        return;
+      }
+      window.alert(text);
+    };
+
+    const closeMessageModal = () => {
+      if (messageModal.open) messageModal.close();
+    };
+
+    messageModalClose.addEventListener('click', closeMessageModal);
+    messageModal.addEventListener('click', (event) => {
+      const bounds = messageModal.getBoundingClientRect();
+      const clickedInside =
+        event.clientX >= bounds.left &&
+        event.clientX <= bounds.right &&
+        event.clientY >= bounds.top &&
+        event.clientY <= bounds.bottom;
+      if (!clickedInside) closeMessageModal();
+    });
+
     const render = (items) => {
       const snapshot = JSON.stringify(items);
       if (snapshot === previousSnapshot) return;
@@ -237,7 +330,7 @@
       if (sortedItems.length === 0) {
         const tr = document.createElement('tr');
         const td = document.createElement('td');
-        td.colSpan = 3;
+        td.colSpan = 4;
         td.textContent = '投稿はまだありません。';
         tr.appendChild(td);
         rows.appendChild(tr);
@@ -253,10 +346,20 @@
           text.textContent = String(item.text || '');
           text.title = String(item.text || '');
 
+          const detail = document.createElement('td');
+          const viewBtn = document.createElement('button');
+          viewBtn.type = 'button';
+          viewBtn.className = 'row-btn';
+          viewBtn.textContent = '全て見る';
+          viewBtn.addEventListener('click', () => {
+            openMessageModal(String(item.text || ''));
+          });
+          detail.appendChild(viewBtn);
+
           const action = document.createElement('td');
           const deleteBtn = document.createElement('button');
           deleteBtn.type = 'button';
-          deleteBtn.className = 'delete-btn';
+          deleteBtn.className = 'row-btn';
           deleteBtn.textContent = '削除';
           deleteBtn.addEventListener('click', async () => {
             if (!window.confirm('このコメントを削除しますか？')) return;
@@ -274,6 +377,7 @@
 
           tr.appendChild(no);
           tr.appendChild(text);
+          tr.appendChild(detail);
           tr.appendChild(action);
           rows.appendChild(tr);
         });
