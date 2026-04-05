@@ -6,16 +6,12 @@
   <title>Smartphone Feed</title>
   <style>
     :root {
-      --bg-top: #f7d9bf;
-      --bg-bottom: #f4f7fb;
-      --surface: rgba(255, 255, 255, 0.92);
-      --surface-strong: #ffffff;
-      --text: #1c1b19;
-      --muted: #6c6a66;
-      --line: rgba(28, 27, 25, 0.1);
-      --accent: #ea580c;
-      --accent-soft: rgba(234, 88, 12, 0.12);
-      --shadow: 0 20px 48px rgba(28, 27, 25, 0.08);
+      --bg: #83d3e2;
+      --surface: #ffffff;
+      --border: #d8d3c8;
+      --text: #111111;
+      --muted: #6b6b6b;
+      --hover: #f3f4f6;
     }
 
     * {
@@ -28,96 +24,81 @@
 
     body {
       margin: 0;
-      min-height: 100vh;
-      background:
-        radial-gradient(circle at top left, rgba(255, 255, 255, 0.72), transparent 34%),
-        linear-gradient(180deg, var(--bg-top) 0%, var(--bg-bottom) 52%, #eef3f8 100%);
+      background: var(--bg);
       color: var(--text);
-      font-family: "Avenir Next", "Helvetica Neue", Arial, "Hiragino Kaku Gothic ProN", "Hiragino Sans", Meiryo, sans-serif;
+      font-family: 'Helvetica Neue', Arial, 'Hiragino Kaku Gothic ProN', 'Hiragino Sans', Meiryo, sans-serif;
     }
 
     a {
       color: inherit;
+      text-decoration: none;
     }
 
     .app {
-      width: min(100%, 520px);
+      width: min(100%, 600px);
       margin: 0 auto;
-      padding: 0 0 4.5rem;
+      background: var(--surface);
+      min-height: 100vh;
+      border-left: 1px solid var(--border);
+      border-right: 1px solid var(--border);
+      position: relative;
     }
 
     .hero {
       position: sticky;
       top: 0;
       z-index: 10;
-      padding: 1rem 1rem 0.8rem;
-      backdrop-filter: blur(18px);
-      background: linear-gradient(180deg, rgba(244, 247, 251, 0.88), rgba(244, 247, 251, 0.55));
-    }
-
-    .hero-card {
-      background: rgba(255, 255, 255, 0.76);
-      border: 1px solid rgba(255, 255, 255, 0.66);
-      border-radius: 24px;
+      background: rgba(255, 255, 255, 0.85);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
       padding: 1rem;
-      box-shadow: var(--shadow);
     }
 
     .eyebrow {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.35rem;
-      padding: 0.28rem 0.68rem;
-      border-radius: 999px;
-      background: var(--accent-soft);
-      color: var(--accent);
-      font-size: 0.73rem;
+      display: inline-block;
+      font-size: 0.75rem;
       font-weight: 700;
-      letter-spacing: 0.08em;
+      color: var(--muted);
       text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 0.3rem;
     }
 
     h1 {
-      margin: 0.8rem 0 0.35rem;
-      font-size: 1.7rem;
-      line-height: 1.05;
-      letter-spacing: -0.05em;
+      margin: 0 0 0.5rem;
+      font-size: 1.35rem;
+      font-weight: 700;
     }
 
     .hero-copy {
-      margin: 0;
+      margin: 0 0 1rem;
       color: var(--muted);
-      font-size: 0.92rem;
-      line-height: 1.6;
+      font-size: 0.9rem;
+      line-height: 1.4;
     }
 
     .hero-actions {
       display: flex;
-      gap: 0.65rem;
-      margin-top: 1rem;
+      gap: 0.6rem;
       flex-wrap: wrap;
     }
 
-    .pill,
-    .fab {
+    .pill {
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      border-radius: 999px;
-      text-decoration: none;
+      border-radius: 8px;
       font-weight: 700;
-    }
-
-    .pill {
-      min-height: 42px;
+      min-height: 38px;
       padding: 0 1rem;
-      border: 1px solid var(--line);
-      background: rgba(255, 255, 255, 0.8);
-      font-size: 0.9rem;
+      border: 1px solid var(--text);
+      background: transparent;
+      color: var(--text);
+      font-size: 0.85rem;
     }
 
     .pill.primary {
-      border-color: transparent;
       background: var(--text);
       color: #ffffff;
     }
@@ -125,193 +106,165 @@
     .summary {
       display: flex;
       justify-content: space-between;
-      gap: 0.8rem;
       align-items: center;
-      margin-top: 0.95rem;
-      font-size: 0.84rem;
+      margin-top: 1rem;
+      padding-top: 0.8rem;
+      border-top: 1px solid var(--border);
+      font-size: 0.85rem;
       color: var(--muted);
     }
 
     .feed {
       display: flex;
       flex-direction: column;
-      gap: 1rem;
-      padding: 0 1rem;
+      padding-bottom: 5rem;
     }
 
-    .card {
-      position: relative;
-      overflow: hidden;
-      background: var(--surface);
-      border: 1px solid rgba(255, 255, 255, 0.7);
-      border-radius: 28px;
-      padding: 1rem;
-      box-shadow: var(--shadow);
-    }
-
-    .card::before {
-      content: "";
-      position: absolute;
-      inset: 0 auto auto 0;
-      width: 100%;
-      height: 4px;
-      background: linear-gradient(90deg, #fb923c, #f97316, #ea580c);
-      opacity: 0.88;
-    }
-
-    .card-head {
+    .post {
       display: flex;
-      align-items: center;
       gap: 0.8rem;
-      margin-bottom: 0.9rem;
+      padding: 1rem;
+      border-bottom: 1px solid var(--border);
+      background: var(--surface);
+      transition: background-color 0.2s;
+    }
+
+    .post:active {
+      background-color: var(--hover);
+    }
+
+    .post-left {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      flex-shrink: 0;
     }
 
     .avatar {
-      width: 46px;
-      height: 46px;
+      width: 40px;
+      height: 40px;
       border-radius: 50%;
-      background: linear-gradient(135deg, #fdba74, #f97316);
-      color: #ffffff;
+      background: #e5e5e5;
+      color: var(--text);
       display: grid;
       place-items: center;
       font-weight: 700;
-      font-size: 0.95rem;
-      flex: none;
+      font-size: 0.85rem;
     }
 
-    .meta {
+    .thread-line {
+      flex-grow: 1;
+      width: 2px;
+      background: var(--border);
+      margin-top: 0.5rem;
+      margin-bottom: 0.2rem;
+      border-radius: 2px;
+    }
+
+    .post-right {
+      flex-grow: 1;
       min-width: 0;
     }
 
-    .meta strong,
-    .meta span {
-      display: block;
+    .post-header {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      margin-bottom: 0.25rem;
     }
 
-    .meta strong {
+    .post-header strong {
       font-size: 0.95rem;
     }
 
-    .meta span {
-      margin-top: 0.18rem;
-      font-size: 0.8rem;
+    .post-header time {
+      font-size: 0.85rem;
       color: var(--muted);
     }
 
     .text {
-      margin: 0;
-      font-size: 1rem;
-      line-height: 1.8;
+      margin: 0 0 0.8rem;
+      font-size: 0.95rem;
+      line-height: 1.5;
       white-space: pre-wrap;
       word-break: break-word;
     }
 
-    .card-footer {
+    .post-actions {
       display: flex;
       align-items: center;
-      justify-content: space-between;
-      gap: 0.8rem;
-      margin-top: 1rem;
-      padding-top: 0.85rem;
-      border-top: 1px solid var(--line);
-    }
-
-    .likes {
-      display: flex;
-      align-items: baseline;
-      gap: 0.35rem;
-      min-width: 0;
-    }
-
-    .likes strong {
-      font-size: 1.1rem;
-      letter-spacing: -0.04em;
-    }
-
-    .likes span {
-      font-size: 0.82rem;
-      color: var(--muted);
+      gap: 1.2rem;
     }
 
     .like-btn {
-      min-width: 112px;
-      min-height: 42px;
-      border: 1px solid var(--line);
-      border-radius: 999px;
-      background: var(--surface-strong);
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      background: transparent;
+      border: none;
+      padding: 0;
       color: var(--text);
-      padding: 0 1rem;
       font: inherit;
       font-size: 0.9rem;
-      font-weight: 700;
+      font-weight: 600;
       cursor: pointer;
-      transition: transform 0.16s ease, background-color 0.16s ease, color 0.16s ease;
+      opacity: 0.75;
+      transition: opacity 0.2s, color 0.2s;
     }
 
     .like-btn:hover {
-      transform: translateY(-1px);
+      opacity: 1;
     }
 
     .like-btn.is-liked {
-      border-color: transparent;
-      background: var(--text);
-      color: #ffffff;
+      color: #e0245e;
+      opacity: 1;
     }
 
     .like-btn[disabled] {
       cursor: wait;
-      opacity: 0.7;
-      transform: none;
+      opacity: 0.4;
     }
 
     .empty,
     .status {
-      margin: 0 1rem;
-      padding: 1rem 1.15rem;
-      border-radius: 20px;
-      background: rgba(255, 255, 255, 0.72);
-      border: 1px solid rgba(255, 255, 255, 0.7);
-      color: var(--muted);
-      box-shadow: var(--shadow);
-    }
-
-    .status {
+      padding: 2rem 1rem;
       text-align: center;
-      font-size: 0.86rem;
+      color: var(--muted);
+      font-size: 0.9rem;
     }
 
     .sentinel {
       height: 1px;
-      margin: 0 1rem;
     }
 
     .fab {
       position: fixed;
-      right: 1rem;
-      bottom: 1rem;
+      right: 1.5rem;
+      bottom: 1.5rem;
       z-index: 12;
-      min-width: 132px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0 1.25rem;
       min-height: 50px;
-      padding: 0 1.2rem;
-      background: linear-gradient(135deg, #f97316, #ea580c);
+      border-radius: 999px;
+      background: var(--text);
       color: #ffffff;
-      box-shadow: 0 16px 32px rgba(234, 88, 12, 0.28);
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+      font-weight: bold;
     }
 
     @media (min-width: 640px) {
       .app {
-        padding-bottom: 5.5rem;
+        margin: 2rem auto;
+        border-radius: 16px;
+        box-shadow: 0 8px 24px rgba(0,0,0,0.06);
+        min-height: calc(100vh - 4rem);
+        border: 1px solid var(--border);
       }
-
       .hero {
-        padding-top: 1.25rem;
-      }
-
-      .hero-card,
-      .card,
-      .status,
-      .empty {
-        border-radius: 30px;
+        border-radius: 16px 16px 0 0;
       }
     }
   </style>
@@ -319,18 +272,16 @@
 <body>
   <div class="app">
     <header class="hero">
-      <div class="hero-card">
-        <div class="eyebrow">Smartphone View</div>
-        <h1>やってみなはれ Feed</h1>
-        <p class="hero-copy">最新の投稿を上から順に流す、スマホ向けの一覧です。スクロールすると続きを自動で読み込みます。</p>
-        <div class="hero-actions">
-          <a class="pill primary" href="/question">投稿する</a>
-          <a class="pill" href="/">PC表示を見る</a>
-        </div>
-        <div class="summary">
-          <span id="summary-count">読み込み中...</span>
-          <span>最新順</span>
-        </div>
+      <div class="eyebrow">Smartphone View</div>
+      <h1>やってみなはれ Feed</h1>
+      <p class="hero-copy">最新の投稿を上から順に流す、スマホ向けの一覧です。スクロールすると続きを自動で読み込みます。</p>
+      <div class="hero-actions">
+        <a class="pill primary" href="/question">投稿する</a>
+        <a class="pill" href="/">PC表示を見る</a>
+      </div>
+      <div class="summary">
+        <span id="summary-count">読み込み中...</span>
+        <span>最新順</span>
       </div>
     </header>
 
@@ -561,46 +512,48 @@
       visibleItems.forEach((item, index) => {
         const card = document.createElement('article');
         card.className = 'card';
+post = document.createElement('article');
+        post.className = 'post';
 
-        const head = document.createElement('div');
-        head.className = 'card-head';
+        // Left Column (Avatar + Thread line)
+        const leftCol = document.createElement('div');
+        leftCol.className = 'post-left';
 
         const avatar = document.createElement('div');
         avatar.className = 'avatar';
         avatar.textContent = `#${String(index + 1).padStart(2, '0')}`;
 
-        const meta = document.createElement('div');
-        meta.className = 'meta';
+        leftCol.appendChild(avatar);
+
+        // Add thread line if it's not the last loaded item
+        if (index < visibleItems.length - 1) {
+          const threadLine = document.createElement('div');
+          threadLine.className = 'thread-line';
+          leftCol.appendChild(threadLine);
+        }
+
+        // Right Column (Content)
+        const rightCol = document.createElement('div');
+        rightCol.className = 'post-right';
+
+        const header = document.createElement('div');
+        header.className = 'post-header';
 
         const title = document.createElement('strong');
         title.textContent = 'やってみなはれ';
 
-        const sub = document.createElement('span');
-        sub.textContent = formatCreatedAt(item.createdAt);
+        const time = document.createElement('time');
+        time.textContent = formatCreatedAt(item.createdAt);
 
-        meta.appendChild(title);
-        meta.appendChild(sub);
-        head.appendChild(avatar);
-        head.appendChild(meta);
+        header.appendChild(title);
+        header.appendChild(time);
 
         const text = document.createElement('p');
         text.className = 'text';
         text.textContent = String(item.text || '');
 
-        const footer = document.createElement('div');
-        footer.className = 'card-footer';
-
-        const likes = document.createElement('div');
-        likes.className = 'likes';
-
-        const likeCount = document.createElement('strong');
-        likeCount.textContent = String(getDisplayedLikeCount(item));
-
-        const likeLabel = document.createElement('span');
-        likeLabel.textContent = 'likes';
-
-        likes.appendChild(likeCount);
-        likes.appendChild(likeLabel);
+        const actions = document.createElement('div');
+        actions.className = 'post-actions';
 
         const likeBtn = document.createElement('button');
         likeBtn.type = 'button';
@@ -608,7 +561,9 @@
 
         const likeState = getLikeState(item.id);
         const isLiked = likeState === LIKE_STATE_LIKED;
-        likeBtn.textContent = isLiked ? 'いいね解除' : 'いいね';
+        
+        const likeIcon = isLiked ? '♥' : '♡';
+        likeBtn.textContent = `${likeIcon} ${getDisplayedLikeCount(item)}`;
         likeBtn.setAttribute('aria-pressed', isLiked ? 'true' : 'false');
         if (isLiked) likeBtn.classList.add('is-liked');
         if (typeof item.id !== 'number') {
@@ -657,15 +612,15 @@
           }
         });
 
-        footer.appendChild(likes);
-        footer.appendChild(likeBtn);
+        actions.appendChild(likeBtn);
 
-        card.appendChild(head);
-        card.appendChild(text);
-        card.appendChild(footer);
-        feed.appendChild(card);
-      });
-    };
+        rightCol.appendChild(header);
+        rightCol.appendChild(text);
+        rightCol.appendChild(actions);
+
+        post.appendChild(leftCol);
+        post.appendChild(rightCol);
+        feed.appendChild(post
 
     const expandVisibleItems = () => {
       if (visibleCount >= allItems.length) return;
