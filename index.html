@@ -47,13 +47,16 @@
 
     .table-wrap {
       overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
       border: 1px solid var(--border);
       border-radius: 10px;
     }
 
     table {
       width: 100%;
+      min-width: 620px;
       border-collapse: collapse;
+      table-layout: fixed;
     }
 
     th,
@@ -99,6 +102,7 @@
       font: inherit;
       font-size: 0.82rem;
       cursor: pointer;
+      white-space: nowrap;
     }
 
     .row-btn:hover {
@@ -164,6 +168,71 @@
       white-space: pre-wrap;
       word-break: break-word;
     }
+
+    .col-no,
+    .cell-no,
+    .col-detail,
+    .cell-detail,
+    .col-action,
+    .cell-action {
+      white-space: nowrap;
+    }
+
+    .cell-detail,
+    .cell-action {
+      text-align: center;
+    }
+
+    @media (max-width: 640px) {
+      main {
+        width: auto;
+        margin: 0.5rem;
+        padding: 0.8rem;
+      }
+
+      h1 {
+        font-size: 1.1rem;
+      }
+
+      th,
+      td {
+        padding: 0.55rem;
+        font-size: 0.84rem;
+      }
+
+      th {
+        font-size: 0.74rem;
+      }
+
+      table {
+        min-width: 540px;
+      }
+
+      .comment-cell {
+        max-width: none;
+      }
+
+      .row-btn {
+        min-width: 4.9rem;
+        padding: 0.35rem 0.5rem;
+        font-size: 0.76rem;
+      }
+
+      .modal {
+        width: calc(100vw - 1rem);
+        max-height: calc(100vh - 1rem);
+      }
+
+      .modal-header {
+        padding: 0.85rem 1rem;
+      }
+
+      .modal-body {
+        max-height: 70vh;
+        padding: 1rem;
+        font-size: 0.9rem;
+      }
+    }
   </style>
 </head>
 <body>
@@ -178,10 +247,10 @@
       <table aria-label="Clipboard submissions">
         <thead>
           <tr>
-            <th style="width: 70px;">No.</th>
+            <th class="col-no" style="width: 70px;">No.</th>
             <th>コメント</th>
-            <th style="width: 110px;" aria-label="全文表示"></th>
-            <th style="width: 100px;">操作</th>
+            <th class="col-detail" style="width: 110px;" aria-label="全文表示"></th>
+            <th class="col-action" style="width: 100px;">操作</th>
           </tr>
         </thead>
         <tbody id="rows"></tbody>
@@ -339,6 +408,7 @@
           const tr = document.createElement('tr');
 
           const no = document.createElement('td');
+          no.className = 'cell-no mono';
           no.textContent = String(index + 1);
 
           const text = document.createElement('td');
@@ -347,6 +417,7 @@
           text.title = String(item.text || '');
 
           const detail = document.createElement('td');
+          detail.className = 'cell-detail';
           const viewBtn = document.createElement('button');
           viewBtn.type = 'button';
           viewBtn.className = 'row-btn';
@@ -357,6 +428,7 @@
           detail.appendChild(viewBtn);
 
           const action = document.createElement('td');
+          action.className = 'cell-action';
           const deleteBtn = document.createElement('button');
           deleteBtn.type = 'button';
           deleteBtn.className = 'row-btn';
