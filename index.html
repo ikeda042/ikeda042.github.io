@@ -45,6 +45,37 @@
       font-size: 1.3rem;
     }
 
+    .header-links {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .header-link {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid #111;
+      border-radius: 8px;
+      padding: 0.4rem 0.75rem;
+      color: #111;
+      background: #fff;
+      text-decoration: none;
+      font-size: 0.88rem;
+      font-weight: 700;
+      line-height: 1.2;
+    }
+
+    .header-link:hover {
+      background: #111;
+      color: #fff;
+    }
+
+    .header-link:focus-visible {
+      outline: 3px solid #2563eb;
+      outline-offset: 2px;
+    }
+
     .table-wrap {
       overflow-x: auto;
       -webkit-overflow-scrolling: touch;
@@ -292,6 +323,10 @@
     <div class="header">
       <div>
         <h1>やってみなはれボックス</h1>
+      </div>
+      <div class="header-links" aria-label="ページ移動">
+        <a class="header-link" href="/question">投稿</a>
+        <a class="header-link" href="/smartphone-view">フィード</a>
       </div>
     </div>
 
